@@ -40,7 +40,8 @@ export default ({ api_funcion, params, type_begin, type_success, type_failure })
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.
         err => {
-          if (err.response.status === 401) {
+          console.log(err);
+          if (typeof err.response !== "undefined" && err.response.status === 401) {
             swal({
               title: 'Ops',
               text: 'Su sesion expirió o no has iniciado la sesión',

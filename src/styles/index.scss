@@ -1,0 +1,52 @@
+
+
+.form-style {
+  &__field {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: $white;
+    border-radius: 2px;
+    // border: none;
+    border: 1px solid #ccc;
+
+    &--border {
+      border: 1px solid $gray_light;
+    }
+
+    &:active,
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__link {
+    // color: $white;
+    color: $orange;
+    font-size: 14px;
+    font-weight: 300;
+    &:hover,
+    &:focus,
+    &:active {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+
+  &__error {
+    color: $white;
+    background-color: $erro;
+    padding: 6px;
+    border-radius: 3px;
+  }
+
+  &__margin {
+    margin-bottom: 20px;
+  }
+  input[type="text"]:disabled {
+    background: #efefef;
+  }
+
+  &__noRightBorder {
+    border-right: none;
+  }
+}

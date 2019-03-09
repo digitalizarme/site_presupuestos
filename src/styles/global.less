@@ -1,0 +1,119 @@
+@import './mixins';
+
+// Here you put all global css rules.
+
+body {
+  margin: 0;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  padding-top: 20px; /* Vertically center the text there */
+  background-color: #212529;
+}
+.logo
+{
+   max-width:50px;
+}
+
+.logo_conf
+{
+   width:66%;
+}
+
+@media screen and (max-width: 369px)
+{
+.logo_conf
+{
+   width:100px;
+}
+
+.custom-file-label::after
+{
+   content: "Buscar"!important;
+}
+
+}
+
+.form_border
+{
+  border: 1px #6c757d solid;
+    padding: 5px;
+}
+
+// .app_btns
+// {
+// }
+
+// .label.label-block
+// {
+//    display: block;
+// }
+
+
+
+// input[type=text],
+// input[type=password],
+// textarea
+// {
+//     /* Remove First */
+//     -webkit-appearance: none;
+//     -moz-appearance: none;
+//     appearance: none;
+// }
+
+// .autonumeric
+// {
+//    text-align:right;
+// }
+
+
+// .fijo {
+//     position: fixed;
+//     top: 3px;
+//     z-index: 1200;
+// }
+
+// @media screen and (max-width: 575px)
+// {
+//    .fijo {
+//        left: 4.4%;
+//    }
+// }
+
+.mano
+{
+   cursor:pointer;
+
+}
+
+.margin_pie
+{
+   padding-bottom:70px;
+}
+
+.titulo_formulario {
+    text-align: center;
+    font-size: 22px;
+    padding: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 22px;
+    margin-top: 15px;
+    background-color: dimgrey;
+    color: white;
+}
+

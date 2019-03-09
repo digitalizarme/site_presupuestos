@@ -84,7 +84,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "heroku-postbuild": "echo Skip build on Heroku"
   },
   "rekit": {
     "devPort": 6075,
@@ -129,5 +130,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "description": "site created by Rekit."
+  "description": "site created by Rekit.",
+  "heroku-run-build-script": true
 }

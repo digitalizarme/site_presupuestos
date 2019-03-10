@@ -86,7 +86,7 @@
     "start": "serve -s build",
     "dev": "node scripts/dev.js",
     "test": "node scripts/test.js --env=jsdom",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "node scripts/build.js"
   },
   "rekit": {
     "devPort": 6075,

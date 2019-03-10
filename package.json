@@ -84,7 +84,6 @@
   "scripts": {
     "start": "serve -s build",
     "dev": "node scripts/dev.js",
-    "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "heroku-postbuild": "npm run build"
   },

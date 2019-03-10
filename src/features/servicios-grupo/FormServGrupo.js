@@ -14,7 +14,7 @@ class FormServGrupo extends Component {
 
     return (
       <div className="servicios-grupo-form-serv-grupo">
-        <Form onSubmit={enviarFormulario}  className="form_border">
+        <Form onSubmit={enviarFormulario}  >
           <Field name="id" component="input" type="hidden" />
           <Field
             name="c_descripcion"

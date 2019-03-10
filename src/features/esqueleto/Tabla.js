@@ -50,7 +50,6 @@ const RemoteAll = ({
   procesarTabla,
   api_funcion,
   modalToggle,
-  // traerItem,
   limpiarItemLinea,
   sinModal,
   props,
@@ -102,22 +101,6 @@ const RemoteAll = ({
       });
     } else {
       sinModal ? history.push(`${sinModal}/editar/${selected[0].id}`) : modalToggle();
-      // return traerItem({
-      //   api_funcion:`${api_funcion}/${selected[0].id}`,
-      // }).then(res => {
-      //     modalToggle();
-      // }).catch(err => {
-      //       const { message } =
-      //         typeof err.response !== 'undefined'
-      //           ? err.response.data
-      //           : 'Error al intentar traer los datos';
-      //       swal({
-      //         title: 'Ops',
-      //         text: message ? message : 'Error al intentar traer los datos',
-      //         icon: 'error',
-      //         button: 'OK!',
-      //       });
-      // });
     }
   };
 
@@ -253,6 +236,7 @@ const RemoteAll = ({
       <PaginationProvider pagination={paginationFactory(options)}>
         {({ paginationProps, paginationTableProps }) => (
           <div>
+           {/*overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.5)' }) }*/}
             {!sinModal ? <ModalForm {...props} /> : null}
             <BootstrapTable
               bootstrap4
@@ -261,13 +245,12 @@ const RemoteAll = ({
               hover
               remote
               defaultSorted={defaultSorted}
-              classes="table-responsive-sm"
+              classes="table-responsive-lg"
               filter={filterFactory()}
               keyField="id"
               data={data}
               columns={columns}
               onTableChange={onTableChange}
-              overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.5)' }) }
               noDataIndication={() => <NoDataIndication />}
               selectRow={selectRow}
               cellEdit={cellEditFactory({
@@ -300,11 +283,11 @@ export class Tabla extends Component {
 
   handleTableChange = (type, { page, sizePerPage, sortField, sortOrder, filters }) => {
     const { procesarTabla } = this.props.actions;
-    const currentIndex = (page - 1) * sizePerPage;
+    const offset = (page - 1) * sizePerPage;
     const { api_funcion } = this.props;
     const params = {
       api_funcion,
-      offset: currentIndex,
+      offset,
       sizePerPage,
       page,
       filters,
@@ -322,7 +305,6 @@ export class Tabla extends Component {
       modalToggle,
       lineaSeleccionada,
       apiGenerico,
-      // traerItem,
       limpiarItemLinea,
     } = this.props.actions;
 
@@ -370,7 +352,6 @@ function mapDispatchToProps(dispatch) {
         apiGenerico,
         lineaSeleccionada,
         modalToggle,
-        // traerItem,
         limpiarItemLinea,
       },
       dispatch,

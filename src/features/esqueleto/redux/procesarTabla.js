@@ -11,12 +11,6 @@ import initialState from './initialState';
 
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-// export function actualizarDatos({api_funcion, params}) {
-//   return api_axio({
-//     api_funcion,
-//     params,
-//   });
-// }
 
 export function procesarTabla({api_funcion, offset, sizePerPage, page, filters, sortField, sortOrder}) {
   const params = sizePerPage
@@ -31,6 +25,7 @@ export function procesarTabla({api_funcion, offset, sizePerPage, page, filters, 
       offset: 0, 
       sizePerPage: initialState.sizePerPage 
     };
+
   return api_axio({
     api_funcion,
     params,

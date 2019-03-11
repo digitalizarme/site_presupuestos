@@ -39,6 +39,7 @@ export class Menu extends Component {
           <NavbarToggler onClick={menuToggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
+              {persona?
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                   Presupuestos
@@ -56,6 +57,7 @@ export class Menu extends Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              :null}
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                   Catastro

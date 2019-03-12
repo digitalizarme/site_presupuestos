@@ -8,7 +8,6 @@ import esqueletoReducer from '../features/esqueleto/redux/reducer';
 import serviciosGrupoReducer from '../features/servicios-grupo/redux/reducer';
 import accederReducer from '../features/acceder/redux/reducer';
 import { reducer as formReducer } from 'redux-form'
-import deslogarReducer from '../features/deslogar/redux/reducer';
 import personasReducer from '../features/personas/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
@@ -26,7 +25,6 @@ const reducerMap = {
   serviciosGrupo: serviciosGrupoReducer,
   acceder: accederReducer,
   form: formReducer,
-  deslogar: deslogarReducer,
   personas: personasReducer,
 };
 

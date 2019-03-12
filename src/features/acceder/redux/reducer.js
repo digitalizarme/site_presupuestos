@@ -8,9 +8,11 @@
 
 import initialState from './initialState';
 import { reducer as accederReducer } from './acceder';
+import { reducer as limpiarUsuarioReducer } from './limpiarUsuario';
 
 const reducers = [
   accederReducer,
+  limpiarUsuarioReducer,
 ];
 
 export default function reducer(state = initialState, action) {

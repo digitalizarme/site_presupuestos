@@ -8,7 +8,6 @@ import contactoRoute from '../features/contacto/route';
 import esqueletoRoute from '../features/esqueleto/route';
 import serviciosGrupoRoute from '../features/servicios-grupo/route';
 import accederRoute from '../features/acceder/route';
-import deslogarRoute from '../features/deslogar/route';
 import personasRoute from '../features/personas/route';
 
 // NOTE: DO NOT CHANGE the 'childRoutes' name and the declaration pattern.
@@ -21,7 +20,6 @@ const childRoutes = [
   esqueletoRoute,
   serviciosGrupoRoute,
   accederRoute,
-  deslogarRoute,
   personasRoute,
 ];
 

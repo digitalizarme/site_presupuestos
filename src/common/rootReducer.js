@@ -2,8 +2,6 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import homeReducer from '../features/home/redux/reducer';
 import commonReducer from '../features/common/redux/reducer';
-import examplesReducer from '../features/examples/redux/reducer';
-import contactoReducer from '../features/contacto/redux/reducer';
 import esqueletoReducer from '../features/esqueleto/redux/reducer';
 import serviciosGrupoReducer from '../features/servicios-grupo/redux/reducer';
 import accederReducer from '../features/acceder/redux/reducer';
@@ -19,8 +17,6 @@ const reducerMap = {
   router: routerReducer,
   home: homeReducer,
   common: commonReducer,
-  examples: examplesReducer,
-  contacto: contactoReducer,
   esqueleto: esqueletoReducer,
   serviciosGrupo: serviciosGrupoReducer,
   acceder: accederReducer,

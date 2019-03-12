@@ -2,9 +2,7 @@ import { App } from '../features/home';
 import { PageNotFound } from '../features/common';
 import homeRoute from '../features/home/route';
 import commonRoute from '../features/common/route';
-import examplesRoute from '../features/examples/route';
 import _ from 'lodash';
-import contactoRoute from '../features/contacto/route';
 import esqueletoRoute from '../features/esqueleto/route';
 import serviciosGrupoRoute from '../features/servicios-grupo/route';
 import accederRoute from '../features/acceder/route';
@@ -15,8 +13,6 @@ import personasRoute from '../features/personas/route';
 const childRoutes = [
   homeRoute,
   commonRoute,
-  examplesRoute,
-  contactoRoute,
   esqueletoRoute,
   serviciosGrupoRoute,
   accederRoute,

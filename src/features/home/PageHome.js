@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import {Principal} from '../esqueleto';
+import { Principal } from '../esqueleto';
 import { Form } from './';
-export class DefaultPage extends Component {
+
+export class PageHome extends Component {
   static propTypes = {
     home: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
@@ -13,8 +14,8 @@ export class DefaultPage extends Component {
 
   render() {
     return (
-      <div className="home-default-page">
-      <Principal component={Form} titulo='Inicio' />
+      <div className="home-page-home">
+        <Principal component={Form} {...this.props} titulo="Inicio" />
       </div>
     );
   }
@@ -24,6 +25,7 @@ export class DefaultPage extends Component {
 function mapStateToProps(state) {
   return {
     home: state.home,
+    usuario: state.acceder.usuario,
   };
 }
 
@@ -34,4 +36,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PageHome);

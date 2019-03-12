@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  DefaultPage,
+  PageAcceder,
 } from './';
 
 export default {
   path: 'acceder',
   name: 'Acceder',
   childRoutes: [
-    { path: 'default-page', name: 'Default page', component: DefaultPage, isIndex: true },
+    { path: 'page-acceder', name: 'Page acceder', component: PageAcceder, isIndex: true },
   ],
 };

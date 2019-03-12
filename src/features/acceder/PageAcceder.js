@@ -9,7 +9,7 @@ import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
 import history from '../../common/history';
 
-export class DefaultPage extends Component {
+export class PageAcceder extends Component {
   static propTypes = {
     acceder: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
@@ -53,7 +53,7 @@ componentWillUnmount(){
   render() {
 
     return (
-      <div className="acceder-default-page">
+      <div className="acceder-page-acceder">
         <Principal component={Formulario} onSubmit={this.submit} />
       </div>
     );
@@ -77,4 +77,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(DefaultPage);
+)(PageAcceder);

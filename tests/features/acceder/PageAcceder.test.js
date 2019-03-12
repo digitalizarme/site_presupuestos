@@ -1,19 +1,19 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { DefaultPage } from '../../../src/features/contacto/DefaultPage';
+import { PageAcceder } from '../../../src/features/acceder/PageAcceder';
 
-describe('contacto/DefaultPage', () => {
+describe('acceder/PageAcceder', () => {
   it('renders node with correct class name', () => {
     const props = {
-      contacto: {},
+      login: {},
       actions: {},
     };
     const renderedComponent = shallow(
-      <DefaultPage {...props} />
+      <PageAcceder {...props} />
     );
 
     expect(
-      renderedComponent.find('.contacto-default-page').length
+      renderedComponent.find('.acceder-page-acceder').length
     ).toBe(1);
   });
 });

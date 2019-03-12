@@ -1,2 +1,2 @@
-export { default as DefaultPage } from './DefaultPage';
+export { default as PageAcceder } from './PageAcceder';
 export { default as Formulario } from './Formulario';

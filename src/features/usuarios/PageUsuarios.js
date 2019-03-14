@@ -108,7 +108,8 @@ export class PageUsuarios extends Component {
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
-          filters: esqueleto.filters,
+          columns:JSON.stringify(columns),
+          searchText: esqueleto.searchText,
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
         });

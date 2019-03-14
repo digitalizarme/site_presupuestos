@@ -14,7 +14,7 @@ const initialState = {
   data: { items: [], total: 0 },
   sizePerPage: 10,
   selected: [],
-  filters: {},
+  searchText: null,
   sortField: null,
   sortOrder: null,
   item:{},

@@ -212,8 +212,8 @@ const RemoteAll = ({
   const NoDataIndication = ({procesarTablaPending}) => (
     <div className="d-flex justify-content-center">
       {procesarTablaPending?<div className="spinner-grow text-primary m-5" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>:'Sem dados'}
+        <span className="sr-only">Cargando...</span>
+      </div>:'Sin datos'}
     </div>
   );
 

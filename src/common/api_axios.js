@@ -48,7 +48,8 @@ export default ({ api_funcion, params, type_begin, type_success, type_failure })
               icon: 'warning',
               button: 'OK!',
             }).then(value => {
-              history.push('/');
+              
+              history.push('/acceder');
             });
           }
           if (type_failure) {

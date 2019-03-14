@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
-import { textFilter } from 'react-bootstrap-table2-filter';
 
 const columns = [
   {
@@ -11,63 +10,56 @@ const columns = [
     table: 'Personas',
     text: 'Identificación',
     sort: true,
-    filter: textFilter({
-      placeholder: 'Busque aqui',
-    }),
   },
   {
     dataField: 'c_nombre',
     text: 'Nombre',
     sort: true,
-    filter: textFilter({
-      placeholder: 'Busque aqui',
-    }),
   },
   {
     dataField: 'c_direccion',
     text: 'Dirección',
     sort: true,
-    filter: textFilter({
-      placeholder: 'Busque aqui',
-    }),
   },
   {
     dataField: 'c_cel1',
     text: 'Celular',
     sort: true,
-    filter: textFilter({
-      placeholder: 'Busque aqui',
-    }),
   },
   {
     dataField: 'c_activo',
     text: 'Activa',
     sort: true,
     editable: false,
+    searchable: false,
   },
   {
     dataField: 'c_cliente',
     text: 'Cliente',
     sort: true,
     editable: false,
+    searchable: false,
   },
   {
     dataField: 'c_comisionista',
     text: 'Comisionista',
     sort: true,
     editable: false,
+    searchable: false,
   },
   {
     dataField: 'c_funcionario',
     text: 'Funcionario',
     sort: true,
     editable: false,
+    searchable: false,
   },
   {
     dataField: 'c_usuario',
     text: 'Usuário',
     sort: true,
     editable: false,
+    searchable: false,
   },
   
 ];

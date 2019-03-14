@@ -12,14 +12,15 @@ import initialState from './initialState';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 
-export function procesarTabla({api_funcion, offset, sizePerPage, page, filters, sortField, sortOrder}) {
+export function procesarTabla({api_funcion, offset, sizePerPage, page, sortField, sortOrder,columns,searchText}) {
   const params = sizePerPage
     ? {
         offset,
         sizePerPage,
-        filters,
         sortField,
         sortOrder,
+        columns,
+        searchText,
       }
     : { 
       offset: 0, 
@@ -31,7 +32,7 @@ export function procesarTabla({api_funcion, offset, sizePerPage, page, filters, 
     params,
     type_begin: {
       type: ESQUELETO_PROCESAR_TABLA_BEGIN,
-      data: { offset, sizePerPage, page, filters, sortField, sortOrder },
+      data: { offset, sizePerPage, page, searchText, sortField, sortOrder },
     },
     type_success: { type: ESQUELETO_PROCESAR_TABLA_SUCCESS },
     type_failure: { type: ESQUELETO_PROCESAR_TABLA_FAILURE },
@@ -55,7 +56,7 @@ export function reducer(state, action) {
         procesarTablaPending: true,
         procesarTablaError: null,
         page: action.data.page,
-        filters: action.data.filters,
+        searchText: action.data.searchText,
         sortField: action.data.sortField,
         sortOrder: action.data.sortOrder,
       };

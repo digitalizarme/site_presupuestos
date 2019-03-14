@@ -29,12 +29,11 @@ export function getToken() {
 export function hasToken() {
   const tokenString = !! localStorage.getItem(LENS_TOKEN_KEY);
   const expiresAt = localStorage.getItem(LENS_TOKEN_EXPIRES);
-
   if (tokenString && ! expiresAt) {
     return true;
   }
 
-  return tokenString && (new Date().getDate() < expiresAt);
+  return tokenString && (new Date().getDate() <= expiresAt);
 }
 
 /**

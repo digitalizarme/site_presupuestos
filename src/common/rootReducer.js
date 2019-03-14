@@ -7,6 +7,7 @@ import serviciosGrupoReducer from '../features/servicios-grupo/redux/reducer';
 import accederReducer from '../features/acceder/redux/reducer';
 import { reducer as formReducer } from 'redux-form'
 import personasReducer from '../features/personas/redux/reducer';
+import usuariosReducer from '../features/usuarios/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
 // This is used for Rekit cmds to register new features, remove features, etc.
@@ -22,6 +23,7 @@ const reducerMap = {
   acceder: accederReducer,
   form: formReducer,
   personas: personasReducer,
+  usuarios: usuariosReducer,
 };
 
 export default combineReducers(reducerMap);

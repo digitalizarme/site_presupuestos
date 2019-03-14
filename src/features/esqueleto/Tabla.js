@@ -7,7 +7,6 @@ import {
   apiGenerico,
   lineaSeleccionada,
   modalToggle,
-  // traerItem,
   limpiarItemLinea,
 } from './redux/actions';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -18,18 +17,17 @@ import paginationFactory, {
   PaginationProvider,
   PaginationListStandalone,
 } from 'react-bootstrap-table2-paginator';
-import filterFactory from 'react-bootstrap-table2-filter';
-import overlayFactory from 'react-bootstrap-table2-overlay';
+import ToolkitProvider from 'react-bootstrap-table2-toolkit';
 import swal from 'sweetalert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'reactstrap';
+import { Button,Row,Col } from 'reactstrap';
 import { ModalForm } from './';
 import history from '../../common/history';
 
 const CustomTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
-    Mostrando registros del {from} al {from + to - 1} de un total de {size} Registros
+    {from} - {from + to - 1} / {size} Registros
   </span>
 );
 
@@ -151,7 +149,7 @@ const RemoteAll = ({
                 offset: 0,
                 sizePerPage,
                 page,
-                filters: esqueleto.filters,
+                searchText: esqueleto.searchText,
                 sortField: esqueleto.sortField,
                 sortOrder: esqueleto.sortOrder,
               });
@@ -211,64 +209,103 @@ const RemoteAll = ({
     return { async: true };
   };
 
-  const NoDataIndication = () => (
+  const NoDataIndication = ({procesarTablaPending}) => (
     <div className="d-flex justify-content-center">
-      <div className="spinner-grow text-primary m-5" role="status">
+      {procesarTablaPending?<div className="spinner-grow text-primary m-5" role="status">
         <span className="sr-only">Loading...</span>
-      </div>
+      </div>:'Sem dados'}
     </div>
   );
 
+const MySearch = ({onSearch,searchText}) => {
+
+  let input;
+  const handleClick = (event) => {
+    if(event.keyCode===13)
+    {
+      onSearch(input.value);
+    }
+    searchText = input.value;
+    
+  };
+
   return (
-    <div>
-      <div className="titulo_formulario">{titulo}</div>
-      <div className="espacio_abajo">
-        <Button type="button" color="success" size="md" onClick={agregar}>
-          <FontAwesomeIcon icon={faPlus} /> Agregar
-        </Button>{' '}
-        <Button type="button" color="info" size="md" onClick={editar}>
-          <FontAwesomeIcon icon={faEdit} /> Editar
-        </Button>{' '}
-        <Button type="button" color="danger" size="md" onClick={eliminar}>
-          <FontAwesomeIcon icon={faTrashAlt} /> Eliminar
-        </Button>
-      </div>
-      <PaginationProvider pagination={paginationFactory(options)}>
-        {({ paginationProps, paginationTableProps }) => (
-          <div>
-           {/*overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.5)' }) }*/}
-            {!sinModal ? <ModalForm {...props} /> : null}
-            <BootstrapTable
-              bootstrap4
-              loading={procesarTablaPending}
-              striped
-              hover
-              remote
-              defaultSorted={defaultSorted}
-              classes="table-responsive-lg"
-              filter={filterFactory()}
-              keyField="id"
-              data={data}
-              columns={columns}
-              onTableChange={onTableChange}
-              noDataIndication={() => <NoDataIndication />}
-              selectRow={selectRow}
-              cellEdit={cellEditFactory({
-                mode: 'dbclick',
-                blurToSave: true,
-                autoSelectText: true,
-                beforeSaveCell,
-              })}
-              {...paginationTableProps}
-            />
-            <div>
-              {CustomTotal((page - 1) * sizePerPage + 1, data.length, totalSize)}{' '}
-              <PaginationListStandalone {...paginationProps} />
-            </div>
+    
+      <input
+        className="field form-control-lg form-control"
+        placeholder="Busque aqui [Presione enter]"
+        ref={ n => input = n }
+        autoFocus
+        defaultValue={searchText}
+        type="text"
+        onKeyUp={ handleClick }
+      />
+  );
+};
+
+  return (
+    <ToolkitProvider 
+    search keyField="id" 
+    data={data} 
+    columns={columns} 
+    bootstrap4
+
+    >
+      {props_ToolkitProvider => (
+        <div>
+          <div className="titulo_formulario">{titulo}</div>
+          <div className="espacio_abajo">
+          <Row>
+            <Col xs="12" lg="6">
+            <Button type="button" color="success" size="md" onClick={agregar}>
+              <FontAwesomeIcon icon={faPlus} /> Agregar
+            </Button>{' '}
+            <Button type="button" color="info" size="md" onClick={editar}>
+              <FontAwesomeIcon icon={faEdit} /> Editar
+            </Button>{' '}
+            <Button type="button" color="danger" size="md" onClick={eliminar}>
+              <FontAwesomeIcon icon={faTrashAlt} /> Eliminar
+            </Button>{' '}
+            </Col>
+            <Col xs="12" lg="6">
+            <MySearch { ...props_ToolkitProvider.searchProps } searchText={esqueleto.searchText} />
+            </Col>
+          </Row>
           </div>
-        )}
-      </PaginationProvider>
-    </div>
+          <PaginationProvider pagination={paginationFactory(options)}>
+            {({ paginationProps, paginationTableProps }) => (
+              <div>
+                {!sinModal ? <ModalForm {...props} /> : null}
+                <BootstrapTable
+                  loading={procesarTablaPending}
+                  striped
+                  hover
+                  remote
+                  defaultSorted={ defaultSorted } 
+                  classes="table-responsive-lg"
+                  onTableChange={onTableChange}
+                  noDataIndication={() => <NoDataIndication procesarTablaPending={procesarTablaPending} />}
+                  selectRow={selectRow}
+                  cellEdit={cellEditFactory({
+                    mode: 'dbclick',
+                    blurToSave: true,
+                    autoSelectText: true,
+                    beforeSaveCell,
+                  })}
+                  {...props_ToolkitProvider.baseProps}
+                  {...paginationTableProps}
+                />
+
+                <div>
+                  {CustomTotal((page - 1) * sizePerPage + 1, data.length, totalSize)}{' '}
+                  <PaginationListStandalone {...paginationProps} />
+                </div>
+              </div>
+            )}
+          </PaginationProvider>
+        </div>
+      )}
+    </ToolkitProvider>
   );
 };
 
@@ -281,16 +318,17 @@ export class Tabla extends Component {
     defaultSorted: PropTypes.array.isRequired,
   };
 
-  handleTableChange = (type, { page, sizePerPage, sortField, sortOrder, filters }) => {
+  handleTableChange = (type, { page, sizePerPage, sortField, sortOrder, searchText }) => {
     const { procesarTabla } = this.props.actions;
     const offset = (page - 1) * sizePerPage;
-    const { api_funcion } = this.props;
+    const { api_funcion,columns } = this.props;
     const params = {
       api_funcion,
       offset,
       sizePerPage,
       page,
-      filters,
+      searchText,
+      columns:JSON.stringify(columns),
       sortField,
       sortOrder,
     };
@@ -298,7 +336,7 @@ export class Tabla extends Component {
   };
 
   render() {
-    const { data, sizePerPage, page, selected,procesarTablaPending } = this.props.esqueleto;
+    const { data, sizePerPage, page, selected, procesarTablaPending } = this.props.esqueleto;
     const { columns, titulo, defaultSorted, api_funcion, sinModal } = this.props;
     const {
       procesarTabla,

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { FormServGrupo } from './';
 import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import validate from 'validate.js';
+import { FormUsuario } from './';
+import { reduxForm } from 'redux-form';
 
 const validationConstraints = {
   c_descripcion: {
@@ -21,17 +21,56 @@ const validationConstraints = {
   },
 };
 
-
 const columns = [
   {
-    dataField: 'c_descripcion',
-    table: 'Servicios_grupos',
-    text: 'Descripción',
+    dataField: 'c_usuario',
+    table: 'Usuarios',
+    text: 'Usuario',
     sort: true,
   },
   {
-    dataField: 'updatedAt',
-    text: 'Atualizado',
+    dataField: 'persona.c_nombre',
+    text: 'Nome',
+    sort: true,
+  },
+  {
+    dataField: 'c_activo',
+    text: 'Ativo',
+    sort: true,
+    editable: false,
+    searchable: false,
+  },
+  {
+    dataField: 'c_administrador',
+    text: 'Administrador',
+    sort: true,
+    editable: false,
+    searchable: false,
+  },
+  {
+    dataField: 'c_cadastrar',
+    text: 'Cadastrar',
+    sort: true,
+    editable: false,
+    searchable: false,
+  },
+  {
+    dataField: 'c_editar',
+    text: 'Editar',
+    sort: true,
+    editable: false,
+    searchable: false,
+  },
+  {
+    dataField: 'c_eliminar',
+    text: 'Eliminar',
+    sort: true,
+    editable: false,
+    searchable: false,
+  },
+  {
+    dataField: 'c_imprimir',
+    text: 'Imprimir',
     sort: true,
     editable: false,
     searchable: false,
@@ -40,14 +79,14 @@ const columns = [
 
 const defaultSorted = [
   {
-    dataField: 'c_descripcion',
+    dataField: 'c_usuario',
     order: 'asc',
   },
 ];
 
-export class PageServiciosGrupo extends Component {
+export class PageUsuarios extends Component {
   static propTypes = {
-    serviciosGrupo: PropTypes.object.isRequired,
+    usuarios: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
@@ -60,12 +99,12 @@ export class PageServiciosGrupo extends Component {
       method: 'post',
     };
     return apiGenerico({
-      api_funcion: 'servicios_grupos',
+      api_funcion: 'usuarios',
       params,
     })
       .then(res => {
         procesarTabla({
-          api_funcion: 'servicios_grupos',
+          api_funcion: 'usuarios',
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
@@ -95,16 +134,15 @@ export class PageServiciosGrupo extends Component {
 
   render() {
     const { handleSubmit, edicion } = this.props;
-
     return (
-      <div className="servicios-grupo-page-servicios-grupo">
+      <div className="usuarios-page-usuarios">
         <PrincipalTabla
-          titulo={'Lista de Grupo de servicios'}
+          titulo={'Lista de Usuarios'}
           defaultSorted={defaultSorted}
-          api_funcion={'servicios_grupos'}
+          api_funcion={'usuarios'}
           columns={columns}
-          cuerpoModal={FormServGrupo}
-          tituloModal={edicion ? 'Editar Grupo de Servicios' : 'Nuevo Grupo de Servicios'}
+          cuerpoModal={FormUsuario}
+          tituloModal={edicion ? 'Editar Usuario' : 'Nuevo Usuario'}
           enviarFormulario={handleSubmit(this.submit)}
           {...this.props}
         />
@@ -113,18 +151,19 @@ export class PageServiciosGrupo extends Component {
   }
 }
 
-PageServiciosGrupo = reduxForm({
+PageUsuarios = reduxForm({
   // a unique name for the form
-    form: 'formServGrupo',
-    enableReinitialize: true,
-    validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(PageServiciosGrupo);
+  form: 'formUsuario',
+  enableReinitialize: true,
+  validate: values => validate(values, validationConstraints, { fullMessages: false }),
+})(PageUsuarios);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
   const initialValues = state.esqueleto.selected[0];
+
   return {
-    serviciosGrupo: state.serviciosGrupo,
+    usuarios: state.usuarios,
     esqueleto: state.esqueleto,
     initialValues,
     edicion: initialValues ? true : false,
@@ -141,4 +180,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PageServiciosGrupo);
+)(PageUsuarios);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Field } from 'redux-form';
 import { Button, Form } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { InputText } from '../esqueleto';
+import { Field } from 'redux-form';
 
 class FormServGrupo extends Component {
   static propTypes = {

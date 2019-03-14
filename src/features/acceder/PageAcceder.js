@@ -24,7 +24,7 @@ export class PageAcceder extends Component {
     acceder(values)
       .then(res => {
         const { acceder } = this.props;
-        setToken(acceder.usuario.token, 24);
+        setToken(acceder.usuario.token, 0);//el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
         history.push('/servicios-grupo');
       })
       .catch(res => {

@@ -75,6 +75,21 @@ const MenuLogado = ({ persona, isOpen, limpiarUsuario }) => (
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
+      <UncontrolledDropdown nav inNavbar>
+        <DropdownToggle nav caret>
+          Administración
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem>
+            <NavItem>
+              <NavLink href="#configuraciones">Configuraciones</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/usuarios">Usuários</NavLink>
+            </NavItem>
+          </DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
     </Nav>
     <Nav className="ml-auto" navbar>
       <UncontrolledDropdown nav inNavbar>

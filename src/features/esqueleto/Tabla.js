@@ -235,7 +235,6 @@ const MySearch = ({onSearch,searchText}) => {
         className="field form-control-lg form-control"
         placeholder="Busque aqui [Presione enter]"
         ref={ n => input = n }
-        autoFocus
         defaultValue={searchText}
         type="text"
         onKeyUp={ handleClick }

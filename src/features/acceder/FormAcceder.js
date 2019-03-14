@@ -4,15 +4,15 @@ import { Container, Button, InputGroup, InputGroupAddon } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey } from '@fortawesome/free-solid-svg-icons';
 
-class Formulario extends Component {
+class FormAcceder extends Component {
   static propTypes = {};
 
   render() {
-      const { handleSubmit } = this.props;
+      const { handleSubmit,submitting, pristine, } = this.props;
 
     return (
       <div className="servicios-grupo-form">
-    <div className="acceder-formulario">
+    <div className="acceder-form-acceder">
       <Container fluid>
         <form onSubmit={handleSubmit}>
           <div className="card card-container">
@@ -48,8 +48,8 @@ class Formulario extends Component {
               />
             </InputGroup>
             <br />
-            <Button type="submit" color="success">
-              Enviar
+            <Button type="submit" color="success" disabled={pristine || submitting}>
+              {!submitting ? 'Acceder' : 'Accediendo...'}
             </Button>
           </div>
         </form>
@@ -59,11 +59,11 @@ class Formulario extends Component {
     );
   }
 }
-Formulario = reduxForm({
+FormAcceder = reduxForm({
   // a unique name for the form
   form: 'formlogin',
-})(Formulario);
+})(FormAcceder);
 
-export default Formulario;
+export default FormAcceder;
 
 

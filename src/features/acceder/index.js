@@ -1,2 +1,2 @@
 export { default as PageAcceder } from './PageAcceder';
-export { default as Formulario } from './Formulario';
+export { default as FormAcceder } from './FormAcceder';

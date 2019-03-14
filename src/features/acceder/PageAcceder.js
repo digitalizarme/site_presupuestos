@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { acceder } from './redux/actions';
-import { Formulario } from './';
+import { FormAcceder } from './';
 import { Principal } from '../esqueleto';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
@@ -14,8 +14,6 @@ export class PageAcceder extends Component {
     acceder: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
-
-  
 
   submit = values => {
     const { acceder } = this.props.actions;
@@ -54,7 +52,7 @@ componentWillUnmount(){
 
     return (
       <div className="acceder-page-acceder">
-        <Principal component={Formulario} onSubmit={this.submit} />
+        <Principal component={FormAcceder} onSubmit={this.submit} />
       </div>
     );
   }

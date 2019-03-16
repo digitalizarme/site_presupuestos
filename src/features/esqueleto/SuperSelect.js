@@ -21,7 +21,7 @@ export default class SuperSelect extends Component {
           <Select
             defaultValue={options.find(option => (option.value === parseInt(input.value,0)))}
             onChange={option => input.onChange(option.value)}
-            onBlur={() => input.onBlur(input.value)}
+            onBlur={(option) => input.onBlur(option.value)}
             autoFocus={autoFocus}
             name={input.name}
             options={options}

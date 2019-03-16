@@ -149,6 +149,7 @@ const RemoteAll = ({
                 offset: 0,
                 sizePerPage,
                 page,
+                columns:JSON.stringify(columns),
                 searchText: esqueleto.searchText,
                 sortField: esqueleto.sortField,
                 sortOrder: esqueleto.sortOrder,

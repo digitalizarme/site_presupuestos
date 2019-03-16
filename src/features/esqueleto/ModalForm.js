@@ -17,11 +17,11 @@ export class ModalForm extends Component {
 
     const { isOpenModal } = this.props.esqueleto;
     const { modalToggle } = this.props.actions;
-    const { tituloModal, cuerpoModal: Component } = this.props;
+    const { tituloModal, cuerpoModal: Component, sizeModal } = this.props;
 
     return (
       <div className="esqueleto-modal-form">
-        <Modal centered isOpen={isOpenModal} toggle={modalToggle}>
+        <Modal centered isOpen={isOpenModal} toggle={modalToggle} size={sizeModal}>
           <ModalHeader toggle={modalToggle}>{tituloModal}</ModalHeader>
           <ModalBody>
             <Component {...this.props} />

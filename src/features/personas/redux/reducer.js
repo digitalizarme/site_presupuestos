@@ -9,10 +9,12 @@
 import initialState from './initialState';
 import { reducer as traerPersonaReducer } from './traerPersona';
 import { reducer as limpiarPersonaReducer } from './limpiarPersona';
+import { reducer as traerPersonasReducer } from './traerPersonas';
 
 const reducers = [
   traerPersonaReducer,
   limpiarPersonaReducer,
+  traerPersonasReducer,
 ];
 
 export default function reducer(state = initialState, action) {

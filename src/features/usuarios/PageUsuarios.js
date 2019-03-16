@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
+import { traerPersonas } from '../personas/redux/actions';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import validate from 'validate.js';
@@ -10,13 +11,27 @@ import { FormUsuario } from './';
 import { reduxForm } from 'redux-form';
 
 const validationConstraints = {
-  c_descripcion: {
+  c_id_persona: {
     presence: {
-      message: 'Descripción es obligatorio',
+      message: 'Persona es obligatorio',
+    },
+  },
+  c_usuario: {
+    presence: {
+      message: 'Usuário es obligatorio',
     },
     length: {
       minimum: 6,
-      message: 'Su Descripción debe tener no mínimo 6 caracteres',
+      message: 'Su Usuário debe tener no mínimo 6 caracteres',
+    },
+  },
+  c_contrasena: {
+    presence: {
+      message: 'Contraseña es obligatorio',
+    },
+    length: {
+      minimum: 6,
+      message: 'Su Contraseña debe tener no mínimo 6 caracteres',
     },
   },
 };
@@ -133,6 +148,12 @@ export class PageUsuarios extends Component {
       });
   };
 
+  componentDidMount = () => {
+    const { traerPersonas } = this.props.actions;
+    traerPersonas();
+  };
+
+
   render() {
     const { handleSubmit, edicion } = this.props;
     return (
@@ -143,6 +164,7 @@ export class PageUsuarios extends Component {
           api_funcion={'usuarios'}
           columns={columns}
           cuerpoModal={FormUsuario}
+          sizeModal="lg"
           tituloModal={edicion ? 'Editar Usuario' : 'Nuevo Usuario'}
           enviarFormulario={handleSubmit(this.submit)}
           {...this.props}
@@ -168,13 +190,14 @@ function mapStateToProps(state) {
     esqueleto: state.esqueleto,
     initialValues,
     edicion: initialValues ? true : false,
+    optionsPersonas: state.personas.personas
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ apiGenerico, procesarTabla, modalToggle }, dispatch),
+    actions: bindActionCreators({ apiGenerico, procesarTabla, modalToggle,traerPersonas }, dispatch),
   };
 }
 

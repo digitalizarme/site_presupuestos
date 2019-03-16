@@ -9,6 +9,9 @@ const initialState = {
   traerPersonaPending: false,
   traerPersonaError: null,
   persona: {},
+  personas: [],
+  traerPersonasPending: false,
+  traerPersonasError: null,
 };
 
 export default initialState;

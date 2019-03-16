@@ -14,7 +14,7 @@ export default class FormUsuario extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine, optionsPersonas } = this.props;
+    const { enviarFormulario, submitting, pristine, optionsPersonas,edicion } = this.props;
     const personasSelect = map(optionsPersonas, persona => {
       return {
         label: persona.c_nombre,
@@ -57,7 +57,7 @@ export default class FormUsuario extends Component {
               <Col sm="3">
                 <Field
                   name="c_contrasena"
-                  label="Contraseña"
+                  label={edicion?"Nueva Contraseña":"Contraseña"}
                   component={InputText}
                   type="text"
                   className="field"

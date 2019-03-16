@@ -10,7 +10,19 @@ import validate from 'validate.js';
 import { FormUsuario } from './';
 import { reduxForm } from 'redux-form';
 
-const validationConstraints = {
+const validationConstraintsEmail = {
+  c_contrasena: {
+    presence: {
+      message: 'Contraseña es obligatorio',
+    },
+    length: {
+      minimum: 6,
+      message: 'Su Contraseña debe tener no mínimo 6 caracteres',
+    },
+  },
+}
+
+const validationConstraintsComum = {
   c_id_persona: {
     presence: {
       message: 'Persona es obligatorio',
@@ -25,16 +37,17 @@ const validationConstraints = {
       message: 'Su Usuário debe tener no mínimo 6 caracteres',
     },
   },
-  c_contrasena: {
-    presence: {
-      message: 'Contraseña es obligatorio',
-    },
-    length: {
-      minimum: 6,
-      message: 'Su Contraseña debe tener no mínimo 6 caracteres',
-    },
-  },
 };
+
+const validationConstraintsNuevo = {
+  ...validationConstraintsEmail
+  ,...validationConstraintsComum
+};
+
+const validationConstraintsEdicion = {
+  ...validationConstraintsComum
+};
+
 
 const columns = [
   {
@@ -109,6 +122,10 @@ export class PageUsuarios extends Component {
   submit = values => {
     const { apiGenerico, procesarTabla, modalToggle } = this.props.actions;
     const { esqueleto } = this.props;
+    if(values.c_contrasena === "")
+    {
+      delete values["c_contrasena"];
+    }
     const params = {
       data: values,
       method: 'post',
@@ -178,12 +195,20 @@ PageUsuarios = reduxForm({
   // a unique name for the form
   form: 'formUsuario',
   enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
+  validate: values => validate(values, !values.id?validationConstraintsNuevo:validationConstraintsEdicion, { fullMessages: false }),
 })(PageUsuarios);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  const initialValues = state.esqueleto.selected[0];
+  let initialValues = state.esqueleto.selected[0];
+  if(initialValues)
+  {
+    initialValues = 
+    {
+      ...initialValues
+      ,c_contrasena : ""
+    }
+  }
 
   return {
     usuarios: state.usuarios,

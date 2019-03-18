@@ -15,8 +15,8 @@ const validationConstraints = {
       message: 'Descripción es obligatorio',
     },
     length: {
-      minimum: 6,
-      message: 'Su Descripción debe tener no mínimo 6 caracteres',
+      minimum: 5,
+      message: 'Su Descripción debe tener no mínimo 5 caracteres',
     },
   },
 };

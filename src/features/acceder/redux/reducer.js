@@ -9,10 +9,14 @@
 import initialState from './initialState';
 import { reducer as accederReducer } from './acceder';
 import { reducer as limpiarUsuarioReducer } from './limpiarUsuario';
+import { reducer as setaUsuarioReducer } from './setaUsuario';
+import { reducer as setaUsuarioPersonaReducer } from './setaUsuarioPersona';
 
 const reducers = [
   accederReducer,
   limpiarUsuarioReducer,
+  setaUsuarioReducer,
+  setaUsuarioPersonaReducer,
 ];
 
 export default function reducer(state = initialState, action) {

@@ -40,7 +40,7 @@ const MenuDeslogado = ({ isOpen }) => (
   </Collapse>
 );
 
-const MenuLogado = ({ persona, isOpen, limpiarUsuario }) => (
+const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
   <Collapse isOpen={isOpen} navbar>
     <Nav className="mr-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
@@ -75,33 +75,37 @@ const MenuLogado = ({ persona, isOpen, limpiarUsuario }) => (
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
-      <UncontrolledDropdown nav inNavbar>
-        <DropdownToggle nav caret>
-          Administración
-        </DropdownToggle>
-        <DropdownMenu right>
-          <DropdownItem>
-            <NavItem>
-              <NavLink href="#configuraciones">Configuraciones</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/usuarios">Usuários</NavLink>
-            </NavItem>
-          </DropdownItem>
-        </DropdownMenu>
-      </UncontrolledDropdown>
+      {usuario.b_administrador ? (
+        <UncontrolledDropdown nav inNavbar>
+          <DropdownToggle nav caret>
+            Administración
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem>
+              <NavItem>
+                <NavLink href="#configuraciones">Configuraciones</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/usuarios">Usuários</NavLink>
+              </NavItem>
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+      ) : null}
     </Nav>
     <Nav className="ml-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
         <DropdownToggle nav caret>
-          {persona.c_nombre.toUpperCase()}
+          {usuario.persona.c_nombre.toUpperCase()}
         </DropdownToggle>
         <DropdownMenu right>
-          <DropdownItem>
-            <NavItem>
-              <NavLink href="#config">Configuraciones</NavLink>
-            </NavItem>
-          </DropdownItem>
+          {usuario.b_administrador ? (
+            <DropdownItem>
+              <NavItem>
+                <NavLink href="#config">Configuraciones</NavLink>
+              </NavItem>
+            </DropdownItem>
+          ) : null}
           <DropdownItem>
             <NavItem>
               <NavLink href="#deslogar" onClick={() => deslogar(limpiarUsuario)}>
@@ -123,7 +127,7 @@ export class Menu extends Component {
 
   render() {
     const { isOpen } = this.props.esqueleto;
-    const { persona } = this.props.usuario;
+    const { usuario } = this.props;
     const { menuToggle, limpiarUsuario } = this.props.actions;
 
     return (
@@ -133,8 +137,8 @@ export class Menu extends Component {
             <img src={logo} className="img-responsive pull-left logo" alt="Logo" />
           </NavbarBrand>
           <NavbarToggler onClick={menuToggle} />
-          {persona ? (
-            <MenuLogado persona={persona} isOpen={isOpen} limpiarUsuario={limpiarUsuario} />
+          {usuario.persona ? (
+            <MenuLogado usuario={usuario} isOpen={isOpen} limpiarUsuario={limpiarUsuario} />
           ) : (
             <MenuDeslogado isOpen={isOpen} />
           )}

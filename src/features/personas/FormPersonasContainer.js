@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { apiGenerico, limpiarItemLinea } from '../esqueleto/redux/actions';
 import { traerPersona, limpiarPersona } from './redux/actions';
 import { Principal } from '../esqueleto';
+import { setaUsuarioPersona } from '../acceder/redux/actions';
+
 import { FormPersonas } from './';
 import swal from 'sweetalert';
 import history from '../../common/history';
@@ -69,7 +71,8 @@ export class FormPersonasContainer extends Component {
   };
 
   submit = values => {
-    const { apiGenerico } = this.props.actions;
+    const { apiGenerico, setaUsuarioPersona } = this.props.actions;
+    const { persona } = this.props;
     const params = {
       data: values,
       method: 'post',
@@ -79,6 +82,10 @@ export class FormPersonasContainer extends Component {
       params,
     })
       .then(res => {
+        if (res.data.id === persona.id) {
+          setaUsuarioPersona(res.data);
+        }
+
         history.push('/personas');
         swal({
           icon: 'success',
@@ -157,6 +164,7 @@ function mapStateToProps(state) {
   return {
     personas: state.personas,
     esqueleto: state.esqueleto,
+    persona: state.acceder.usuario.persona,
     initialValues,
     b_comisionista: selector(state, 'b_comisionista'),
   };
@@ -166,7 +174,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, traerPersona, limpiarPersona, limpiarItemLinea },
+      { apiGenerico, traerPersona, limpiarPersona, limpiarItemLinea, setaUsuarioPersona },
       dispatch,
     ),
   };

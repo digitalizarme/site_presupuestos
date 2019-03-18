@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
 import { InputText,SuperSelect } from '../esqueleto';
-import { map } from 'lodash';
 
 import PropTypes from 'prop-types';
 import { InputCheckBox } from '../esqueleto';
@@ -15,12 +14,6 @@ export default class FormUsuario extends Component {
 
   render() {
     const { enviarFormulario, submitting, pristine, optionsPersonas,edicion } = this.props;
-    const personasSelect = map(optionsPersonas, persona => {
-      return {
-        label: persona.c_nombre,
-        value: persona.id,
-      };
-    });
     return (
       <div className="usuarios-form-usuario">
         <Container>
@@ -39,7 +32,7 @@ export default class FormUsuario extends Component {
                 <Field
                   name="c_id_persona"
                   label="Persona"
-                  options={personasSelect}
+                  options={optionsPersonas}
                   component={SuperSelect}
                   placeholder="Elija"
                 />

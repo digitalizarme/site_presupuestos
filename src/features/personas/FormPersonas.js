@@ -3,9 +3,8 @@ import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { InputText } from '../esqueleto';
-
 import PropTypes from 'prop-types';
-import { InputCheckBox } from '../esqueleto';
+import { InputCheckBox, InputNumber } from '../esqueleto';
 
 class FormPersonas extends Component {
   static propTypes = {
@@ -122,18 +121,16 @@ class FormPersonas extends Component {
             </Row>
             <Row className="alturaChk">
               <Col sm="3" md="2" lg="3" xl="3">
-                <Field name="b_comisionista" required label="Comisionista" component={InputCheckBox} />
+                <Field name="b_comisionista" label="Comisionista" component={InputCheckBox} />
               </Col>
               {b_comisionista ? (
                 <Col sm="2" md="3" lg="2" xl="2">
                   <Field
                     name="n_valor_porcentaje_comision"
                     label="% Comisión"
-                    required={b_comisionista}
-                    component={InputText}
-                    type="text"
-                    className="field"
-                    bsSize="lg"
+                    component={InputNumber}
+                    decimalScale={2}
+                    className="field form-control-lg form-control"
                   />
                 </Col>
               ) : null}

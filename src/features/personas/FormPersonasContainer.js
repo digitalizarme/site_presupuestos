@@ -63,6 +63,23 @@ const validationConstraints = {
   },
 };
 
+const validationConstraintsComision = {
+  ...validationConstraints,
+  n_valor_porcentaje_comision: {
+    presence: {
+      message: '% de la comisión es obligatorio',
+    },
+    numericality: {
+      onlyInteger: false,
+      notValid:"Este valor no es válido. Debe estar entre 0 y 100",
+      greaterThan: 0,
+      notGreaterThan: "El valor debe ser mayor que zero",
+      lessThanOrEqualTo: 100,
+      notLessThanOrEqualTo:"El valor debe ser menor o igual a 100",
+    },
+  },
+};
+
 export class FormPersonasContainer extends Component {
   static propTypes = {
     personas: PropTypes.object.isRequired,
@@ -73,6 +90,14 @@ export class FormPersonasContainer extends Component {
   submit = values => {
     const { apiGenerico, setaUsuarioPersona } = this.props.actions;
     const { persona } = this.props;
+    if(!values.b_comisionista)
+    {
+      values = {
+        ...values
+        ,n_valor_porcentaje_comision:null
+
+      }
+    }
     const params = {
       data: values,
       method: 'post',
@@ -148,7 +173,12 @@ FormPersonasContainer = reduxForm({
   // a unique name for the form
   form: 'formPersonas',
   enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
+  validate: values =>
+    validate(
+      values,
+      values.b_comisionista ? validationConstraintsComision : validationConstraints,
+      { fullMessages: false },
+    ),
 })(FormPersonasContainer);
 
 /* istanbul ignore next */

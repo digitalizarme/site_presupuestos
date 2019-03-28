@@ -128,7 +128,7 @@ export class PageUsuarios extends Component {
     }
     const params = {
       data: values,
-      method: 'post',
+      method: values.id && values.id !== ''?'put':'post',
     };
     return apiGenerico({
       api_funcion: 'usuarios',

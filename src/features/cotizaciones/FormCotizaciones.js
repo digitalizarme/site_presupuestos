@@ -42,7 +42,7 @@ export default class FormCotizaciones extends Component {
                 name="n_valor"
                 label="Cotizacion"
                 component={InputNumber}
-                decimalScale={2}
+                decimalScale={10}
                 className="field form-control-lg form-control"
               />
             </Col>

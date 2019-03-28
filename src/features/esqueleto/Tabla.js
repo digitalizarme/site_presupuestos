@@ -139,7 +139,7 @@ const RemoteAll = ({
             table: columns[0].table,
             where_field: 'id',
             where_value: selected[0].id,
-            method:'del',
+            method:'DELETE',
           };
           return apiGenerico({
             api_funcion: 'generico/eliminar',

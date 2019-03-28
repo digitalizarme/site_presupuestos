@@ -135,8 +135,6 @@ export class PageUsuarios extends Component {
       params,
     })
       .then(res => {
-        console.log(res.data.id);
-        console.log(acceder.usuario.id)
         if(res.data.id === acceder.usuario.id)
         {
           setaUsuario(res.data);

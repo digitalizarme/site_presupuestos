@@ -86,6 +86,9 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
                 <NavLink href="#configuraciones">Configuraciones</NavLink>
               </NavItem>
               <NavItem>
+                <NavLink href="/cotizaciones">Cotizaciones</NavLink>
+              </NavItem>
+              <NavItem>
                 <NavLink href="/usuarios">Usuários</NavLink>
               </NavItem>
             </DropdownItem>

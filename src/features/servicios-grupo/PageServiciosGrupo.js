@@ -7,6 +7,7 @@ import { FormServGrupo } from './';
 import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
+import moment from 'moment';
 import validate from 'validate.js';
 
 const validationConstraints = {
@@ -21,6 +22,9 @@ const validationConstraints = {
   },
 };
 
+  const formatarFecha = (cell, row) => {
+  return (moment(cell).format('DD/MM/YYYY HH:mm:ss'));
+}
 
 const columns = [
   {
@@ -35,6 +39,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    formatter: formatarFecha
   },
 ];
 
@@ -123,12 +128,11 @@ PageServiciosGrupo = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  const initialValues = state.esqueleto.selected[0];
   return {
     serviciosGrupo: state.serviciosGrupo,
     esqueleto: state.esqueleto,
-    initialValues,
-    edicion: initialValues ? true : false,
+    initialValues:state.esqueleto.selected[0],
+    edicion: state.esqueleto.selected[0] ? true : false,
   };
 }
 

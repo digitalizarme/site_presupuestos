@@ -6,22 +6,12 @@
 
 // NOTE: initialState constant is necessary so that Rekit could auto add initial state when creating async actions.
 const initialState = {
-  isOpen: false,
-  isOpenModal: false,
-  procesarTablaPending: false,
-  procesarTablaError: null,
-  page: 1,
-  data: { items: [], total: 0 },
-  sizePerPage: 10,
-  selected: [],
-  searchText: null,
-  sortField: null,
-  sortOrder: null,
-  defaultSorted:null,
-  item:{},
-  traerItemPending: false,
-  traerItemError: null,
-
+  cotizaciones:{base:"", monedas:{}},
+  guardarCotizacionesPending: false,
+  guardarCotizacionesError: null,
+  listaMonedasPending: false,
+  listaMonedasError: null,
+  monedas:[]
 };
 
 export default initialState;

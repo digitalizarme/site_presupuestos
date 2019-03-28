@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { InputText } from '../esqueleto';
 import PropTypes from 'prop-types';
-import { InputCheckBox, InputNumber } from '../esqueleto';
+import { InputCheckBox, InputNumber,InputText } from '../esqueleto';
 
 class FormPersonas extends Component {
   static propTypes = {

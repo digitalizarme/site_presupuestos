@@ -4,7 +4,6 @@ import { FormGroup, Label } from 'reactstrap';
 
 export default class SuperSelect extends Component {
   static propTypes = {};
-
   render() {
     const {
       input,
@@ -12,16 +11,16 @@ export default class SuperSelect extends Component {
       placeholder,
       label,
       autoFocus,
-      meta: { touched, error,warning },
+      meta: { touched, error, warning },
     } = this.props;
     return (
       <div className="esqueleto-super-select">
-        <FormGroup className={touched && error?'con_error':touched?'sin_error':null}>
+        <FormGroup className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>
           {label ? <Label>{label}</Label> : null}
           <Select
-            defaultValue={options.find(option => (option.value === parseInt(input.value,0)))}
+            defaultValue={options.find(option => option.value === input.value)}
             onChange={option => input.onChange(option.value)}
-            onBlur={(option) => input.onBlur(option.value)}
+            onBlur={option => input.onBlur(option.value)}
             autoFocus={autoFocus}
             name={input.name}
             options={options}
@@ -29,8 +28,8 @@ export default class SuperSelect extends Component {
             classNamePrefix="react-select"
           />
           {touched &&
-          ((error && <span className="error invalid-feedback">{error}</span>) ||
-            (warning && <span className="warning">{warning}</span>))}
+            ((error && <span className="error invalid-feedback">{error}</span>) ||
+              (warning && <span className="warning">{warning}</span>))}
         </FormGroup>
       </div>
     );

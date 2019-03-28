@@ -9,7 +9,8 @@ import { guardarCotizaciones, listaMonedas } from './redux/actions';
 
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
-import moment from 'moment';
+import formatarFecha from '../../common/formatarFecha';
+import formatarNumero from '../../common/formatarNumero';
 import validate from 'validate.js';
 import NumberFormat from 'react-number-format';
 
@@ -46,20 +47,6 @@ const validationConstraints = {
   },
 };
 
-const formatarFecha = (cell, row) => {
-  return moment(cell).format('DD/MM/YYYY HH:mm:ss');
-};
-
-const formatarNumero = (cell, row) => {
-  return (
-    <NumberFormat
-      defaultValue={cell}
-      thousandSeparator="."
-      decimalSeparator=","
-      displayType={'text'}
-    />
-  );
-};
 
 class EditarCotizacion extends React.Component {
   static propTypes = {
@@ -106,8 +93,8 @@ const columns = [
     ),
   },
   {
-    dataField: 'createdAt',
-    text: 'Creado',
+    dataField: 'updatedAt',
+    text: 'Actualizado',
     sort: true,
     editable: false,
     searchable: false,
@@ -121,7 +108,7 @@ const defaultSorted = [
     order: 'asc',
   },
   {
-    dataField: 'createdAt',
+    dataField: 'updatedAt',
     order: 'desc',
   },
 ];

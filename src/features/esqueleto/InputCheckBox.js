@@ -18,7 +18,7 @@ export default class InputCheckBox extends Component {
          type="checkbox" 
          color="success"
          name={input.name}
-         checked={input.value}
+         checked={input.value?input.value:false}
          onChange={input.onChange}
          value={input.value?input.value:false}
          disabled={disabled ? 'disabled' : ''}

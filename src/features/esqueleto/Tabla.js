@@ -31,6 +31,15 @@ const CustomTotal = (from, to, size) => (
   </span>
 );
 
+const sinPrivilegios = () => {
+  swal({
+    title: 'Ops',
+    text: 'No tienes privilegios para esta acción',
+    icon: 'warning',
+    button: 'OK!',
+  });
+};
+
 const RemoteAll = ({
   data,
   page,
@@ -51,6 +60,7 @@ const RemoteAll = ({
   limpiarItemLinea,
   sinModal,
   btnsExtra,
+  usuario,
   props,
 }) => {
   const options = {
@@ -86,99 +96,111 @@ const RemoteAll = ({
   };
 
   const agregar = () => {
-    const { reset } = props;
-    sinModal ? history.push(`${sinModal}/nuevo`) : limpiarItemLinea() && reset() && modalToggle();
+    if (usuario.b_cadastrar) {
+      const { reset } = props;
+      sinModal ? history.push(`${sinModal}/nuevo`) : limpiarItemLinea() && reset() && modalToggle();
+    } else {
+      sinPrivilegios();
+    }
   };
 
   const editar = () => {
-    if (selected.length === 0) {
-      swal({
-        title: 'Ops',
-        text: 'Debes seleccionar una linea primero',
-        icon: 'warning',
-        button: 'OK!',
-      });
+    if (usuario.b_editar) {
+      if (selected.length === 0) {
+        swal({
+          title: 'Ops',
+          text: 'Debes seleccionar una linea primero',
+          icon: 'warning',
+          button: 'OK!',
+        });
+      } else {
+        sinModal ? history.push(`${sinModal}/editar/${selected[0].id}`) : modalToggle();
+      }
     } else {
-      sinModal ? history.push(`${sinModal}/editar/${selected[0].id}`) : modalToggle();
+      sinPrivilegios();
     }
   };
 
   const eliminar = () => {
-    if (selected.length === 0) {
-      swal({
-        title: 'Ops',
-        text: 'Debes seleccionar una linea primero',
-        icon: 'warning',
-        button: 'OK!',
-      });
-    } else {
-      swal({
-        title: 'Estás seguro?',
-        text: 'Esta acción no podrá ser cancelada',
-        icon: 'warning',
-        buttons: {
-          cancel: {
-            text: 'Cancelar',
-            value: null,
-            visible: true,
-            className: '',
-            closeModal: true,
+    if (usuario.b_eliminar) {
+      if (selected.length === 0) {
+        swal({
+          title: 'Ops',
+          text: 'Debes seleccionar una linea primero',
+          icon: 'warning',
+          button: 'OK!',
+        });
+      } else {
+        swal({
+          title: 'Estás seguro?',
+          text: 'Esta acción no podrá ser cancelada',
+          icon: 'warning',
+          buttons: {
+            cancel: {
+              text: 'Cancelar',
+              value: null,
+              visible: true,
+              className: '',
+              closeModal: true,
+            },
+            confirm: {
+              text: 'Sí, estoy',
+              value: true,
+              visible: true,
+              className: '',
+              closeModal: true,
+            },
           },
-          confirm: {
-            text: 'Sí, estoy',
-            value: true,
-            visible: true,
-            className: '',
-            closeModal: true,
-          },
-        },
-        dangerMode: true,
-      }).then(willDelete => {
-        if (willDelete) {
-          const params = {
-            table: columns[0].table,
-            where_field: 'id',
-            where_value: selected[0].id,
-            method:'DELETE',
-          };
-          return apiGenerico({
-            api_funcion: 'generico/eliminar',
-            params,
-          })
-            .then(res => {
-              procesarTabla({
-                api_funcion,
-                offset: 0,
-                sizePerPage,
-                page,
-                columns: JSON.stringify(columns),
-                searchText: esqueleto.searchText,
-                sortField: esqueleto.sortField,
-                sortOrder: esqueleto.sortOrder,
-                defaultSorted: esqueleto.defaultSorted,
-              });
-
-              swal({
-                icon: 'success',
-                timer: 1000,
-              });
+          dangerMode: true,
+        }).then(willDelete => {
+          if (willDelete) {
+            const params = {
+              table: columns[0].table,
+              where_field: 'id',
+              where_value: selected[0].id,
+              method: 'DELETE',
+            };
+            return apiGenerico({
+              api_funcion: 'generico/eliminar',
+              params,
             })
-            .catch(err => {
-              if (typeof err.response !== 'undefined' && err.response.status !== 401) {
-                const { message } =
-                  typeof err.response !== 'undefined'
-                    ? err.response.data
-                    : 'Error al intentar eliminar';
-                swal({
-                  title: 'Ops',
-                  text: message ? message : 'Error al intentar eliminar',
-                  icon: 'error',
-                  button: 'OK!',
+              .then(res => {
+                procesarTabla({
+                  api_funcion,
+                  offset: 0,
+                  sizePerPage,
+                  page,
+                  columns: JSON.stringify(columns),
+                  searchText: esqueleto.searchText,
+                  sortField: esqueleto.sortField,
+                  sortOrder: esqueleto.sortOrder,
+                  defaultSorted: esqueleto.defaultSorted,
                 });
-              }
-            });
-        }
-      });
+
+                swal({
+                  icon: 'success',
+                  timer: 1000,
+                });
+              })
+              .catch(err => {
+                if (typeof err.response !== 'undefined' && err.response.status !== 401) {
+                  const { message } =
+                    typeof err.response !== 'undefined'
+                      ? err.response.data
+                      : 'Error al intentar eliminar';
+                  swal({
+                    title: 'Ops',
+                    text: message ? message : 'Error al intentar eliminar',
+                    icon: 'error',
+                    button: 'OK!',
+                  });
+                }
+              });
+          }
+        });
+      }
+    } else {
+      sinPrivilegios();
     }
   };
 
@@ -189,7 +211,7 @@ const RemoteAll = ({
       valor: newValue,
       where_field: 'id',
       where_value: row.id,
-      method:'put',
+      method: 'put',
     };
     apiGenerico({
       api_funcion: 'generico/actualizar',
@@ -270,7 +292,7 @@ const RemoteAll = ({
                 <Button type="button" color="danger" size="md" onClick={eliminar}>
                   <FontAwesomeIcon icon={faTrashAlt} /> Eliminar
                 </Button>{' '}
-                {btnsExtra?btnsExtra:null}
+                {btnsExtra ? btnsExtra : null}
               </Col>
               <Col xs="12" lg="6">
                 <MySearch
@@ -331,7 +353,7 @@ export class Tabla extends Component {
   handleTableChange = (type, { page, sizePerPage, sortField, sortOrder, searchText }) => {
     const { procesarTabla } = this.props.actions;
     const offset = (page - 1) * sizePerPage;
-    const { api_funcion, columns,defaultSorted } = this.props;
+    const { api_funcion, columns, defaultSorted } = this.props;
     const params = {
       api_funcion,
       offset,
@@ -341,14 +363,22 @@ export class Tabla extends Component {
       columns: JSON.stringify(columns),
       sortField,
       sortOrder,
-      defaultSorted:JSON.stringify(defaultSorted),
+      defaultSorted: JSON.stringify(defaultSorted),
     };
     procesarTabla(params);
   };
 
   render() {
     const { data, sizePerPage, page, selected, procesarTablaPending } = this.props.esqueleto;
-    const { columns, titulo, defaultSorted, api_funcion, sinModal,btnsExtra } = this.props;
+    const {
+      columns,
+      titulo,
+      defaultSorted,
+      api_funcion,
+      sinModal,
+      btnsExtra,
+      usuario,
+    } = this.props;
     const {
       procesarTabla,
       modalToggle,
@@ -379,6 +409,7 @@ export class Tabla extends Component {
           esqueleto={this.props.esqueleto}
           sinModal={sinModal}
           btnsExtra={btnsExtra}
+          usuario={usuario}
           props={this.props}
         />
       </div>
@@ -390,6 +421,7 @@ export class Tabla extends Component {
 function mapStateToProps(state) {
   return {
     esqueleto: state.esqueleto,
+    usuario: state.acceder.usuario,
   };
 }
 

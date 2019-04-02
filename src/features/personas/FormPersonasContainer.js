@@ -58,7 +58,7 @@ const validationConstraints = {
     },
     length: {
       minimum: 5,
-      message: 'Su Celular debe tener 5 caracteres como minimo',
+      message: 'Su Dirección debe tener 5 caracteres como minimo',
     },
   },
 };

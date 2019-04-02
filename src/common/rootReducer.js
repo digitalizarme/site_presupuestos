@@ -9,6 +9,7 @@ import { reducer as formReducer } from 'redux-form'
 import personasReducer from '../features/personas/redux/reducer';
 import usuariosReducer from '../features/usuarios/redux/reducer';
 import cotizacionesReducer from '../features/cotizaciones/redux/reducer';
+import configuracionesReducer from '../features/configuraciones/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
 // This is used for Rekit cmds to register new features, remove features, etc.
@@ -26,6 +27,7 @@ const reducerMap = {
   personas: personasReducer,
   usuarios: usuariosReducer,
   cotizaciones: cotizacionesReducer,
+  configuraciones: configuracionesReducer,
 };
 
 export default combineReducers(reducerMap);

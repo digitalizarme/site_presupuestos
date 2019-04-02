@@ -6,7 +6,7 @@ import { Field } from 'redux-form';
 
 class FormServGrupo extends Component {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
+    enviarFormulario: PropTypes.func.isRequired,
   };
 
   render() {
@@ -20,7 +20,7 @@ class FormServGrupo extends Component {
             name="c_descripcion"
             bsSize="lg"
             className="field"
-            Label="Descripción"
+            label="Descripción"
             component={InputText}
             type="text"
           />

@@ -1,6 +1,6 @@
 {
-  "name": "site",
-  "version": "0.1.0",
+  "name": "presupuesto",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
@@ -136,6 +136,6 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "description": "site created by Rekit.",
+  "description": "Sistema para gerenciar presupuestos",
   "heroku-run-build-script": true
 }

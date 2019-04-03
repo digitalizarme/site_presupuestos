@@ -11,7 +11,7 @@ const router = routerMiddleware(history);
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['acceder'] // only navigation will be persisted
+  whitelist: ['acceder','configuraciones'] // only navigation will be persisted
 };
 
 // NOTE: Do not change middleares delaration pattern since rekit plugins may register middlewares to it.

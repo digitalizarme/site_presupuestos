@@ -44,6 +44,7 @@ export function reducer(state, action) {
         ...state,
         guardarPending: false,
         guardarError: null,
+        configuracion:action.data
       };
 
     case CONFIGURACIONES_GUARDAR_FAILURE:

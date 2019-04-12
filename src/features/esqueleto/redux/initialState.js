@@ -21,6 +21,7 @@ const initialState = {
   item:{},
   traerItemPending: false,
   traerItemError: null,
+  img:null
 
 };
 

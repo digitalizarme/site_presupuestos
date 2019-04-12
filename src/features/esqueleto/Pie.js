@@ -27,7 +27,7 @@ export class Pie extends Component {
               </div>
               <div className="form-group col-6 text-right">
                 <a href={usuario.b_administrador?'/configuraciones':'#'}>
-                  <span className="text-info">{configuracion.c_nombre_fantasia}</span>{' - '}
+                  <span className="text-info">{configuracion.c_nombre_fantasia?configuracion.c_nombre_fantasia + ' - ':null}</span>
                   <span className="text-success d-none d-md-inline">{configuracion.c_slogan}</span>
                 </a>
               </div>

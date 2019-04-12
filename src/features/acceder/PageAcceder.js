@@ -8,6 +8,7 @@ import { Principal } from '../esqueleto';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
 import history from '../../common/history';
+import { traerConfiguracion } from '../configuraciones/redux/actions';
 
 export class PageAcceder extends Component {
   static propTypes = {
@@ -22,14 +23,12 @@ export class PageAcceder extends Component {
     acceder(values)
       .then(res => {
         const { acceder } = this.props;
-        setToken(acceder.usuario.token, 0);//el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
+        setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
         history.push('/servicios-grupo');
       })
       .catch(res => {
         const { message } =
-          typeof res.response !== 'undefined'
-            ? res.response.data
-            : 'Error al intentar acceder';
+          typeof res.response !== 'undefined' ? res.response.data : 'Error al intentar acceder';
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar acceder',
@@ -39,17 +38,20 @@ export class PageAcceder extends Component {
       });
   };
 
-componentWillMount(){
-    document.body.style.backgroundImage = "linear-gradient(rgb(104,145,162),rgb(12,97,33))";
-};
+  componentWillMount() {
+    document.body.style.backgroundImage = 'linear-gradient(rgb(104,145,162),rgb(12,97,33))';
+  }
 
-componentWillUnmount(){
+  componentWillUnmount() {
     document.body.style.backgroundImage = null;
-}
+  }
 
+  componentDidMount = () => {
+    const { traerConfiguracion } = this.props.actions;
+    traerConfiguracion();
+  };
 
   render() {
-
     return (
       <div className="acceder-page-acceder">
         <Principal component={FormAcceder} onSubmit={this.submit} />
@@ -68,7 +70,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ acceder }, dispatch),
+    actions: bindActionCreators({ acceder, traerConfiguracion }, dispatch),
   };
 }
 

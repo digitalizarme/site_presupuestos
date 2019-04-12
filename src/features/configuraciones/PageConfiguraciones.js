@@ -101,6 +101,15 @@ export class PageConfiguraciones extends Component {
 
   submit = values => {
     const { guardar } = this.props.actions;
+    const { t_logo } = this.props;
+    if(t_logo && t_logo.file)
+    {
+      values = 
+      {
+        ...values
+        ,t_logo:t_logo.file
+      }
+    }
     guardar(values)
       .then(res => {
         swal({
@@ -158,6 +167,8 @@ function mapStateToProps(state) {
     configuraciones: state.configuraciones,
     initialValues: state.configuraciones.configuracion,
     b_comision: selector(state, 'b_comision'),
+    t_logo: state.esqueleto.img,
+
   };
 }
 

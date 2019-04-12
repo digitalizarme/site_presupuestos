@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form, Container,Row, Col } from 'reactstrap';
+import { Button, Form, Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { InputText, InputCheckBox, InputNumber } from '../esqueleto';
+import { InputText, InputCheckBox, InputNumber, DragDrop } from '../esqueleto';
 import { Field } from 'redux-form';
 
 export default class FormConfiguraciones extends Component {
@@ -9,14 +9,20 @@ export default class FormConfiguraciones extends Component {
     enviarFormulario: PropTypes.func.isRequired,
   };
 
+
   render() {
-    const { enviarFormulario, submitting, pristine, b_comision } = this.props;
+    const { enviarFormulario, submitting, pristine, b_comision, t_logo } = this.props;
 
     return (
       <div className="configuraciones-form-configuraciones">
         <div className="titulo_formulario">Editar Configuraciones</div>
         <Container>
           <Form onSubmit={enviarFormulario} className="form_border">
+            <Row>
+              <Col sm="12">
+                <DragDrop />
+              </Col>
+            </Row>
             <Row>
               <Col sm="2">
                 <Field name="id" component="input" type="hidden" />
@@ -39,7 +45,6 @@ export default class FormConfiguraciones extends Component {
                   component={InputText}
                   type="text"
                 />
-
               </Col>
               <Col sm="5">
                 <Field
@@ -50,9 +55,7 @@ export default class FormConfiguraciones extends Component {
                   component={InputText}
                   type="text"
                 />
-
               </Col>
-
             </Row>
             <Row>
               <Col sm="5">
@@ -115,41 +118,39 @@ export default class FormConfiguraciones extends Component {
                     className="field form-control-lg form-control"
                   />
                 </Col>
-              ) : null}              
+              ) : null}
               <Col sm="2" md="2" lg="1" xl="1">
                 <Field name="b_seguro" label="Seguro" component={InputCheckBox} />
               </Col>
             </Row>
             <Row>
               <Col sm="12">
-              <Field
-                name="c_obs_presup_1"
-                styleDiv={{ width: '100%' }}
-                label="Observación 1"
-                component={InputText}
-                type="textarea"
-                className="field"
-              />
+                <Field
+                  name="c_obs_presup_1"
+                  styleDiv={{ width: '100%' }}
+                  label="Observación 1"
+                  component={InputText}
+                  type="textarea"
+                  className="field"
+                />
               </Col>
             </Row>
             <Row>
               <Col sm="12">
-              <Field
-                name="c_obs_presup_2"
-                styleDiv={{ width: '100%' }}
-                label="Observación 2"
-                component={InputText}
-                type="textarea"
-                className="field"
-              />
+                <Field
+                  name="c_obs_presup_2"
+                  styleDiv={{ width: '100%' }}
+                  label="Observación 2"
+                  component={InputText}
+                  type="textarea"
+                  className="field"
+                />
               </Col>
             </Row>
             <Row>
-              <Col sm="3">
-              </Col>
+              <Col sm="3" />
             </Row>
-
-            <Button type="submit" color="success" disabled={pristine || submitting}>
+            <Button type="submit" color="success" disabled={t_logo==null?true:false && (pristine || submitting)}>
               {submitting ? 'Guardando' : 'Guardar'}
             </Button>
           </Form>

@@ -8,3 +8,4 @@ export { default as InputCheckBox } from './InputCheckBox';
 export { default as InputText } from './InputText';
 export { default as SuperSelect } from './SuperSelect';
 export { default as InputNumber } from './InputNumber';
+export { default as DragDrop } from './DragDrop';

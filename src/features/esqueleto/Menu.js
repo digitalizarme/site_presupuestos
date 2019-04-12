@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { menuToggle } from './redux/actions';
 import { limpiarUsuario } from '../acceder/redux/actions';
+import { traerConfiguracion } from '../configuraciones/redux/actions';
 import logo from '../../images/logo_digitalizarame.png';
 import { dropToken } from '../../common/tokenManager';
 
@@ -102,13 +103,6 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
           {usuario.persona.c_nombre.toUpperCase()}
         </DropdownToggle>
         <DropdownMenu right>
-          {usuario.b_administrador ? (
-            <DropdownItem>
-              <NavItem>
-                <NavLink href="#config">Configuraciones</NavLink>
-              </NavItem>
-            </DropdownItem>
-          ) : null}
           <DropdownItem>
             <NavItem>
               <NavLink href="#deslogar" onClick={() => deslogar(limpiarUsuario)}>
@@ -128,16 +122,21 @@ export class Menu extends Component {
     actions: PropTypes.object.isRequired,
   };
 
+  componentDidMount = () => {
+    const { traerConfiguracion } = this.props.actions;
+    traerConfiguracion();
+  };
+
   render() {
     const { isOpen } = this.props.esqueleto;
-    const { usuario } = this.props;
+    const { usuario, configuracion } = this.props;
     const { menuToggle, limpiarUsuario } = this.props.actions;
 
     return (
       <div className="esqueleto-menu">
         <Navbar color="light" light className="bg-dark" expand="md">
           <NavbarBrand href="/">
-            <img src={logo} className="img-responsive pull-left logo" alt="Logo" />
+            <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" />
           </NavbarBrand>
           <NavbarToggler onClick={menuToggle} />
           {usuario.persona ? (
@@ -156,13 +155,14 @@ function mapStateToProps(state) {
   return {
     esqueleto: state.esqueleto,
     usuario: state.acceder.usuario,
+    configuracion: state.configuraciones.configuracion,
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ menuToggle, limpiarUsuario }, dispatch),
+    actions: bindActionCreators({ menuToggle, limpiarUsuario, traerConfiguracion }, dispatch),
   };
 }
 

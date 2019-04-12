@@ -7,3 +7,4 @@ export { traerItem, dismissTraerItemError } from './traerItem';
 export { limpiarItem } from './limpiarItem';
 export { limpiarLineaSeleccionada } from './limpiarLineaSeleccionada';
 export { limpiarItemLinea } from './limpiarItemLinea';
+export { setaImg } from './setaImg';

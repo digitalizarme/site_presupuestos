@@ -18,7 +18,7 @@ export class PrincipalTabla extends Component {
 
     return (
       <div className="esqueleto-principal-tabla">
-        <ReactTitle title={`Presupuesto | ${titulo ? titulo : 'Principal'}`} />
+        <ReactTitle title={`${titulo ? titulo : 'Principal'} | Presupuesto`} />
         <div className="margin_pie">
           <Menu />
           <div className="margin_component">

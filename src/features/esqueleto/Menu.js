@@ -100,7 +100,7 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
     <Nav className="ml-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
         <DropdownToggle nav caret title={usuario.persona.c_nombre.toUpperCase()}>
-          {usuario.persona.t_avatar?<img src={usuario.persona.t_avatar?usuario.persona.t_avatar:null} className="img-responsive pull-left logo" alt={usuario.persona.c_nombre.toUpperCase()} />:usuario.persona.c_nombre.toUpperCase()}
+          {usuario.persona.t_avatar?<img src={usuario.persona.t_avatar?usuario.persona.t_avatar:null} className="avatar pull-left" alt={usuario.persona.c_nombre.toUpperCase()} />:usuario.persona.c_nombre.toUpperCase()}
 
           
         </DropdownToggle>
@@ -136,7 +136,7 @@ export class Menu extends Component {
 
     return (
       <div className="esqueleto-menu">
-        <Navbar color="light" light className="bg-dark" expand="md">
+        <Navbar color="dark"  expand="md">
           <NavbarBrand href="/">
             <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" />
           </NavbarBrand>

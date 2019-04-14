@@ -16,7 +16,7 @@ export class Principal extends Component {
     const { component: Component, titulo } = this.props;
     return (
       <div className="esqueleto-principal">
-        <ReactTitle title={`Presupuesto | ${titulo ? titulo : 'Principal'}`} />
+        <ReactTitle title={`${titulo ? titulo : 'Principal'} | Presupuesto`} />
         <div className="margin_pie">
           <Menu />
           <div className="margin_component">

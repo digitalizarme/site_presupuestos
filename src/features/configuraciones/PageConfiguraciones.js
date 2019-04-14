@@ -131,10 +131,6 @@ export class PageConfiguraciones extends Component {
       });
   };
 
-  componentDidMount = () => {
-    const { traerConfiguracion } = this.props.actions;
-    // traerConfiguracion();
-  };
 
   render() {
     const { handleSubmit } = this.props;
@@ -142,6 +138,7 @@ export class PageConfiguraciones extends Component {
     return (
       <div className="configuraciones-page-configuraciones">
         <Principal
+          titulo="Configuraciones"
           component={FormConfiguraciones}
           enviarFormulario={handleSubmit(this.submit)}
           {...this.props}

@@ -8,7 +8,6 @@ import { Principal } from '../esqueleto';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
 import history from '../../common/history';
-import { traerConfiguracion } from '../configuraciones/redux/actions';
 import { reduxForm, formValueSelector } from 'redux-form';
 
 // Decorate with connect to read form values
@@ -28,7 +27,7 @@ export class PageAcceder extends Component {
       .then(res => {
         const { acceder } = this.props;
         setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
-        history.push('/servicios-grupo');
+        history.push('/');
       })
       .catch(res => {
         const { message } =
@@ -41,6 +40,11 @@ export class PageAcceder extends Component {
         });
       });
   };
+
+  onChangeEmail = (event, email, oldEmail) => {
+    const { limpiarAvatar } = this.props.actions;
+    limpiarAvatar();
+  }
 
   onBlurEmail = (event, email) => {
     const { verificaEmail } = this.props.actions;
@@ -67,9 +71,8 @@ export class PageAcceder extends Component {
   }
 
   componentDidMount = () => {
-    const { traerConfiguracion, limpiarAvatar } = this.props.actions;
+    const {  limpiarAvatar } = this.props.actions;
     limpiarAvatar();
-    // traerConfiguracion();
   };
 
   render() {
@@ -78,10 +81,12 @@ export class PageAcceder extends Component {
     return (
       <div className="acceder-page-acceder">
         <Principal
+          titulo="Acceder"
           component={FormAcceder}
           enviarFormulario={handleSubmit(this.submit)}
           {...this.props}
           onBlurEmail={this.onBlurEmail}
+          onChangeEmail={this.onChangeEmail}
         />
       </div>
     );
@@ -109,7 +114,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { acceder, traerConfiguracion, verificaEmail, limpiarAvatar },
+      { acceder, verificaEmail, limpiarAvatar },
       dispatch,
     ),
   };

@@ -10,7 +10,7 @@ export default class FormAcceder extends Component {
 
 
   render() {
-    const { enviarFormulario, submitting, pristine, acceder, onBlurEmail, email, errorEmail } = this.props;
+    const { enviarFormulario, submitting, pristine, acceder, onBlurEmail, email, errorEmail, onChangeEmail } = this.props;
 
 
 
@@ -40,6 +40,7 @@ export default class FormAcceder extends Component {
                     autoFocus
                     className="form-control"
                     onBlur={onBlurEmail}
+                    onChange={onChangeEmail}
                   />
                 </InputGroup>
                 <span className="text-danger">{acceder.verificadoEmail?errorEmail:null}</span>

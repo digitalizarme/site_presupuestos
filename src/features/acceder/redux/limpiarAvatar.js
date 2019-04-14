@@ -17,6 +17,7 @@ export function reducer(state, action) {
         ...state,
         avatar: null,
         existeEmail: false,
+        verificadoEmail:false,
       };
 
     default:

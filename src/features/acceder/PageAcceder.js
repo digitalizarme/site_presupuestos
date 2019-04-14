@@ -46,7 +46,11 @@ export class PageAcceder extends Component {
     const { verificaEmail } = this.props.actions;
     verificaEmail(email)
       .then(res => {
-        document.getElementsByName('contrasena')[0].focus();
+        if (res.data.res) {
+          document.getElementsByName('contrasena')[0].focus();
+        } else {
+          document.getElementsByName('email')[0].focus();
+        }
         return res;
       })
       .catch(err => {
@@ -63,9 +67,9 @@ export class PageAcceder extends Component {
   }
 
   componentDidMount = () => {
-    const { traerConfiguracion,limpiarAvatar } = this.props.actions;
+    const { traerConfiguracion, limpiarAvatar } = this.props.actions;
     limpiarAvatar();
-    traerConfiguracion();
+    // traerConfiguracion();
   };
 
   render() {
@@ -94,14 +98,20 @@ function mapStateToProps(state) {
   return {
     acceder: state.acceder,
     email: selector(state, 'email'),
-    errorEmail: state.acceder.existeEmail?'':'No existe este email',
+    errorEmail:
+      state.acceder.existeEmail || !selector(state, 'email') || selector(state, 'email') === ''
+        ? ''
+        : 'No existe este email',
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ acceder, traerConfiguracion, verificaEmail, limpiarAvatar }, dispatch),
+    actions: bindActionCreators(
+      { acceder, traerConfiguracion, verificaEmail, limpiarAvatar },
+      dispatch,
+    ),
   };
 }
 

@@ -45,6 +45,7 @@ export function reducer(state, action) {
         ...state,
         verificaEmailPending: false,
         verificaEmailError: null,
+        verificadoEmail:true,
         avatar:action.data.avatar,
         existeEmail:action.data.res,
       };

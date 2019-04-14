@@ -11,6 +11,7 @@ const initialState = {
   accederError: null,
   verificaEmailPending: false,
   verificaEmailError: null,
+  verificadoEmail: false,
   avatar:null,
   existeEmail:false,
 };

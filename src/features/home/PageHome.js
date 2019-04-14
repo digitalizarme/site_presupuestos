@@ -14,7 +14,7 @@ export class PageHome extends Component {
 
   componentDidMount = () => {
     const { traerConfiguracion } = this.props.actions;
-    traerConfiguracion();
+    // traerConfiguracion();
   };
 
   render() {

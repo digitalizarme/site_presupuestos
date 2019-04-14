@@ -42,7 +42,7 @@ export default class FormAcceder extends Component {
                     onBlur={onBlurEmail}
                   />
                 </InputGroup>
-                <span className="text-danger">{errorEmail}</span>
+                <span className="text-danger">{acceder.verificadoEmail?errorEmail:null}</span>
 
                 <br />
                 <InputGroup>

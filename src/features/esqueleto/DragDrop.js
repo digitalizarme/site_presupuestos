@@ -16,21 +16,34 @@ export class DragDrop extends Component {
 
   onDrop = acceptedFiles => {
     const { setaImg } = this.props.actions;
+    const {
+      input: {  onChange }
+    } = this.props;
     redimensionarImagem(acceptedFiles[0], width, height).then(imgRedimensionada =>
-      setaImg(imgRedimensionada),
+    {
+      onChange(imgRedimensionada.file);
+      return setaImg(imgRedimensionada);
+
+    }
     );
   };
 
   render() {
-    const preview = this.props.esqueleto.img ? this.props.esqueleto.img.file : null;
-
+    const {preview} = this.props;
+    const {
+      input: {  value }
+    } = this.props;
+    const imagem = preview?preview:value?value:'';
     width = this.props.width ? this.props.width : 75;
     height = this.props.height ? this.props.height : 75;
     minSize = this.props.minSize ? this.props.minSize : 1;
     multiple = this.props.multiple ? this.props.multiple : false;
-
+    const {
+      meta: { touched, error, warning },
+    } = this.props;
     return (
       <div className="esqueleto-drag-drop">
+        <div className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>
         <Dropzone
           onDrop={this.onDrop}
           accept="image/jpeg, image/png"
@@ -41,12 +54,16 @@ export class DragDrop extends Component {
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
               Clique aqui o arrastre una imagem! La dimension sera {width} x {height}
-              {preview ? (
-                <img src={preview} alt="img escolhida" style={{ maxWidth: 70, MaxHeight: 70 }} />
+              {imagem ? (
+                <img src={imagem} alt="img escolhida" style={{ maxWidth: 70, MaxHeight: 70 }} />
               ) : null}
             </div>
           )}
         </Dropzone>
+          {touched &&
+            ((error && <span className="error invalid-feedback">{error}</span>) ||
+              (warning && <span className="warning">{warning}</span>))}
+      </div>
       </div>
     );
   }
@@ -54,9 +71,10 @@ export class DragDrop extends Component {
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  // console.log(state);
+  //  console.log(state);
   return {
     esqueleto: state.esqueleto,
+    preview: state.esqueleto.img ? state.esqueleto.img.file : null,
   };
 }
 

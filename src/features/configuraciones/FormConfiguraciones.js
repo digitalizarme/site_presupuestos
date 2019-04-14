@@ -11,7 +11,7 @@ export default class FormConfiguraciones extends Component {
 
 
   render() {
-    const { enviarFormulario, submitting, pristine, b_comision, t_logo } = this.props;
+    const { enviarFormulario, submitting, pristine, b_comision } = this.props;
 
     return (
       <div className="configuraciones-form-configuraciones">
@@ -20,7 +20,10 @@ export default class FormConfiguraciones extends Component {
           <Form onSubmit={enviarFormulario} className="form_border">
             <Row>
               <Col sm="12">
-                <DragDrop />
+                <Field
+                  name="t_logo"
+                  component={DragDrop}
+                />
               </Col>
             </Row>
             <Row>
@@ -150,7 +153,7 @@ export default class FormConfiguraciones extends Component {
             <Row>
               <Col sm="3" />
             </Row>
-            <Button type="submit" color="success" disabled={t_logo==null?true:false && (pristine || submitting)}>
+            <Button type="submit" color="success" disabled={ (pristine || submitting)}>
               {submitting ? 'Guardando' : 'Guardar'}
             </Button>
           </Form>

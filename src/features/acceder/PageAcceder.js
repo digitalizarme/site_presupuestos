@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { acceder } from './redux/actions';
+import { acceder, verificaEmail, limpiarAvatar } from './redux/actions';
 import { FormAcceder } from './';
 import { Principal } from '../esqueleto';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
 import history from '../../common/history';
 import { traerConfiguracion } from '../configuraciones/redux/actions';
+import { reduxForm, formValueSelector } from 'redux-form';
+
+// Decorate with connect to read form values
+const selector = formValueSelector('formAcceder'); // <-- same as form name
 
 export class PageAcceder extends Component {
   static propTypes = {
@@ -38,6 +42,18 @@ export class PageAcceder extends Component {
       });
   };
 
+  onBlurEmail = (event, email) => {
+    const { verificaEmail } = this.props.actions;
+    verificaEmail(email)
+      .then(res => {
+        document.getElementsByName('contrasena')[0].focus();
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
+  };
+
   componentWillMount() {
     document.body.style.backgroundImage = 'linear-gradient(rgb(104,145,162),rgb(12,97,33))';
   }
@@ -47,30 +63,45 @@ export class PageAcceder extends Component {
   }
 
   componentDidMount = () => {
-    const { traerConfiguracion } = this.props.actions;
+    const { traerConfiguracion,limpiarAvatar } = this.props.actions;
+    limpiarAvatar();
     traerConfiguracion();
   };
 
   render() {
+    const { handleSubmit } = this.props;
+
     return (
       <div className="acceder-page-acceder">
-        <Principal component={FormAcceder} onSubmit={this.submit} />
+        <Principal
+          component={FormAcceder}
+          enviarFormulario={handleSubmit(this.submit)}
+          {...this.props}
+          onBlurEmail={this.onBlurEmail}
+        />
       </div>
     );
   }
 }
 
+PageAcceder = reduxForm({
+  // a unique name for the form
+  form: 'formAcceder',
+})(PageAcceder);
+
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
     acceder: state.acceder,
+    email: selector(state, 'email'),
+    errorEmail: state.acceder.existeEmail?'':'No existe este email',
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ acceder, traerConfiguracion }, dispatch),
+    actions: bindActionCreators({ acceder, traerConfiguracion, verificaEmail, limpiarAvatar }, dispatch),
   };
 }
 

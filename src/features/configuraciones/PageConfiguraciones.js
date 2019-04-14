@@ -74,6 +74,15 @@ const validationConstraints = {
       tooLong: 'Su Dirección debe tener 100 caracteres como máximo',
     },
   },
+  t_logo: {
+    presence: {
+      message: 'Logo es obligatorio',
+    },
+    length: {
+      minimum: 5,
+      tooShort: 'Su Logo debe tener 5 caracteres como minimo',
+    },
+  },
 };
 
 const validationConstraintsComision = {
@@ -101,15 +110,6 @@ export class PageConfiguraciones extends Component {
 
   submit = values => {
     const { guardar } = this.props.actions;
-    const { t_logo } = this.props;
-    if(t_logo && t_logo.file)
-    {
-      values = 
-      {
-        ...values
-        ,t_logo:t_logo.file
-      }
-    }
     guardar(values)
       .then(res => {
         swal({

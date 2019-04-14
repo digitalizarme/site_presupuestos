@@ -9,6 +9,10 @@ const initialState = {
   usuario: {},
   accederPending: false,
   accederError: null,
+  verificaEmailPending: false,
+  verificaEmailError: null,
+  avatar:null,
+  existeEmail:false,
 };
 
 export default initialState;

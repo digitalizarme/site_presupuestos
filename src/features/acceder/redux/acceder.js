@@ -45,6 +45,8 @@ export function reducer(state, action) {
         accederPending: false,
         accederError: null,
         usuario: action.data,
+        avatar:null,
+        existeEmail:false,
       };
 
     case ACCEDER_ACCEDER_FAILURE:

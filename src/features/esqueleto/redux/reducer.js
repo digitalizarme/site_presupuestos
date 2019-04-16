@@ -17,6 +17,7 @@ import { reducer as limpiarItemReducer } from './limpiarItem';
 import { reducer as limpiarLineaSeleccionadaReducer } from './limpiarLineaSeleccionada';
 import { reducer as limpiarItemLineaReducer } from './limpiarItemLinea';
 import { reducer as setaImgReducer } from './setaImg';
+import { reducer as toggleCargandoReducer } from './toggleCargando';
 
 const reducers = [
   menuToggleReducer,
@@ -29,6 +30,7 @@ const reducers = [
   limpiarLineaSeleccionadaReducer,
   limpiarItemLineaReducer,
   setaImgReducer,
+  toggleCargandoReducer,
 ];
 
 export default function reducer(state = initialState, action) {

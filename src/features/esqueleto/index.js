@@ -9,3 +9,4 @@ export { default as InputText } from './InputText';
 export { default as SuperSelect } from './SuperSelect';
 export { default as InputNumber } from './InputNumber';
 export { default as DragDrop } from './DragDrop';
+export { default as Cargando } from './Cargando';

@@ -136,11 +136,11 @@ export class Menu extends Component {
 
     return (
       <div className="esqueleto-menu">
-        <Navbar color="dark"  expand="md">
+        <Navbar  color="dark"   expand="md">
           <NavbarBrand href="/">
             <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" />
           </NavbarBrand>
-          <NavbarToggler onClick={menuToggle} />
+          <NavbarToggler color="success" onClick={menuToggle} />
           {usuario.persona ? (
             <MenuLogado usuario={usuario} isOpen={isOpen} limpiarUsuario={limpiarUsuario} />
           ) : (

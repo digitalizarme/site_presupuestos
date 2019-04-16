@@ -21,7 +21,10 @@ const initialState = {
   item:{},
   traerItemPending: false,
   traerItemError: null,
-  img:null
+  img:null,
+  cargando:false,
+  toggleCargandoPending: false,
+  toggleCargandoError: null,
 
 };
 

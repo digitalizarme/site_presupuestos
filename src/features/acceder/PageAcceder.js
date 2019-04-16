@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { acceder, verificaEmail, limpiarAvatar } from './redux/actions';
 import { FormAcceder } from './';
 import { Principal } from '../esqueleto';
+import { toggleCargando } from '../esqueleto/redux/actions';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
 import history from '../../common/history';
@@ -20,16 +21,17 @@ export class PageAcceder extends Component {
   };
 
   submit = values => {
-    const { acceder } = this.props.actions;
-
-    // print the form values to the console
+    const { acceder, toggleCargando } = this.props.actions;
+    toggleCargando();
     acceder(values)
       .then(res => {
+        toggleCargando();
         const { acceder } = this.props;
         setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
         history.push('/');
       })
       .catch(res => {
+        toggleCargando();
         const { message } =
           typeof res.response !== 'undefined' ? res.response.data : 'Error al intentar acceder';
         swal({
@@ -47,9 +49,11 @@ export class PageAcceder extends Component {
   }
 
   onBlurEmail = (event, email) => {
-    const { verificaEmail } = this.props.actions;
+    const { verificaEmail,toggleCargando } = this.props.actions;
+    toggleCargando();
     verificaEmail(email)
       .then(res => {
+        toggleCargando();
         if (res.data.res) {
           document.getElementsByName('contrasena')[0].focus();
         } else {
@@ -114,7 +118,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { acceder, verificaEmail, limpiarAvatar },
+      { acceder, verificaEmail, limpiarAvatar, toggleCargando },
       dispatch,
     ),
   };

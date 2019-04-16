@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabla, Menu, Pie } from './';
+import { Tabla, Menu, Pie, Cargando } from './';
 import { ReactTitle } from 'react-meta-tags';
 
 export class PrincipalTabla extends Component {
@@ -15,14 +15,15 @@ export class PrincipalTabla extends Component {
 
   render() {
     const { titulo } = this.props;
-
+    const { toggleCargando } = this.props.actions;
     return (
       <div className="esqueleto-principal-tabla">
+        <Cargando />
         <ReactTitle title={`${titulo ? titulo : 'Principal'} | Presupuesto`} />
         <div className="margin_pie">
           <Menu />
           <div className="margin_component">
-          <Tabla  {...this.props} />
+            <Tabla {...this.props} toggleCargando={toggleCargando} />
           </div>
           <Pie />
         </div>
@@ -41,11 +42,11 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch)
+    actions: bindActionCreators({ ...actions }, dispatch),
   };
 }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(PrincipalTabla);

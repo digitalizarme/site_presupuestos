@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {  reduxForm } from 'redux-form';
 import { FormCotizaciones } from './';
-import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
+import { apiGenerico, procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { guardarCotizaciones, listaMonedas } from './redux/actions';
 
 import { PrincipalTabla } from '../esqueleto';
@@ -121,9 +121,9 @@ export class PageCotizaciones extends Component {
   };
 
   guardarNovasAtualizacoes = () => {
-    const { guardarCotizaciones, procesarTabla } = this.props.actions;
+    const { guardarCotizaciones, procesarTabla, toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
-
+    toggleCargando();
     guardarCotizaciones({ base: 'USD', monedas: 'PYG,BRL,ARS,EUR' })
       .then(res => {
         procesarTabla({
@@ -136,12 +136,14 @@ export class PageCotizaciones extends Component {
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
         });
+        toggleCargando();
       })
       .catch(err => {
         const { message } =
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar actualizar cotizaciones';
+        toggleCargando();
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar actualizar cotizaciones',
@@ -152,9 +154,10 @@ export class PageCotizaciones extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle } = this.props.actions;
+    const { apiGenerico, procesarTabla, modalToggle,toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
     if (values.c_monedaOrigem !== values.c_monedaDestino) {
+      toggleCargando();
       values = {
         ...values,
         c_monedaOrigemDestino: values.c_monedaOrigem + '' + values.c_monedaDestino,
@@ -180,6 +183,7 @@ export class PageCotizaciones extends Component {
             sortOrder: esqueleto.sortOrder,
           });
           modalToggle();
+          toggleCargando();
           swal({
             icon: 'success',
             timer: 1000,
@@ -190,6 +194,7 @@ export class PageCotizaciones extends Component {
             typeof err.response !== 'undefined'
               ? err.response.data
               : 'Error al intentar guardar los datos';
+          toggleCargando();    
           swal({
             title: 'Ops',
             text: message ? message : 'Error al intentar guardar los datos',
@@ -208,8 +213,9 @@ export class PageCotizaciones extends Component {
   };
 
   componentDidMount = () => {
-    const { listaMonedas } = this.props.actions;
-    listaMonedas();
+    const { listaMonedas, toggleCargando } = this.props.actions;
+    toggleCargando();
+    listaMonedas().then( toggleCargando());
   };
 
   render() {
@@ -274,7 +280,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, procesarTabla, modalToggle, guardarCotizaciones, listaMonedas },
+      { apiGenerico, procesarTabla, modalToggle, guardarCotizaciones, listaMonedas, toggleCargando },
       dispatch,
     ),
   };

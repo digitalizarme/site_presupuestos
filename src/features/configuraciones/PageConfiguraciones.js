@@ -8,6 +8,7 @@ import { FormConfiguraciones } from './';
 import swal from 'sweetalert';
 import validate from 'validate.js';
 import { reduxForm, formValueSelector } from 'redux-form';
+import { toggleCargando } from '../esqueleto/redux/actions';
 
 // Decorate with connect to read form values
 const selector = formValueSelector('formConfiguraciones'); // <-- same as form name
@@ -109,9 +110,11 @@ export class PageConfiguraciones extends Component {
   };
 
   submit = values => {
-    const { guardar } = this.props.actions;
+    const { guardar,toggleCargando } = this.props.actions;
+    toggleCargando();
     guardar(values)
       .then(res => {
+        toggleCargando();
         swal({
           icon: 'success',
           timer: 1000,
@@ -122,6 +125,7 @@ export class PageConfiguraciones extends Component {
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar guardar los datos';
+        toggleCargando();    
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar guardar los datos',
@@ -172,7 +176,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...actions }, dispatch),
+    actions: bindActionCreators({ ...actions,toggleCargando }, dispatch),
   };
 }
 

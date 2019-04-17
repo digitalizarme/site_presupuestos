@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, limpiarItemLinea } from '../esqueleto/redux/actions';
+import { apiGenerico, limpiarItemLinea, toggleCargando } from '../esqueleto/redux/actions';
+
 import { traerPersona, limpiarPersona } from './redux/actions';
 import { Principal } from '../esqueleto';
 import { setaUsuarioPersona } from '../acceder/redux/actions';
@@ -88,8 +89,9 @@ export class FormPersonasContainer extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, setaUsuarioPersona } = this.props.actions;
+    const { apiGenerico, setaUsuarioPersona,toggleCargando } = this.props.actions;
     const { persona } = this.props;
+    toggleCargando();
     if(!values.b_comisionista)
     {
       values = {
@@ -112,6 +114,7 @@ export class FormPersonasContainer extends Component {
         }
 
         history.push('/personas');
+        toggleCargando();
         swal({
           icon: 'success',
           timer: 1000,
@@ -122,6 +125,7 @@ export class FormPersonasContainer extends Component {
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar guardar los datos';
+        toggleCargando();
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar guardar los datos',
@@ -204,7 +208,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, traerPersona, limpiarPersona, limpiarItemLinea, setaUsuarioPersona },
+      { apiGenerico, traerPersona, limpiarPersona, limpiarItemLinea, setaUsuarioPersona, toggleCargando },
       dispatch,
     ),
   };

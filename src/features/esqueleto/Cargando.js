@@ -5,34 +5,33 @@ import { connect } from 'react-redux';
 import { toggleCargando } from './redux/actions';
 import { ClipLoader } from 'react-spinners';
 
-
-const ComponentCargando = ({cargando}) =>
-{
+const ComponentCargando = ({ cargando }) => {
   const cssCargando = {
     marginLeft: '-75px',
     marginTop: '-75px',
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
   };
 
-  return(
-      <div className="esqueleto-cargando" style={{display:cargando?'block':'none'}}>
-        <ClipLoader
-          css={cssCargando}
-          sizeUnit={'px'}
-          size={150}
-          color={'#123abc'}
-          loading={cargando}
-        />
-      </div>
-  )
-}
+  return (
+    <div className="esqueleto-cargando" style={{ display: cargando ? 'block' : 'none' }}>
+      <ClipLoader
+        css={cssCargando}
+        sizeUnit={'px'}
+        size={150}
+        color={'#123abc'}
+        loading={cargando}
+      />
+    </div>
+  );
+};
 
 export class Cargando extends Component {
   static propTypes = {};
 
   render() {
-    return (
-      <ComponentCargando cargando={this.props.cargando} />
-    );
+    return <ComponentCargando cargando={this.props.cargando} />;
   }
 }
 

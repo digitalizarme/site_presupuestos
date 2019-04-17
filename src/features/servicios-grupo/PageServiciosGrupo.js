@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormServGrupo } from './';
-import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
+import { apiGenerico, procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import moment from 'moment';
@@ -58,12 +58,13 @@ export class PageServiciosGrupo extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle } = this.props.actions;
+    const { apiGenerico, procesarTabla, modalToggle, toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
     const params = {
       data: values,
       method: values.id && values.id !== ''?'put':'post',
     };
+    toggleCargando();
     return apiGenerico({
       api_funcion: 'servicios_grupos',
       params,
@@ -80,6 +81,7 @@ export class PageServiciosGrupo extends Component {
           sortOrder: esqueleto.sortOrder,
         });
         modalToggle();
+        toggleCargando();
         swal({
           icon: 'success',
           timer: 1000,
@@ -90,6 +92,7 @@ export class PageServiciosGrupo extends Component {
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar guardar los datos';
+        toggleCargando();
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar guardar los datos',
@@ -139,7 +142,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ apiGenerico, procesarTabla, modalToggle }, dispatch),
+    actions: bindActionCreators({ apiGenerico, procesarTabla, modalToggle, toggleCargando }, dispatch),
   };
 }
 

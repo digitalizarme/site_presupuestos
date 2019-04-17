@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, procesarTabla, modalToggle } from '../esqueleto/redux/actions';
+import { apiGenerico, procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { traerPersonas } from '../personas/redux/actions';
 import { setaUsuario } from '../acceder/redux/actions';
 
@@ -121,8 +121,9 @@ export class PageUsuarios extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle,setaUsuario } = this.props.actions;
+    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
     const { esqueleto,acceder } = this.props;
+    toggleCargando();
     if (values.c_contrasena === '') {
       delete values['c_contrasena'];
     }
@@ -150,6 +151,7 @@ export class PageUsuarios extends Component {
           sortOrder: esqueleto.sortOrder,
         });
         modalToggle();
+        toggleCargando();
         swal({
           icon: 'success',
           timer: 1000,
@@ -160,6 +162,7 @@ export class PageUsuarios extends Component {
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar guardar los datos';
+        toggleCargando();
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar guardar los datos',
@@ -238,7 +241,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, procesarTabla, modalToggle, traerPersonas,setaUsuario },
+      { apiGenerico, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando },
       dispatch,
     ),
   };

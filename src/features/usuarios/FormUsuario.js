@@ -30,7 +30,7 @@ export default class FormUsuario extends Component {
             <Row>
               <Col sm="5">
                 <Field
-                  name="c_id_persona"
+                  name="n_id_persona"
                   label="Persona"
                   options={optionsPersonas}
                   component={SuperSelect}

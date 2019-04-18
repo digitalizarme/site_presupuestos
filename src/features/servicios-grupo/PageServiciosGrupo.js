@@ -29,9 +29,11 @@ const validationConstraints = {
 const columns = [
   {
     dataField: 'c_descripcion',
-    table: 'Servicios_grupos',
+    table: 'serviciosGrupos',
     text: 'Descripción',
     sort: true,
+    
+
   },
   {
     dataField: 'updatedAt',
@@ -66,12 +68,12 @@ export class PageServiciosGrupo extends Component {
     };
     toggleCargando();
     return apiGenerico({
-      api_funcion: 'servicios_grupos',
+      api_funcion: 'serviciosGrupos',
       params,
     })
       .then(res => {
         procesarTabla({
-          api_funcion: 'servicios_grupos',
+          api_funcion: 'serviciosGrupos',
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
@@ -110,7 +112,7 @@ export class PageServiciosGrupo extends Component {
         <PrincipalTabla
           titulo={'Lista de Grupo de servicios'}
           defaultSorted={defaultSorted}
-          api_funcion={'servicios_grupos'}
+          api_funcion={'serviciosGrupos'}
           columns={columns}
           cuerpoModal={FormServGrupo}
           tituloModal={edicion ? 'Editar Grupo de Servicios' : 'Nuevo Grupo de Servicios'}

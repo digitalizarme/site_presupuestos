@@ -129,7 +129,7 @@ export default class FormConfiguraciones extends Component {
             <Row>
               <Col sm="12">
                 <Field
-                  name="c_obs_presup_1"
+                  name="t_obs_presup_1"
                   styleDiv={{ width: '100%' }}
                   label="Observación 1"
                   component={InputText}
@@ -141,7 +141,7 @@ export default class FormConfiguraciones extends Component {
             <Row>
               <Col sm="12">
                 <Field
-                  name="c_obs_presup_2"
+                  name="t_obs_presup_2"
                   styleDiv={{ width: '100%' }}
                   label="Observación 2"
                   component={InputText}

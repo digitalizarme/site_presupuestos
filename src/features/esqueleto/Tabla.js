@@ -312,7 +312,7 @@ const RemoteAll = ({
                   hover
                   remote
                   defaultSorted={defaultSorted}
-                  classes="table-responsive-lg"
+                  classes="table-responsive"
                   onTableChange={onTableChange}
                   noDataIndication={() => (
                     <NoDataIndication procesarTablaPending={procesarTablaPending} />

@@ -136,7 +136,7 @@ export class Menu extends Component {
 
     return (
       <div className="esqueleto-menu">
-        <Navbar  color="dark"   expand="md">
+        <Navbar  color="light" light   expand="md">
           <NavbarBrand href="/">
             <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" />
           </NavbarBrand>

@@ -14,6 +14,7 @@ const initialState = {
   verificadoEmail: false,
   avatar:null,
   existeEmail:false,
+  msg:null,
 };
 
 export default initialState;

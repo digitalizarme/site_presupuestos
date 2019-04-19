@@ -21,8 +21,14 @@ export default ({ api_funcion, params, type_begin, type_success, type_failure })
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
+      const method=  params && params.method?params.method:'get';
+      if(params && params.method)
+      {
+        delete params["method"];
+      }
+
       const doRequest = axios({
-        method: params && params.method?params.method:'get',
+        method,
         url: `${API}/${api_funcion}`,
         data: params && params.data?params.data:null,
         params:params && params.data?null:params,

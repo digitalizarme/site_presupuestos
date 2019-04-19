@@ -48,6 +48,7 @@ export function reducer(state, action) {
         verificadoEmail:true,
         avatar:action.data.avatar,
         existeEmail:action.data.res,
+        msg: action.data.msg,
       };
 
     case ACCEDER_VERIFICA_EMAIL_FAILURE:

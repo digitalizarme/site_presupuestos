@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   procesarTabla,
-  apiGenerico,
   lineaSeleccionada,
   modalToggle,
   limpiarItemLinea,
@@ -24,6 +23,7 @@ import { faEdit, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col } from 'reactstrap';
 import { ModalForm } from './';
 import history from '../../common/history';
+import api_axio from '../../common/api_axios';
 
 const CustomTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -50,7 +50,7 @@ const RemoteAll = ({
   columns,
   titulo,
   defaultSorted,
-  apiGenerico,
+  api_axio,
   esqueleto,
   selected,
   lineaSeleccionada,
@@ -155,13 +155,11 @@ const RemoteAll = ({
         }).then(willDelete => {
           if (willDelete) {
             const params = {
-              table: columns[0].table,
-              where_field: 'id',
-              where_value: selected[0].id,
+              id:selected[0].id,
               method: 'DELETE',
             };
-            return apiGenerico({
-              api_funcion: 'generico/eliminar',
+            return api_axio({
+              api_funcion,
               params,
             })
               .then(res => {
@@ -205,16 +203,17 @@ const RemoteAll = ({
   };
 
   const beforeSaveCell = (oldValue, newValue, row, column, done) => {
+    const data = 
+    {
+      [column.dataField]:newValue,
+      id:row.id
+    }
     const params = {
-      table: columns[0].table,
-      column: column.dataField,
-      valor: newValue,
-      where_field: 'id',
-      where_value: row.id,
+      data: data,
       method: 'put',
     };
-    apiGenerico({
-      api_funcion: 'generico/actualizar',
+    api_axio({
+      api_funcion,
       params,
     })
       .then(res => {
@@ -282,7 +281,7 @@ const RemoteAll = ({
           <div className="titulo_formulario">{titulo}</div>
           <div className="espacio_abajo">
             <Row>
-              <Col xs="12" lg="6">
+              <Col xs="12" lg="6" className="espacio_abajo">
                 <Button type="button" color="success" size="md" onClick={agregar}>
                   <FontAwesomeIcon icon={faPlus} /> Agregar
                 </Button>{' '}
@@ -383,7 +382,7 @@ export class Tabla extends Component {
       procesarTabla,
       modalToggle,
       lineaSeleccionada,
-      apiGenerico,
+      api_axio,
       limpiarItemLinea,
     } = this.props.actions;
 
@@ -404,7 +403,7 @@ export class Tabla extends Component {
           procesarTabla={procesarTabla}
           api_funcion={api_funcion}
           onTableChange={this.handleTableChange}
-          apiGenerico={apiGenerico}
+          api_axio={api_axio}
           lineaSeleccionada={lineaSeleccionada}
           esqueleto={this.props.esqueleto}
           sinModal={sinModal}
@@ -431,7 +430,7 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(
       {
         procesarTabla,
-        apiGenerico,
+        api_axio,
         lineaSeleccionada,
         modalToggle,
         limpiarItemLinea,

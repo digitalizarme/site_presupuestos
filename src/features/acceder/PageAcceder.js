@@ -62,7 +62,13 @@ export class PageAcceder extends Component {
         return res;
       })
       .catch(err => {
-        return err;
+        toggleCargando();
+        swal({
+          title: 'Ops',
+          text: 'Error al verificar este email',
+          icon: 'error',
+          button: 'OK!',
+        });
       });
   };
 
@@ -110,7 +116,7 @@ function mapStateToProps(state) {
     errorEmail:
       state.acceder.existeEmail || !selector(state, 'email') || selector(state, 'email') === ''
         ? ''
-        : 'No existe este email',
+        : state.acceder.msg,
   };
 }
 

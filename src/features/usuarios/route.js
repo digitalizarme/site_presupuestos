@@ -9,6 +9,6 @@ export default {
   path: 'usuarios',
   name: 'Usuarios',
   childRoutes: [
-    { path: 'page-usuarios', name: 'Page usuarios', component: PageUsuarios, isIndex: true },
+    { path: 'page-usuarios', name: 'Page usuarios', component: PageUsuarios, isIndex: true,protegido:true, admin:true },
   ],
 };

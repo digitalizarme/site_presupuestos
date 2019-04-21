@@ -9,6 +9,6 @@ export default {
   path: 'servicios-grupo',
   name: 'Servicios grupo',
   childRoutes: [
-    { path: 'page-servicios-grupo', name: 'Page servicios grupo', component: PageServiciosGrupo, isIndex: true },
+    { path: 'page-servicios-grupo', name: 'Page servicios grupo', component: PageServiciosGrupo, isIndex: true,protegido:true },
   ],
 };

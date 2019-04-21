@@ -3,37 +3,91 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import history from './common/history';
 
-function renderRouteConfigV3(routes, contextPath) {
+let logado = false;
+let soyAdmin = false;
+
+function estoyLogueado(store) {
+  if (store) {
+    const { getState } = store;
+    const { acceder } = getState();
+    logado = acceder.usuario.c_usuario ? true : false;
+    soyAdmin  = acceder.usuario ? acceder.usuario.b_administrador : false;
+    // console.log(soyAdmin,'soyadm');
+  }
+}
+
+function redireciona(props,logado) {
+  return (
+    <Redirect
+      to={{
+        pathname: !logado?'/acceder/sinSesion':'/sinPermiso',
+        state: { from: props.location?props.location:props },
+      }}
+    />
+  );
+}
+
+function renderRouteConfigV3(routes, contextPath, store) {
   // Resolve route config object in React Router v3.
   const children = []; // children component list
 
   const renderRoute = (item, routeContextPath) => {
-    let newContextPath;
+    let newContextPath, protegido, soloAdmin;
+    protegido = false;
+    soloAdmin = false;
+
+    if (typeof item.protegido === 'boolean') {
+      protegido = item.protegido;
+    }
+
+    if (typeof item.admin === 'boolean') {
+      soloAdmin = item.admin;
+    }
+    //console.log(soloAdmin,'soloadmin: '+ item.path)
+
     if (/^\//.test(item.path)) {
       newContextPath = item.path;
     } else {
       newContextPath = `${routeContextPath}/${item.path}`;
     }
     newContextPath = newContextPath.replace(/\/+/g, '/');
+
     if (item.component && item.childRoutes) {
-      const childRoutes = renderRouteConfigV3(item.childRoutes, newContextPath);
+      const childRoutes = renderRouteConfigV3(item.childRoutes, newContextPath, store);
       children.push(
         <Route
           key={newContextPath}
-          render={props => <item.component {...props}>{childRoutes}</item.component>}
+          render={props =>
+            logado || !protegido || !soloAdmin || (soloAdmin && soyAdmin) ? (
+              <item.component {...props}>{childRoutes}</item.component>
+            ) : (
+              redireciona(props,logado)
+            )
+          }
           path={newContextPath}
-        />
+        />,
       );
-    } else if (item.component) {
-      children.push(<Route key={newContextPath} component={item.component} path={newContextPath} exact />);
-    } else if (item.childRoutes) {
+    } 
+    else if (item.component) {
+      children.push(
+        <Route
+          key={newContextPath}
+          render={props => ( (logado || !protegido) && ((soloAdmin && soyAdmin) || !soloAdmin)  ? <item.component {...props} /> : redireciona(props,logado))}
+          path={newContextPath}
+          exact
+        />,
+      );
+    } 
+    else if (item.childRoutes) {
       item.childRoutes.forEach(r => renderRoute(r, newContextPath));
     }
   };
+
+
 
   routes.forEach(item => renderRoute(item, contextPath));
 
@@ -47,7 +101,8 @@ export default class Root extends React.Component {
     routeConfig: PropTypes.array.isRequired,
   };
   render() {
-    const children = renderRouteConfigV3(this.props.routeConfig, '/');
+    estoyLogueado(this.props.store);
+    const children = renderRouteConfigV3(this.props.routeConfig, '/', this.props.store);
     return (
       <Provider store={this.props.store}>
         <ConnectedRouter history={history}>{children}</ConnectedRouter>

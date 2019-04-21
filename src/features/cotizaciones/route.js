@@ -9,6 +9,6 @@ export default {
   path: 'cotizaciones',
   name: 'Cotizaciones',
   childRoutes: [
-    { path: 'page-cotizaciones', name: 'Page cotizaciones', component: PageCotizaciones, isIndex: true },
+    { path: 'page-cotizaciones', name: 'Page cotizaciones', component: PageCotizaciones, isIndex: true,protegido:true, admin:true },
   ],
 };

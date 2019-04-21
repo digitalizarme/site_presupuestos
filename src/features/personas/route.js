@@ -10,8 +10,8 @@ export default {
   path: 'personas',
   name: 'Personas',
   childRoutes: [
-    { path: 'page-personas', name: 'Page personas', component: PagePersonas, isIndex: true },
-    { path: 'nuevo', name: 'Form personas container', component: FormPersonasContainer },
-    { path: 'editar/:id', name: 'Form personas container', component: FormPersonasContainer },
+    { path: 'page-personas', name: 'Page personas', component: PagePersonas, isIndex: true,protegido:true, },
+    { path: 'nuevo', name: 'Form personas container', component: FormPersonasContainer,protegido:true, },
+    { path: 'editar/:id', name: 'Form personas container', component: FormPersonasContainer,protegido:true, },
   ],
 };

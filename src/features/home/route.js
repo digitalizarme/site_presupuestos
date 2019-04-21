@@ -11,5 +11,9 @@ export default {
       component: PageHome,
       isIndex: true,
     },
+    { path: 'sinPermiso',
+      name: 'Page home',
+      component: PageHome,
+    },
   ],
 };

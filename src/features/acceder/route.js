@@ -10,5 +10,6 @@ export default {
   name: 'Acceder',
   childRoutes: [
     { path: 'page-acceder', name: 'Page acceder', component: PageAcceder, isIndex: true },
+    { path: 'sinSesion'  , name: 'Page acceder', component: PageAcceder },
   ],
 };

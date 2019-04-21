@@ -9,6 +9,6 @@ export default {
   path: 'configuraciones',
   name: 'Configuraciones',
   childRoutes: [
-    { path: 'page-configuraciones', name: 'Page configuraciones', component: PageConfiguraciones, isIndex: true },
+    { path: 'page-configuraciones', name: 'Page configuraciones', component: PageConfiguraciones, isIndex: true,protegido:true, admin:true },
   ],
 };

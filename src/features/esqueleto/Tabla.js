@@ -81,6 +81,8 @@ const RemoteAll = ({
   };
 
   const handleOnSelect = (row, isSelect) => {
+      limpiaImg();
+
     if (isSelect) {
       lineaSeleccionada([row]);
     } else {
@@ -100,7 +102,9 @@ const RemoteAll = ({
   const agregar = () => {
     if (usuario.b_cadastrar) {
       const { reset } = props;
-      sinModal ? history.push(`${sinModal}/nuevo`) : limpiarItemLinea() && reset() && modalToggle();
+      limpiarItemLinea();
+      
+      sinModal ? history.push(`${sinModal}/nuevo`) :  reset() && modalToggle();
     } else {
       sinPrivilegios();
     }

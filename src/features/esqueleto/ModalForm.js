@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { modalToggle,limpiaImg } from './redux/actions';
+import { modalToggle } from './redux/actions';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 export class ModalForm extends Component {
@@ -15,9 +15,8 @@ export class ModalForm extends Component {
 
   cerrarModal = () =>
   {
-    const { modalToggle, limpiaImg } = this.props.actions;
+    const { modalToggle } = this.props.actions;
     modalToggle();
-    limpiaImg();
   }
 
   render() {
@@ -53,7 +52,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ modalToggle, limpiaImg }, dispatch),
+    actions: bindActionCreators({ modalToggle }, dispatch),
   };
 }
 

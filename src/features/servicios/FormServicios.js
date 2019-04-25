@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form, Row, Col, Container } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { InputText, InputCheckBox, InputNumber, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
@@ -106,7 +107,10 @@ class FormServicios extends Component {
             </Row>
             <Button type="submit" color="success" disabled={pristine || submitting}>
               {submitting ? 'Guardando' : 'Guardar'}
-            </Button>
+            </Button>{' '}
+            <Link to="/servicios" className="btn btn-primary">
+              Cancelar
+            </Link>
           </Form>
         </Container>
       </div>

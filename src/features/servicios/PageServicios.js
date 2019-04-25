@@ -71,6 +71,7 @@ export class PageServicios extends Component {
           api_funcion={columns[0].table}
           columns={columns}
           sinModal={'servicios'}
+          {...this.props}
         />
       </div>
     );

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, limpiarItemLinea, toggleCargando } from '../esqueleto/redux/actions';
+import { apiGenerico, toggleCargando } from '../esqueleto/redux/actions';
 
 import { traerPersona, limpiarPersona } from './redux/actions';
 import { Principal } from '../esqueleto';
@@ -144,10 +144,8 @@ export class FormPersonasContainer extends Component {
     }
     //MODO CADASTRO
     else if (this.props.match.path.indexOf('nuevo') !== -1) {
-      const { limpiarPersona, limpiarItemLinea } = this.props.actions;
-
-      limpiarItemLinea();
-      limpiarPersona();
+      const { reset } = this.props;
+      reset();
     }
   };
 
@@ -211,7 +209,6 @@ function mapDispatchToProps(dispatch) {
         apiGenerico,
         traerPersona,
         limpiarPersona,
-        limpiarItemLinea,
         setaUsuarioPersona,
         toggleCargando,
       },

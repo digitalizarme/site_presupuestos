@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { limpiarItemLinea, toggleCargando } from '../esqueleto/redux/actions';
+import {  toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import { listaMonedas } from '../cotizaciones/redux/actions';
 import { traeServiciosGrupos } from '../servicios-grupos/redux/actions';
 
-import { traerServicio, limpiarServicio } from './redux/actions';
+import { traerServicio } from './redux/actions';
 import { Principal } from '../esqueleto';
 
 import { FormServicios } from './';
@@ -129,10 +129,9 @@ export class FormServiciosContainer extends Component {
     }
     //MODO CADASTRO
     else if (this.props.match.path.indexOf('nuevo') !== -1) {
-      const { limpiarServicio, limpiarItemLinea } = this.props.actions;
+      const { reset } = this.props;
 
-      limpiarItemLinea();
-      limpiarServicio();
+      reset();
       toggleCargando();
     }
     else
@@ -288,8 +287,6 @@ function mapDispatchToProps(dispatch) {
       {
         api_axio,
         traerServicio,
-        limpiarServicio,
-        limpiarItemLinea,
         listaMonedas,
         toggleCargando,
         traeServiciosGrupos,

@@ -121,7 +121,7 @@ export class PageUsuarios extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando,limpiaImg } = this.props.actions;
+    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
     const { esqueleto,acceder } = this.props;
     toggleCargando();
     if (values.c_contrasena === '') {
@@ -151,7 +151,6 @@ export class PageUsuarios extends Component {
           sortOrder: esqueleto.sortOrder,
         });
         modalToggle();
-        limpiaImg();
         toggleCargando();
         swal({
           icon: 'success',

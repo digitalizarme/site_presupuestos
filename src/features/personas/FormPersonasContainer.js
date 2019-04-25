@@ -72,11 +72,11 @@ const validationConstraintsComision = {
     },
     numericality: {
       onlyInteger: false,
-      notValid:"Este valor no es válido. Debe estar entre 0 y 100",
+      notValid: 'Este valor no es válido. Debe estar entre 0 y 100',
       greaterThan: 0,
-      notGreaterThan: "El valor debe ser mayor que zero",
+      notGreaterThan: 'El valor debe ser mayor que zero',
       lessThanOrEqualTo: 100,
-      notLessThanOrEqualTo:"El valor debe ser menor o igual a 100",
+      notLessThanOrEqualTo: 'El valor debe ser menor o igual a 100',
     },
   },
 };
@@ -89,20 +89,18 @@ export class FormPersonasContainer extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, setaUsuarioPersona,toggleCargando } = this.props.actions;
+    const { apiGenerico, setaUsuarioPersona, toggleCargando } = this.props.actions;
     const { persona } = this.props;
     toggleCargando();
-    if(!values.b_comisionista)
-    {
+    if (!values.b_comisionista) {
       values = {
-        ...values
-        ,n_valor_porcentaje_comision:null
-
-      }
+        ...values,
+        n_valor_porcentaje_comision: null,
+      };
     }
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     return apiGenerico({
       api_funcion: 'personas',
@@ -163,6 +161,7 @@ export class FormPersonasContainer extends Component {
     return (
       <div className="personas-form-personas-container">
         <Principal
+          titulo={'Personas'}
           edicion={edicion}
           component={FormPersonas}
           {...this.props}
@@ -208,7 +207,14 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, traerPersona, limpiarPersona, limpiarItemLinea, setaUsuarioPersona, toggleCargando },
+      {
+        apiGenerico,
+        traerPersona,
+        limpiarPersona,
+        limpiarItemLinea,
+        setaUsuarioPersona,
+        toggleCargando,
+      },
       dispatch,
     ),
   };

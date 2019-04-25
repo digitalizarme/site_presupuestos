@@ -1,8 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { PageServiciosGrupo } from '../../../src/features/servicios-grupo/PageServiciosGrupo';
+import { PageServiciosGrupo } from '../../../src/features/servicios-grupos/PageServiciosGrupo';
 
-describe('servicios-grupo/PageServiciosGrupo', () => {
+describe('servicios-grupos/PageServiciosGrupo', () => {
   it('renders node with correct class name', () => {
     const props = {
       serviciosGrupo: {},
@@ -13,7 +13,7 @@ describe('servicios-grupo/PageServiciosGrupo', () => {
     );
 
     expect(
-      renderedComponent.find('.servicios-grupo-page-servicios-grupo').length
+      renderedComponent.find('.servicios-grupos-page-servicios-grupo').length
     ).toBe(1);
   });
 });

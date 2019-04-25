@@ -9,3 +9,4 @@ export { limpiarLineaSeleccionada } from './limpiarLineaSeleccionada';
 export { limpiarItemLinea } from './limpiarItemLinea';
 export { setaImg } from './setaImg';
 export { toggleCargando, dismissToggleCargandoError } from './toggleCargando';
+export { limpiaImg } from './limpiaImg';

@@ -1,6 +1,6 @@
-import reducer from '../../../../src/features/servicios-grupo/redux/reducer';
+import reducer from '../../../../src/features/servicios-grupos/redux/reducer';
 
-describe('servicios-grupo/redux/reducer', () => {
+describe('servicios-grupos/redux/reducer', () => {
   it('does nothing if no matched action', () => {
     const prevState = {};
     const state = reducer(

@@ -139,5 +139,8 @@
     "extends": "react-app"
   },
   "description": "Sistema para gerenciar presupuestos",
-  "heroku-run-build-script": true
+  "heroku-run-build-script": true,
+  "devDependencies": {
+    "@types/node": "^11.13.7"
+  }
 }

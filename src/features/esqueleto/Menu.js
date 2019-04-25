@@ -71,7 +71,10 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
               <NavLink href="/personas">Personas</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/servicios-grupo">Servicios grupo</NavLink>
+              <NavLink href="/servicios-grupos">Servicios grupos</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/servicios">Servicios</NavLink>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>
@@ -100,7 +103,7 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
     <Nav className="ml-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
         <DropdownToggle nav caret title={usuario.persona.c_nombre.toUpperCase()}>
-          {usuario.persona.t_avatar?<img src={usuario.persona.t_avatar?usuario.persona.t_avatar:null} className="avatar pull-left" alt={usuario.persona.c_nombre.toUpperCase()} />:usuario.persona.c_nombre.toUpperCase()}
+          {usuario.t_avatar?<img src={usuario.t_avatar} className="avatar pull-left" alt={usuario.persona.c_nombre.toUpperCase()} />:usuario.persona.c_nombre.toUpperCase()}
 
           
         </DropdownToggle>

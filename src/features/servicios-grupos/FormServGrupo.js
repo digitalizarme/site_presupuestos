@@ -13,7 +13,7 @@ class FormServGrupo extends Component {
     const { enviarFormulario, submitting, pristine } = this.props;
 
     return (
-      <div className="servicios-grupo-form-serv-grupo">
+      <div className="servicios-grupos-form-serv-grupo">
         <Form onSubmit={enviarFormulario}  >
           <Field name="id" component="input" type="hidden" />
           <Field

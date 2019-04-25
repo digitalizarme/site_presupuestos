@@ -28,7 +28,9 @@ const ComponentCargando = ({ cargando }) => {
 };
 
 export class Cargando extends Component {
-  static propTypes = {};
+  static propTypes = {
+    cargando: PropTypes.bool.isRequired,
+  };
 
   render() {
     return <ComponentCargando cargando={this.props.cargando} />;

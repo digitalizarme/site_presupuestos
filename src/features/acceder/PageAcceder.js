@@ -82,17 +82,17 @@ export class PageAcceder extends Component {
 
   componentDidMount = () => {
     const {  limpiarAvatar } = this.props.actions;
-    const { path } = this.props.match;
+    // const { path } = this.props.match;
     limpiarAvatar();
-    if(path && path.indexOf('sinSesion') !== -1)
-    {
-        swal({
-          title: 'Ops',
-          text: 'Debes iniciar sesion antes acceder a ciertas paginas',
-          icon: 'error',
-          button: 'OK!',
-        });
-    }
+    // if(path && path.indexOf('sinSesion') !== -1)
+    // {
+    //     swal({
+    //       title: 'Ops',
+    //       text: 'Debes iniciar sesion antes acceder a ciertas paginas',
+    //       icon: 'error',
+    //       button: 'OK!',
+    //     });
+    // }
   };
 
   render() {

@@ -20,9 +20,11 @@ export default class InputNumber extends Component {
         <FormGroup className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>
           {label ? <Label>{label}</Label> : null}
           <NumberFormat
-            defaultValue={input.value}
+            name={input.name}
+            isNumericString={true}
+            value={input.value}
             onValueChange={obj => input.onChange(obj.value)}
-            onBlur={(option) => input.onBlur(option.value)}
+            onBlur={(obj) => input.onBlur(obj.value)}
             thousandSeparator="."
             decimalSeparator=","
             disabled={disabled?'disabled':false}

@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import history from './common/history';
+import swal from 'sweetalert';
 
 let logado = false;
 let soyAdmin = false;
@@ -20,12 +21,18 @@ function estoyLogueado(store) {
   }
 }
 
-function redireciona(props,logado) {
+function redireciona(props, logado) {
+  swal({
+    title: 'Ops',
+    text: !logado?'Debes iniciar sesion antes acceder a ciertas paginas':'No tienes los permisos necesarios para acceder a aquella pagina',
+    icon: 'error',
+    button: 'OK!',
+  });
   return (
     <Redirect
       to={{
-        pathname: !logado?'/acceder/sinSesion':'/sinPermiso',
-        state: { from: props.location?props.location:props },
+        pathname: !logado ? '/acceder' : '/',
+        state: { from: props.location ? props.location : props },
       }}
     />
   );
@@ -65,29 +72,31 @@ function renderRouteConfigV3(routes, contextPath, store) {
             logado || !protegido || !soloAdmin || (soloAdmin && soyAdmin) ? (
               <item.component {...props}>{childRoutes}</item.component>
             ) : (
-              redireciona(props,logado)
+              redireciona(props, logado)
             )
           }
           path={newContextPath}
         />,
       );
-    } 
-    else if (item.component) {
+    } else if (item.component) {
       children.push(
         <Route
           key={newContextPath}
-          render={props => ( (logado || !protegido) && ((soloAdmin && soyAdmin) || !soloAdmin)  ? <item.component {...props} /> : redireciona(props,logado))}
+          render={props =>
+            (logado || !protegido) && ((soloAdmin && soyAdmin) || !soloAdmin) ? (
+              <item.component {...props} />
+            ) : (
+              redireciona(props, logado)
+            )
+          }
           path={newContextPath}
           exact
         />,
       );
-    } 
-    else if (item.childRoutes) {
+    } else if (item.childRoutes) {
       item.childRoutes.forEach(r => renderRoute(r, newContextPath));
     }
   };
-
-
 
   routes.forEach(item => renderRoute(item, contextPath));
 

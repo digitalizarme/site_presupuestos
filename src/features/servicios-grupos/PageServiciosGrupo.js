@@ -54,7 +54,7 @@ const defaultSorted = [
 
 export class PageServiciosGrupo extends Component {
   static propTypes = {
-    serviciosGrupo: PropTypes.object.isRequired,
+    serviciosGrupos: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
@@ -108,7 +108,7 @@ export class PageServiciosGrupo extends Component {
     const { handleSubmit, edicion } = this.props;
 
     return (
-      <div className="servicios-grupo-page-servicios-grupo">
+      <div className="servicios-grupos-page-servicios-grupo">
         <PrincipalTabla
           titulo={'Lista de Grupo de servicios'}
           defaultSorted={defaultSorted}
@@ -134,7 +134,7 @@ PageServiciosGrupo = reduxForm({
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    serviciosGrupo: state.serviciosGrupo,
+    serviciosGrupos: state.serviciosGrupos,
     esqueleto: state.esqueleto,
     initialValues:state.esqueleto.selected[0],
     edicion: state.esqueleto.selected[0] ? true : false,

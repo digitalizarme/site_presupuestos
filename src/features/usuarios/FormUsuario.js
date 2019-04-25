@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
-import { InputText,SuperSelect } from '../esqueleto';
+import { InputText,SuperSelect,DragDrop } from '../esqueleto';
 
 import PropTypes from 'prop-types';
 import { InputCheckBox } from '../esqueleto';
@@ -19,6 +19,14 @@ export default class FormUsuario extends Component {
         <Container>
           <Form onSubmit={enviarFormulario}>
             <Field name="id" component="input" type="hidden" />
+            <Row>
+              <Col sm="12">
+                <Field
+                  name="t_avatar"
+                  component={DragDrop}
+                />
+              </Col>
+            </Row>
             <Row>
               <Col sm="2" md="2" lg="3" xl="3">
                 <Field name="b_activo" label="Activo" component={InputCheckBox} />

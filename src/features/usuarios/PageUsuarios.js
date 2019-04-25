@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { apiGenerico, procesarTabla, modalToggle, toggleCargando, limpiaImg } from '../esqueleto/redux/actions';
 import { traerPersonas } from '../personas/redux/actions';
 import { setaUsuario } from '../acceder/redux/actions';
 
@@ -121,7 +121,7 @@ export class PageUsuarios extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
+    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando,limpiaImg } = this.props.actions;
     const { esqueleto,acceder } = this.props;
     toggleCargando();
     if (values.c_contrasena === '') {
@@ -151,6 +151,7 @@ export class PageUsuarios extends Component {
           sortOrder: esqueleto.sortOrder,
         });
         modalToggle();
+        limpiaImg();
         toggleCargando();
         swal({
           icon: 'success',
@@ -241,7 +242,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando },
+      { apiGenerico, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando,limpiaImg },
       dispatch,
     ),
   };

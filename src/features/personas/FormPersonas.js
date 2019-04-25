@@ -3,7 +3,7 @@ import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { InputCheckBox, InputNumber,InputText, DragDrop } from '../esqueleto';
+import { InputCheckBox, InputNumber,InputText } from '../esqueleto';
 
 class FormPersonas extends Component {
   static propTypes = {
@@ -19,14 +19,6 @@ class FormPersonas extends Component {
         <Container>
           <Form onSubmit={enviarFormulario} className="form_border">
             <Field name="id" component="input" type="hidden" />
-            <Row>
-              <Col sm="12">
-                <Field
-                  name="t_avatar"
-                  component={DragDrop}
-                />
-              </Col>
-            </Row>
             <Row>
               <Col sm="3">
                 <Field

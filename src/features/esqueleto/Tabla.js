@@ -6,6 +6,7 @@ import {
   procesarTabla,
   lineaSeleccionada,
   modalToggle,
+  limpiaImg,
   limpiarItemLinea,
 } from './redux/actions';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
@@ -57,6 +58,7 @@ const RemoteAll = ({
   procesarTabla,
   api_funcion,
   modalToggle,
+  limpiaImg,
   limpiarItemLinea,
   sinModal,
   btnsExtra,
@@ -381,6 +383,7 @@ export class Tabla extends Component {
     const {
       procesarTabla,
       modalToggle,
+      limpiaImg,
       lineaSeleccionada,
       api_axio,
       limpiarItemLinea,
@@ -396,6 +399,7 @@ export class Tabla extends Component {
           procesarTablaPending={procesarTablaPending}
           limpiarItemLinea={limpiarItemLinea}
           modalToggle={modalToggle}
+          limpiaImg={limpiaImg}
           defaultSorted={defaultSorted}
           titulo={titulo}
           sizePerPage={sizePerPage}
@@ -433,6 +437,7 @@ function mapDispatchToProps(dispatch) {
         api_axio,
         lineaSeleccionada,
         modalToggle,
+        limpiaImg,
         limpiarItemLinea,
       },
       dispatch,

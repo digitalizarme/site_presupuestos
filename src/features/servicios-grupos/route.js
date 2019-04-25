@@ -6,8 +6,8 @@ import {
 } from './';
 
 export default {
-  path: 'servicios-grupo',
-  name: 'Servicios grupo',
+  path: 'servicios-grupos',
+  name: 'Servicios grupos',
   childRoutes: [
     { path: 'page-servicios-grupo', name: 'Page servicios grupo', component: PageServiciosGrupo, isIndex: true,protegido:true },
   ],

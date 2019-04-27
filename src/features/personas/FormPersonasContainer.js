@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, toggleCargando } from '../esqueleto/redux/actions';
+import { toggleCargando } from '../esqueleto/redux/actions';
+import api_axio from '../../common/api_axios';
 
 import { traerPersona, limpiarPersona } from './redux/actions';
 import { Principal } from '../esqueleto';
@@ -89,7 +90,7 @@ export class FormPersonasContainer extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, setaUsuarioPersona, toggleCargando } = this.props.actions;
+    const { api_axio, setaUsuarioPersona, toggleCargando } = this.props.actions;
     const { persona } = this.props;
     toggleCargando();
     if (!values.b_comisionista) {
@@ -102,7 +103,7 @@ export class FormPersonasContainer extends Component {
       data: values,
       method: values.id && values.id !== '' ? 'put' : 'post',
     };
-    return apiGenerico({
+    return api_axio({
       api_funcion: 'personas',
       params,
     })
@@ -134,18 +135,15 @@ export class FormPersonasContainer extends Component {
   };
 
   componentDidMount = () => {
+    const { path } = this.props.match;
+
     //MODO EDICION
-    if (this.props.esqueleto.selected.length === 0 && this.props.match.params.id) {
+    if (path.indexOf('editar') !== -1) {
       const { traerPersona } = this.props.actions;
       const params = {
         id: this.props.match.params.id,
       };
       traerPersona(params);
-    }
-    //MODO CADASTRO
-    else if (this.props.match.path.indexOf('nuevo') !== -1) {
-      const { reset } = this.props;
-      reset();
     }
   };
 
@@ -185,8 +183,7 @@ FormPersonasContainer = reduxForm({
 /* istanbul ignore next */
 function mapStateToProps(state) {
   const initialValues =
-    typeof state.esqueleto.selected[0] !== 'undefined' &&
-    typeof state.personas.persona === 'undefined'
+    state.router.location.pathname.indexOf('nuevo') !== -1
       ? {}
       : typeof state.esqueleto.selected[0] !== 'undefined'
       ? state.esqueleto.selected[0]
@@ -206,7 +203,7 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
       {
-        apiGenerico,
+        api_axio,
         traerPersona,
         limpiarPersona,
         setaUsuarioPersona,

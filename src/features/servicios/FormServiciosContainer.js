@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {  toggleCargando } from '../esqueleto/redux/actions';
+import { toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import { listaMonedas } from '../cotizaciones/redux/actions';
 import { traeServiciosGrupos } from '../servicios-grupos/redux/actions';
@@ -13,8 +13,11 @@ import { Principal } from '../esqueleto';
 import { FormServicios } from './';
 import swal from 'sweetalert';
 import history from '../../common/history';
-import { reduxForm } from 'redux-form';
+import { formValueSelector, reduxForm } from 'redux-form';
 import validate from 'validate.js';
+
+// Decorate with connect to read form values
+const selector = formValueSelector('formServicios'); // <-- same as form name
 
 const validationConstraints = {
   c_descripcion: {
@@ -72,6 +75,76 @@ const validationConstraints = {
   },
 };
 
+const optionsIVA = [
+  {
+    label: 'Exento',
+    value: 0,
+  },
+  {
+    label: 'IVA 5',
+    value: 5,
+  },
+  {
+    label: 'IVA 10',
+    value: 10,
+  },
+];
+
+const optionsUnidad = [
+  {
+    label: 'UN - UNIDAD',
+    value: 'UN',
+  },
+  {
+    label: 'M2 - METRO CUADRADO',
+    value: 'M2',
+  },
+  {
+    label: 'M3 - METRO CUBICO',
+    value: 'M3',
+  },
+  {
+    label: 'KG - KILO GRAMO',
+    value: 'KG',
+  },
+  {
+    label: 'GR - GRAMO',
+    value: 'GR',
+  },
+  {
+    label: 'MT - METRO',
+    value: 'MT',
+  },
+  {
+    label: 'ML - MILIGRAMO',
+    value: 'ML',
+  },
+  {
+    label: 'JG - JUEGO',
+    value: 'JG',
+  },
+  {
+    label: 'LT - LITRO',
+    value: 'LT',
+  },
+  {
+    label: 'CJ - CAJA',
+    value: 'CJ',
+  },
+  {
+    label: 'HS - HORAS',
+    value: 'HS',
+  },
+  {
+    label: 'MN - MINUTOS',
+    value: 'MN',
+  },
+  {
+    label: 'TN - TONELADA',
+    value: 'TN',
+  },
+];
+
 export class FormServiciosContainer extends Component {
   static propTypes = {
     servicios: PropTypes.object.isRequired,
@@ -115,29 +188,21 @@ export class FormServiciosContainer extends Component {
 
   componentDidMount = () => {
     const { listaMonedas, toggleCargando, traeServiciosGrupos } = this.props.actions;
+    const { path } = this.props.match;
+
     toggleCargando();
     traeServiciosGrupos();
     listaMonedas();
 
     //MODO EDICION
-    if (this.props.esqueleto.selected.length === 0 && this.props.match.params.id) {
+    if (path.indexOf('editar') !== -1) {
       const { traerServicio } = this.props.actions;
       const params = {
         id: this.props.match.params.id,
       };
       traerServicio(params).then(toggleCargando());
-    }
-    //MODO CADASTRO
-    else if (this.props.match.path.indexOf('nuevo') !== -1) {
-      const { reset } = this.props;
-
-      reset();
+    } else {
       toggleCargando();
-    }
-    else
-    {
-      toggleCargando();
-
     }
   };
 
@@ -172,8 +237,7 @@ FormServiciosContainer = reduxForm({
 /* istanbul ignore next */
 function mapStateToProps(state) {
   const initialValues =
-    typeof state.esqueleto.selected[0] !== 'undefined' &&
-    typeof state.servicios.servicio === 'undefined'
+    state.router.location.pathname.indexOf('nuevo') !== -1
       ? {}
       : typeof state.esqueleto.selected[0] !== 'undefined'
       ? state.esqueleto.selected[0]
@@ -185,6 +249,7 @@ function mapStateToProps(state) {
     monedaObj = {
       label: moneda.c_descripcion,
       value: moneda.id,
+      decimales: moneda.n_decimales,
     };
     optionsMonedas.push(monedaObj);
   }
@@ -199,76 +264,10 @@ function mapStateToProps(state) {
     optionsGrupos.push(grupoObj);
   }
 
-  const optionsIVA = [
-    {
-      label: 'Exento',
-      value: 0,
-    },
-    {
-      label: 'IVA 5',
-      value: 5,
-    },
-    {
-      label: 'IVA 10',
-      value: 10,
-    },
-  ];
-
-  const optionsUnidad = [
-    {
-      label: 'UN - UNIDAD',
-      value: 'UN',
-    },
-    {
-      label: 'M2 - METRO CUADRADO',
-      value: 'M2',
-    },
-    {
-      label: 'M3 - METRO CUBICO',
-      value: 'M3',
-    },
-    {
-      label: 'KG - KILO GRAMO',
-      value: 'KG',
-    },
-    {
-      label: 'GR - GRAMO',
-      value: 'GR',
-    },
-    {
-      label: 'MT - METRO',
-      value: 'MT',
-    },
-    {
-      label: 'ML - MILIGRAMO',
-      value: 'ML',
-    },
-    {
-      label: 'JG - JUEGO',
-      value: 'JG',
-    },
-    {
-      label: 'LT - LITRO',
-      value: 'LT',
-    },
-    {
-      label: 'CJ - CAJA',
-      value: 'CJ',
-    },
-    {
-      label: 'HS - HORAS',
-      value: 'HS',
-    },
-    {
-      label: 'MN - MINUTOS',
-      value: 'MN',
-    },
-    {
-      label: 'TN - TONELADA',
-      value: 'TN',
-    },
-  ];
-
+  let decimales = selector(state, 'n_id_moneda')
+    ? optionsMonedas.find(moneda => moneda.value === selector(state, 'n_id_moneda'))
+    : 2;
+  decimales = decimales ? decimales.decimales : 2;
   return {
     servicios: state.servicios,
     esqueleto: state.esqueleto,
@@ -277,6 +276,7 @@ function mapStateToProps(state) {
     optionsIVA,
     optionsUnidad,
     optionsGrupos,
+    decimales,
   };
 }
 

@@ -15,6 +15,7 @@ export default class InputNumber extends Component {
 
       meta: { touched, error, warning },
     } = this.props;
+
     return (
       <div className="esqueleto-input-number">
         <FormGroup className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>

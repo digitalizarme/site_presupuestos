@@ -11,8 +11,7 @@ class FormServicios extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine, edicion, optionsMonedas,optionsIVA,optionsUnidad,optionsGrupos } = this.props;
-
+    const { enviarFormulario, submitting, pristine, edicion, optionsMonedas,optionsIVA,optionsUnidad,optionsGrupos, decimales } = this.props;
     return (
       <div>
         <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Servicio</div>
@@ -37,10 +36,19 @@ class FormServicios extends Component {
             <Row>
               <Col sm="2" md="3" lg="3" xl="3">
                 <Field
+                  name="n_id_moneda"
+                  label="Moneda"
+                  options={optionsMonedas}
+                  component={SuperSelect}
+                  placeholder="Elija"
+                />
+              </Col>
+              <Col sm="2" md="3" lg="3" xl="3">
+                <Field
                   name="n_valor"
                   label="Precio"
                   component={InputNumber}
-                  decimalScale={2}
+                  decimalScale={decimales}
                   className="field form-control-lg form-control"
                 />
               </Col>
@@ -51,15 +59,6 @@ class FormServicios extends Component {
                   component={InputNumber}
                   decimalScale={2}
                   className="field form-control-lg form-control"
-                />
-              </Col>
-              <Col sm="2" md="3" lg="3" xl="3">
-                <Field
-                  name="n_id_moneda"
-                  label="Moneda"
-                  options={optionsMonedas}
-                  component={SuperSelect}
-                  placeholder="Elija"
                 />
               </Col>
               <Col sm="2" md="3" lg="3" xl="3">

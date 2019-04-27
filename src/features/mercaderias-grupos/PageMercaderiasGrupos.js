@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { FormServGrupo } from './';
-import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { FormMercaderiasGrupos } from './';
+import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
@@ -27,7 +27,7 @@ const validationConstraints = {
 const columns = [
   {
     dataField: 'c_descripcion',
-    table: 'serviciosGrupos',
+    table: 'mercaderiasGrupos',
     text: 'Descripción',
     sort: true,
     
@@ -50,9 +50,9 @@ const defaultSorted = [
   },
 ];
 
-export class PageServiciosGrupo extends Component {
+export class PageMercaderiasGrupos extends Component {
   static propTypes = {
-    serviciosGrupos: PropTypes.object.isRequired,
+    mercaderiasGrupos: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
@@ -66,12 +66,12 @@ export class PageServiciosGrupo extends Component {
     };
     toggleCargando();
     return api_axio({
-      api_funcion: 'serviciosGrupos',
+      api_funcion: 'mercaderiasGrupos',
       params,
     })
       .then(res => {
         procesarTabla({
-          api_funcion: 'serviciosGrupos',
+          api_funcion: 'mercaderiasGrupos',
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
@@ -106,14 +106,14 @@ export class PageServiciosGrupo extends Component {
     const { handleSubmit, edicion } = this.props;
 
     return (
-      <div className="servicios-grupos-page-servicios-grupo">
+      <div className="mercaderias-grupos-page-mercaderias-grupos">
         <PrincipalTabla
-          titulo={'Lista de Grupo de servicios'}
+          titulo={'Lista de Grupo de mercaderias'}
           defaultSorted={defaultSorted}
-          api_funcion={'serviciosGrupos'}
+          api_funcion={'mercaderiasGrupos'}
           columns={columns}
-          cuerpoModal={FormServGrupo}
-          tituloModal={edicion ? 'Editar Grupo de Servicios' : 'Nuevo Grupo de Servicios'}
+          cuerpoModal={FormMercaderiasGrupos}
+          tituloModal={edicion ? 'Editar Grupo de Mercaderias' : 'Nuevo Grupo de Mercaderias'}
           enviarFormulario={handleSubmit(this.submit)}
           {...this.props}
         />
@@ -122,17 +122,17 @@ export class PageServiciosGrupo extends Component {
   }
 }
 
-PageServiciosGrupo = reduxForm({
+PageMercaderiasGrupos = reduxForm({
   // a unique name for the form
-    form: 'formServGrupo',
+    form: 'formMercaderiasGrupos',
     enableReinitialize: true,
     validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(PageServiciosGrupo);
+  })(PageMercaderiasGrupos);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    serviciosGrupos: state.serviciosGrupos,
+    mercaderiasGrupos: state.mercaderiasGrupos,
     esqueleto: state.esqueleto,
     initialValues:state.esqueleto.selected[0],
     edicion: state.esqueleto.selected[0] ? true : false,
@@ -149,4 +149,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(PageServiciosGrupo);
+)(PageMercaderiasGrupos);

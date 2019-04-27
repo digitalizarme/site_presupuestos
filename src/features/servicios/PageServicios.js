@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
+import formatarNumero from '../../common/formatarNumero';
 
 const columns = [
   {
@@ -25,6 +26,7 @@ const columns = [
     dataField: 'n_valor',
     text: 'Precio',
     sort: true,
+    formatter: formatarNumero,
   },
   {
     dataField: 'n_comision',
@@ -32,6 +34,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: true,
+    formatter: formatarNumero,
   },
   {
     dataField: 'moneda.c_descripcion',

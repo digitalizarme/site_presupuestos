@@ -4,9 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {  reduxForm } from 'redux-form';
 import { FormCotizaciones } from './';
-import { apiGenerico, procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { guardarCotizaciones, listaMonedas } from './redux/actions';
-
+import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
@@ -154,7 +154,7 @@ export class PageCotizaciones extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle,toggleCargando } = this.props.actions;
+    const { api_axio, procesarTabla, modalToggle,toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
     if (values.c_monedaOrigem !== values.c_monedaDestino) {
       toggleCargando();
@@ -167,7 +167,7 @@ export class PageCotizaciones extends Component {
         data: values,
         method: values.id && values.id !== ''?'put':'post',
       };
-      return apiGenerico({
+      return api_axio({
         api_funcion: 'cotizaciones',
         params,
       })
@@ -280,7 +280,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, procesarTabla, modalToggle, guardarCotizaciones, listaMonedas, toggleCargando },
+      { api_axio, procesarTabla, modalToggle, guardarCotizaciones, listaMonedas, toggleCargando },
       dispatch,
     ),
   };

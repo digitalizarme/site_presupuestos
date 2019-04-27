@@ -71,10 +71,13 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
               <NavLink href="/personas">Personas</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink href="/servicios">Servicios</NavLink>
+            </NavItem>
+            <NavItem>
               <NavLink href="/servicios-grupos">Servicios grupos</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/servicios">Servicios</NavLink>
+              <NavLink href="/mercaderias-grupos">Mercaderias grupos</NavLink>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>

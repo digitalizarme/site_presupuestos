@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { InputText,InputCheckBox } from '../esqueleto';
+import { InputText, InputCheckBox } from '../esqueleto';
 import { Field } from 'redux-form';
 
-class FormServGrupo extends Component {
+class FormMercaderiasGrupos extends Component {
   static propTypes = {
     enviarFormulario: PropTypes.func.isRequired,
   };
@@ -13,7 +13,7 @@ class FormServGrupo extends Component {
     const { enviarFormulario, submitting, pristine } = this.props;
 
     return (
-      <div className="servicios-grupos-form-serv-grupo">
+      <div className="mercaderias-grupos-form-mercaderias-grupos">
         <Form onSubmit={enviarFormulario}  >
           <Field name="id" component="input" type="hidden" />
           <Field
@@ -34,4 +34,4 @@ class FormServGrupo extends Component {
   }
 }
 
-export default FormServGrupo;
+export default FormMercaderiasGrupos;

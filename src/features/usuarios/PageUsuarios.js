@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { apiGenerico, procesarTabla, modalToggle, toggleCargando, limpiaImg } from '../esqueleto/redux/actions';
+import { procesarTabla, modalToggle, toggleCargando, limpiaImg } from '../esqueleto/redux/actions';
 import { traerPersonas } from '../personas/redux/actions';
 import { setaUsuario } from '../acceder/redux/actions';
-
+import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import validate from 'validate.js';
@@ -121,7 +121,7 @@ export class PageUsuarios extends Component {
   };
 
   submit = values => {
-    const { apiGenerico, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
+    const { api_axio, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
     const { esqueleto,acceder } = this.props;
     toggleCargando();
     if (values.c_contrasena === '') {
@@ -131,7 +131,7 @@ export class PageUsuarios extends Component {
       data: values,
       method: values.id && values.id !== ''?'put':'post',
     };
-    return apiGenerico({
+    return api_axio({
       api_funcion: 'usuarios',
       params,
     })
@@ -241,7 +241,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { apiGenerico, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando,limpiaImg },
+      { api_axio, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando,limpiaImg },
       dispatch,
     ),
   };

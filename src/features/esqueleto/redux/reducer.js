@@ -9,7 +9,6 @@
 import initialState from './initialState';
 import { reducer as menuToggleReducer } from './menuToggle';
 import { reducer as procesarTablaReducer } from './procesarTabla';
-import { reducer as apiGenericoReducer } from './apiGenerico';
 import { reducer as lineaSeleccionadaReducer } from './lineaSeleccionada';
 import { reducer as modalToggleReducer } from './modalToggle';
 import { reducer as traerItemReducer } from './traerItem';
@@ -23,7 +22,6 @@ import { reducer as limpiaImgReducer } from './limpiaImg';
 const reducers = [
   menuToggleReducer,
   procesarTablaReducer,
-  apiGenericoReducer,
   lineaSeleccionadaReducer,
   modalToggleReducer,
   traerItemReducer,

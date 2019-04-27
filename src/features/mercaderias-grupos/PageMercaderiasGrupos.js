@@ -5,6 +5,7 @@ import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormMercaderiasGrupos } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { traeFletes } from '../fletes/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
@@ -102,6 +103,12 @@ export class PageMercaderiasGrupos extends Component {
       });
   };
 
+    componentDidMount = () => {
+    const { traeFletes } = this.props.actions;
+    traeFletes();
+  };
+
+
   render() {
     const { handleSubmit, edicion } = this.props;
 
@@ -131,18 +138,29 @@ PageMercaderiasGrupos = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+
+  const optionsFletes = [];
+  let fleteObj = {};
+  for (let flete of state.fletes.fletes) {
+      fleteObj = {
+        label: flete.moneda.c_simbolo + ' '  + flete.n_valor  + ' / ' + flete.c_tipo,
+        value: flete.id,
+      };
+      optionsFletes.push(fleteObj);
+  }
   return {
     mercaderiasGrupos: state.mercaderiasGrupos,
     esqueleto: state.esqueleto,
     initialValues:state.esqueleto.selected[0],
     edicion: state.esqueleto.selected[0] ? true : false,
+    optionsFletes,
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ api_axio, procesarTabla, modalToggle, toggleCargando }, dispatch),
+    actions: bindActionCreators({ api_axio, procesarTabla, modalToggle, toggleCargando, traeFletes }, dispatch),
   };
 }
 

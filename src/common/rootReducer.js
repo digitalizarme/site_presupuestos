@@ -12,6 +12,7 @@ import cotizacionesReducer from '../features/cotizaciones/redux/reducer';
 import configuracionesReducer from '../features/configuraciones/redux/reducer';
 import serviciosReducer from '../features/servicios/redux/reducer';
 import mercaderiasGruposReducer from '../features/mercaderias-grupos/redux/reducer';
+import fletesReducer from '../features/fletes/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
 // This is used for Rekit cmds to register new features, remove features, etc.
@@ -32,6 +33,7 @@ const reducerMap = {
   configuraciones: configuracionesReducer,
   servicios: serviciosReducer,
   mercaderiasGrupos: mercaderiasGruposReducer,
+  fletes: fletesReducer,
 };
 
 export default combineReducers(reducerMap);

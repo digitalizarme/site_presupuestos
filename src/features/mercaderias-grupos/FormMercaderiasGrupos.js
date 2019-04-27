@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'reactstrap';
+import {  Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { InputText, InputCheckBox } from '../esqueleto';
+import { InputText, InputCheckBox, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
 
 class FormMercaderiasGrupos extends Component {
@@ -10,25 +10,37 @@ class FormMercaderiasGrupos extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine } = this.props;
+    const { optionsFletes } = this.props;
 
     return (
       <div className="mercaderias-grupos-form-mercaderias-grupos">
-        <Form onSubmit={enviarFormulario}  >
-          <Field name="id" component="input" type="hidden" />
-          <Field
-            name="c_descripcion"
-            bsSize="lg"
-            className="field"
-            label="Descripción"
-            component={InputText}
-            type="text"
-          />
-          <Field name="b_activo" label="Activo" component={InputCheckBox} />
-          <Button type="submit" color="success" disabled={pristine || submitting}>
-            {submitting ? 'Guardando' : 'Guardar'}
-          </Button>
-        </Form>
+        <Row>
+          <Col sm="12">
+            <Field name="id" component="input" type="hidden" />
+            <Field
+              name="c_descripcion"
+              bsSize="lg"
+              className="field"
+              label="Descripción"
+              component={InputText}
+              type="text"
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col sm="6">
+            <Field
+              name="n_id_flete"
+              label="Flete"
+              options={optionsFletes}
+              component={SuperSelect}
+              placeholder="Elija"
+            />
+          </Col>
+          <Col sm="6">
+            <Field name="b_activo" label="Activo" component={InputCheckBox} />
+          </Col>
+        </Row>
       </div>
     );
   }

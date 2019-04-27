@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  PageConfiguraciones,
+  FormConfiguracionesContainer,
 } from './';
 
 export default {
   path: 'configuraciones',
   name: 'Configuraciones',
   childRoutes: [
-    { path: 'page-configuraciones', name: 'Page configuraciones', component: PageConfiguraciones, isIndex: true,protegido:true, admin:true },
+    { path: 'form-configuraciones-container', name: 'Form configuraciones container', component: FormConfiguracionesContainer, isIndex: true,protegido:true, admin:true },
   ],
 };

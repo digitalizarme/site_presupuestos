@@ -9,7 +9,7 @@ import { InputCheckBox } from '../esqueleto';
 export default class FormUsuario extends Component {
   static propTypes = {
     edicion: PropTypes.bool.isRequired,
-    enviarFormulario: PropTypes.func.isRequired,
+    optionsPersonas:PropTypes.array.isRequired,
   };
 
   render() {

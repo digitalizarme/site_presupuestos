@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  PageCotizaciones,
+  ListaCotizaciones,
 } from './';
 
 export default {
   path: 'cotizaciones',
   name: 'Cotizaciones',
   childRoutes: [
-    { path: 'page-cotizaciones', name: 'Page cotizaciones', component: PageCotizaciones, isIndex: true,protegido:true, admin:true },
+    { path: 'lista-cotizaciones', name: 'Lista cotizaciones', component: ListaCotizaciones, isIndex: true,protegido:true, admin:true },
   ],
 };

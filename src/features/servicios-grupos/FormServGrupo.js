@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { InputText,InputCheckBox } from '../esqueleto';
 import { Field } from 'redux-form';
 
 class FormServGrupo extends Component {
-  static propTypes = {
-    enviarFormulario: PropTypes.func.isRequired,
-  };
 
   render() {
 

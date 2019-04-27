@@ -6,7 +6,7 @@ import { Field } from 'redux-form';
 
 class FormMercaderiasGrupos extends Component {
   static propTypes = {
-    enviarFormulario: PropTypes.func.isRequired,
+    optionsFletes: PropTypes.array.isRequired,
   };
 
   render() {

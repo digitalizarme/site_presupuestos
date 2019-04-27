@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  DefaultPage,
+  ListaFletes,
 } from './';
 
 export default {
   path: 'fletes',
   name: 'Fletes',
   childRoutes: [
-    { path: 'default-page', name: 'Default page', component: DefaultPage, isIndex: true },
+    { path: 'lista-fletes', name: 'Lista fletes', component: ListaFletes, isIndex: true, protegido:true },
   ],
 };

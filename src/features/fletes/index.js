@@ -1,1 +1,2 @@
-export { default as DefaultPage } from './DefaultPage';
+export { default as ListaFletes } from './ListaFletes';
+export { default as FormFletes } from './FormFletes';

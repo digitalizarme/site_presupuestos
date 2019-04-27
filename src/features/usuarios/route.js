@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  PageUsuarios,
+  ListaUsuarios,
 } from './';
 
 export default {
   path: 'usuarios',
   name: 'Usuarios',
   childRoutes: [
-    { path: 'page-usuarios', name: 'Page usuarios', component: PageUsuarios, isIndex: true,protegido:true, admin:true },
+    { path: 'lista-usuarios', name: 'Lista usuarios', component: ListaUsuarios, isIndex: true,protegido:true, admin:true },
   ],
 };

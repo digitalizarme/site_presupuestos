@@ -65,19 +65,35 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
         <DropdownToggle nav caret>
           Catastro
         </DropdownToggle>
-        <DropdownMenu right>
+        <DropdownMenu left="true">
           <DropdownItem>
             <NavItem>
               <NavLink href="/personas">Personas</NavLink>
             </NavItem>
             <NavItem>
+              <NavLink href="/mercaderias">Mercaderias</NavLink>
+            </NavItem>
+            <NavItem>
               <NavLink href="/servicios">Servicios</NavLink>
+            </NavItem>
+             <DropdownItem divider />
+            <NavItem>
+              <NavLink href="/mercaderias-marcas">Mercaderias marcas</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/mercaderias-grupos">Mercaderias grupos</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/mercaderias-sub-grupos">Mercaderias sub-grupos</NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="/servicios-grupos">Servicios grupos</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/mercaderias-grupos">Mercaderias grupos</NavLink>
+              <NavLink href="/fletes">Fletes</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink href="/seguros">Seguros</NavLink>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>

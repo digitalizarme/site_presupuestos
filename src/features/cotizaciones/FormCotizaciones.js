@@ -6,7 +6,7 @@ import { Field } from 'redux-form';
 
 export default class FormCotizaciones extends Component {
   static propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
+    optionsMonedas: PropTypes.array.isRequired,
   };
 
   render() {

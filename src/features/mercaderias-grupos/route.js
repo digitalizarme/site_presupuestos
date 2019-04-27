@@ -2,13 +2,13 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 
 import {
-  PageMercaderiasGrupos,
+  ListaMercaderiasGrupos,
 } from './';
 
 export default {
   path: 'mercaderias-grupos',
   name: 'Mercaderias grupos',
   childRoutes: [
-    { path: 'page-mercaderias-grupos', name: 'Page mercaderias grupos', component: PageMercaderiasGrupos, isIndex: true,protegido:true },
+    { path: 'lista-mercaderias-grupos', name: 'Lista mercaderias grupos', component: ListaMercaderiasGrupos, isIndex: true,protegido:true },
   ],
 };

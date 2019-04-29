@@ -24,7 +24,7 @@ class FormMercaderiasSubGrupos extends Component {
         </Row>
         <Row>
           <Col sm="12">
-            <Field name="b_activo" label="Activo" component={InputCheckBox} />
+            <Field name="b_activo" label="Activo" activado component={InputCheckBox} />
           </Col>
         </Row>
       </div>

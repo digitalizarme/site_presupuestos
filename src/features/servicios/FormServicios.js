@@ -30,7 +30,7 @@ class FormServicios extends Component {
                 />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
-                <Field name="b_activo" label="Activo" component={InputCheckBox} />
+                <Field name="b_activo" activado label="Activo" component={InputCheckBox} />
               </Col>
             </Row>
             <Row>

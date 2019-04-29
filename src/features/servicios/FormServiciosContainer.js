@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
-import { optionsUnidad,optionsIVA } from '../../common/constantesGenerales';
+import { optionsUnidad, optionsIVA } from '../../common/constantesGenerales';
 import { listaMonedas } from '../cotizaciones/redux/actions';
 import { traeServiciosGrupos } from '../servicios-grupos/redux/actions';
 
@@ -75,7 +75,6 @@ const validationConstraints = {
     },
   },
 };
-
 
 export class FormServiciosContainer extends Component {
   static propTypes = {
@@ -168,6 +167,8 @@ FormServiciosContainer = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+  const modoNuevo = state.router.location.pathname.indexOf('nuevo') !== -1;
+
   const initialValues =
     state.router.location.pathname.indexOf('nuevo') !== -1
       ? {}
@@ -178,22 +179,26 @@ function mapStateToProps(state) {
   const optionsMonedas = [];
   let monedaObj = {};
   for (let moneda of state.cotizaciones.monedas) {
-    monedaObj = {
-      label: moneda.c_descripcion,
-      value: moneda.id,
-      decimales: moneda.n_decimales,
-    };
-    optionsMonedas.push(monedaObj);
+    if ((modoNuevo && moneda.b_activo) || ( (!modoNuevo && initialValues.n_id_moneda === moneda.id) || moneda.b_activo) ) {
+      monedaObj = {
+        label: moneda.c_descripcion,
+        value: moneda.id,
+        decimales: moneda.n_decimales,
+      };
+      optionsMonedas.push(monedaObj);
+    }
   }
 
   const optionsGrupos = [];
   let grupoObj = {};
   for (let grupo of state.serviciosGrupos.grupos) {
-    grupoObj = {
-      label: grupo.c_descripcion,
-      value: grupo.id,
-    };
-    optionsGrupos.push(grupoObj);
+    if ((modoNuevo && grupo.b_activo) || ( (!modoNuevo && initialValues.n_id_grupo === grupo.id) || grupo.b_activo) ) {
+      grupoObj = {
+        label: grupo.c_descripcion,
+        value: grupo.id,
+      };
+      optionsGrupos.push(grupoObj);
+    }
   }
 
   let decimales = selector(state, 'n_id_moneda')

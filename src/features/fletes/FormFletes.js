@@ -17,7 +17,7 @@ class FormFletes extends Component {
         <Row>
           <Col sm="12">
             <Field name="id" component="input" type="hidden" />
-            <Field name="b_activo" label="Activo" component={InputCheckBox} />
+            <Field name="b_activo" activado label="Activo" component={InputCheckBox} />
           </Col>
         </Row>
         <Row>

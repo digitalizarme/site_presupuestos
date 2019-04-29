@@ -121,23 +121,28 @@ export class ListaUsuarios extends Component {
   };
 
   submit = values => {
-    const { api_axio, procesarTabla, modalToggle,setaUsuario, toggleCargando } = this.props.actions;
-    const { esqueleto,acceder } = this.props;
+    const {
+      api_axio,
+      procesarTabla,
+      modalToggle,
+      setaUsuario,
+      toggleCargando,
+    } = this.props.actions;
+    const { esqueleto, acceder } = this.props;
     toggleCargando();
     if (values.c_contrasena === '') {
       delete values['c_contrasena'];
     }
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     return api_axio({
       api_funcion: 'usuarios',
       params,
     })
       .then(res => {
-        if(res.data.id === acceder.usuario.id)
-        {
+        if (res.data.id === acceder.usuario.id) {
           setaUsuario(res.data);
         }
         procesarTabla({
@@ -216,15 +221,22 @@ function mapStateToProps(state) {
       c_contrasena: '',
     };
   }
+  const modoNuevo = initialValues ? false : true;
+
   const optionsPersonas = [];
   let personaObj = {};
   for (let persona of state.personas.personas) {
-    if (persona.b_usuario) {
-      personaObj = {
-        label: persona.c_nombre,
-        value: persona.id,
-      };
-      optionsPersonas.push(personaObj);
+    if (
+      (modoNuevo && persona.b_activo) ||
+      ((!modoNuevo && initialValues.n_id_persona === persona.id) || persona.b_activo)
+    ) {
+      if (persona.b_usuario) {
+        personaObj = {
+          label: persona.c_nombre,
+          value: persona.id,
+        };
+        optionsPersonas.push(personaObj);
+      }
     }
   }
   return {
@@ -241,7 +253,15 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { api_axio, procesarTabla, modalToggle, traerPersonas,setaUsuario, toggleCargando,limpiaImg },
+      {
+        api_axio,
+        procesarTabla,
+        modalToggle,
+        traerPersonas,
+        setaUsuario,
+        toggleCargando,
+        limpiaImg,
+      },
       dispatch,
     ),
   };

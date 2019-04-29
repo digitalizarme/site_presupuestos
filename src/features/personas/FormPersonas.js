@@ -134,7 +134,7 @@ class FormPersonas extends Component {
                 </Col>
               ) : null}
               <Col sm="2" md="2" lg="2" xl="2">
-                <Field name="b_cliente" label="Cliente" component={InputCheckBox} />
+                <Field name="b_cliente" activado label="Cliente" component={InputCheckBox} />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
                 <Field name="b_funcionario" label="Funcionario" component={InputCheckBox} />

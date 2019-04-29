@@ -8,6 +8,7 @@ export default class InputCheckBox extends Component {
     const {
       input,
       label,
+      activado,
       disabled,
     } = this.props;
     return (
@@ -18,7 +19,7 @@ export default class InputCheckBox extends Component {
          type="checkbox" 
          color="success"
          name={input.name}
-         checked={input.value?input.value:false}
+         checked={typeof input.value !== "undefined" && input.value !== ''?input.value:(activado?true:false)}
          onChange={input.onChange}
          value={input.value?input.value:false}
          disabled={disabled ? 'disabled' : ''}

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
-import { optionsUnidad,optionsIVA } from '../../common/constantesGenerales';
+import { optionsUnidad, optionsIVA } from '../../common/constantesGenerales';
 import { listaMonedas } from '../cotizaciones/redux/actions';
 import { traeMercaderiasGrupos } from '../mercaderias-grupos/redux/actions';
 import { traeMercaderiasSubGrupos } from '../mercaderias-sub-grupos/redux/actions';
@@ -37,9 +37,19 @@ const validationConstraints = {
       message: 'Unidad es obligatorio',
     },
   },
+  n_id_marca: {
+    presence: {
+      message: 'Marca es obligatorio',
+    },
+  },
   n_id_grupo: {
     presence: {
       message: 'Grupo es obligatorio',
+    },
+  },
+  n_id_subgrupo: {
+    presence: {
+      message: 'Sub-grupo es obligatorio',
     },
   },
   n_iva: {
@@ -52,9 +62,29 @@ const validationConstraints = {
       message: 'Moneda es obligatorio',
     },
   },
+  n_costo: {
+    presence: {
+      message: 'Costo es obligatorio',
+    },
+    numericality: {
+      onlyInteger: false,
+      notValid: 'Este valor no es válido.',
+    },
+  },
   n_venta: {
     presence: {
-      message: 'Precio es obligatorio',
+      message: 'Precio de venta es obligatorio',
+    },
+    numericality: {
+      onlyInteger: false,
+      notValid: 'Este valor no es válido.',
+      greaterThan: 0,
+      notGreaterThan: 'El valor debe ser mayor que zero',
+    },
+  },
+  n_peso: {
+    presence: {
+      message: 'Peso es obligatorio',
     },
     numericality: {
       onlyInteger: false,
@@ -77,7 +107,6 @@ const validationConstraints = {
     },
   },
 };
-
 
 export class FormMercaderiasContainer extends Component {
   static propTypes = {
@@ -121,7 +150,13 @@ export class FormMercaderiasContainer extends Component {
   };
 
   componentDidMount = () => {
-    const { listaMonedas, toggleCargando, traeMercaderiasGrupos,traeMercaderiasSubGrupos,traeMercaderiasMarcas } = this.props.actions;
+    const {
+      listaMonedas,
+      toggleCargando,
+      traeMercaderiasGrupos,
+      traeMercaderiasSubGrupos,
+      traeMercaderiasMarcas,
+    } = this.props.actions;
     const { path } = this.props.match;
 
     toggleCargando();
@@ -172,52 +207,61 @@ FormMercaderiasContainer = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  const initialValues =
-    state.router.location.pathname.indexOf('nuevo') !== -1
-      ? {}
-      : typeof state.esqueleto.selected[0] !== 'undefined'
-      ? state.esqueleto.selected[0]
-      : state.mercaderias.mercaderia;
+  const modoNuevo = state.router.location.pathname.indexOf('nuevo') !== -1;
+
+  const initialValues = modoNuevo
+    ? {}
+    : typeof state.esqueleto.selected[0] !== 'undefined'
+    ? state.esqueleto.selected[0]
+    : state.mercaderias.mercaderia;
 
   const optionsMonedas = [];
   let monedaObj = {};
   for (let moneda of state.cotizaciones.monedas) {
-    monedaObj = {
-      label: moneda.c_descripcion,
-      value: moneda.id,
-      decimales: moneda.n_decimales,
-    };
-    optionsMonedas.push(monedaObj);
+    if ((modoNuevo && moneda.b_activo) || ( (!modoNuevo && initialValues.n_id_moneda === moneda.id) || moneda.b_activo) ) {
+      monedaObj = {
+        label: moneda.c_descripcion,
+        value: moneda.id,
+        decimales: moneda.n_decimales,
+      };
+      optionsMonedas.push(monedaObj);
+    }
   }
 
   const optionsGrupos = [];
   let grupoObj = {};
   for (let grupo of state.mercaderiasGrupos.grupos) {
-    grupoObj = {
-      label: grupo.c_descripcion,
-      value: grupo.id,
-    };
-    optionsGrupos.push(grupoObj);
+    if ((modoNuevo && grupo.b_activo) || ( (!modoNuevo && initialValues.n_id_grupo === grupo.id) || grupo.b_activo) ) {
+      grupoObj = {
+        label: grupo.c_descripcion,
+        value: grupo.id,
+      };
+      optionsGrupos.push(grupoObj);
+    }
   }
 
   const optionsSubGrupos = [];
   let subGrupoObj = {};
-  for (let grupo of state.mercaderiasSubGrupos.subGrupos) {
-    subGrupoObj = {
-      label: grupo.c_descripcion,
-      value: grupo.id,
-    };
-    optionsSubGrupos.push(subGrupoObj);
+  for (let subGrupo of state.mercaderiasSubGrupos.subGrupos) {
+    if ((modoNuevo && subGrupo.b_activo) || ( (!modoNuevo && initialValues.n_id_subgrupo === subGrupo.id) || subGrupo.b_activo) ) {
+      subGrupoObj = {
+        label: subGrupo.c_descripcion,
+        value: subGrupo.id,
+      };
+      optionsSubGrupos.push(subGrupoObj);
+    }
   }
 
   const optionsMarcas = [];
   let marcasObj = {};
-  for (let grupo of state.mercaderiasMarcas.marcas) {
-    marcasObj = {
-      label: grupo.c_descripcion,
-      value: grupo.id,
-    };
-    optionsMarcas.push(marcasObj);
+  for (let marca of state.mercaderiasMarcas.marcas) {
+    if ((modoNuevo && marca.b_activo) || ( (!modoNuevo && initialValues.n_id_marca === marca.id) || marca.b_activo) ) {
+      marcasObj = {
+        label: marca.c_descripcion,
+        value: marca.id,
+      };
+      optionsMarcas.push(marcasObj);
+    }
   }
 
   let decimales = selector(state, 'n_id_moneda')

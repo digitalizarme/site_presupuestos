@@ -24,15 +24,12 @@ const validationConstraints = {
   },
 };
 
-
 const columns = [
   {
     dataField: 'c_descripcion',
     table: 'mercaderiasGrupos',
     text: 'Descripción',
     sort: true,
-    
-
   },
   {
     dataField: 'updatedAt',
@@ -40,7 +37,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
-    formatter: formatarFecha
+    formatter: formatarFecha,
   },
 ];
 
@@ -63,7 +60,7 @@ export class ListaMercaderiasGrupos extends Component {
     const { esqueleto } = this.props;
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     toggleCargando();
     return api_axio({
@@ -76,7 +73,7 @@ export class ListaMercaderiasGrupos extends Component {
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
-          columns:JSON.stringify(columns),
+          columns: JSON.stringify(columns),
           searchText: esqueleto.searchText,
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
@@ -103,11 +100,10 @@ export class ListaMercaderiasGrupos extends Component {
       });
   };
 
-    componentDidMount = () => {
+  componentDidMount = () => {
     const { traeFletes } = this.props.actions;
     traeFletes();
   };
-
 
   render() {
     const { handleSubmit, edicion } = this.props;
@@ -131,27 +127,34 @@ export class ListaMercaderiasGrupos extends Component {
 
 ListaMercaderiasGrupos = reduxForm({
   // a unique name for the form
-    form: 'formMercaderiasGrupos',
-    enableReinitialize: true,
-    validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(ListaMercaderiasGrupos);
+  form: 'formMercaderiasGrupos',
+  enableReinitialize: true,
+  validate: values => validate(values, validationConstraints, { fullMessages: false }),
+})(ListaMercaderiasGrupos);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+  const initialValues = state.esqueleto.selected[0];
+  const modoNuevo = initialValues?false:true;
 
   const optionsFletes = [];
   let fleteObj = {};
   for (let flete of state.fletes.fletes) {
+    if (
+      (modoNuevo && flete.b_activo) ||
+      ((!modoNuevo && initialValues.n_id_flete === flete.id) || flete.b_activo)
+    ) {
       fleteObj = {
-        label: flete.moneda.c_simbolo + ' '  + flete.n_valor  + ' / ' + flete.c_tipo,
+        label: flete.moneda.c_simbolo + ' ' + flete.n_valor + ' / ' + flete.c_tipo,
         value: flete.id,
       };
       optionsFletes.push(fleteObj);
+    }
   }
   return {
     mercaderiasGrupos: state.mercaderiasGrupos,
     esqueleto: state.esqueleto,
-    initialValues:state.esqueleto.selected[0],
+    initialValues,
     edicion: state.esqueleto.selected[0] ? true : false,
     optionsFletes,
   };
@@ -160,7 +163,10 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ api_axio, procesarTabla, modalToggle, toggleCargando, traeFletes }, dispatch),
+    actions: bindActionCreators(
+      { api_axio, procesarTabla, modalToggle, toggleCargando, traeFletes },
+      dispatch,
+    ),
   };
 }
 

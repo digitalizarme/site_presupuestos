@@ -28,7 +28,7 @@ export default class FormUsuario extends Component {
           </Row>
           <Row>
             <Col sm="2" md="2" lg="3" xl="3">
-              <Field name="b_activo" label="Activo" component={InputCheckBox} />
+              <Field name="b_activo" label="Activo" activado component={InputCheckBox} />
             </Col>
             <Col sm="2" md="2" lg="1" xl="1">
               <Field name="b_administrador" label="Administrador" component={InputCheckBox} />
@@ -72,16 +72,16 @@ export default class FormUsuario extends Component {
           </Row>
           <Row>
             <Col sm="4" md="3" lg="3" xl="3">
-              <Field name="b_cadastrar" label="Cadastrar" component={InputCheckBox} />
+              <Field name="b_cadastrar" activado label="Cadastrar" component={InputCheckBox} />
             </Col>
             <Col sm="4" md="3" lg="3" xl="3">
-              <Field name="b_editar" label="Editar" component={InputCheckBox} />
+              <Field name="b_editar" activado label="Editar" component={InputCheckBox} />
             </Col>
             <Col sm="4" md="3" lg="3" xl="3">
-              <Field name="b_eliminar" label="Eliminar" component={InputCheckBox} />
+              <Field name="b_eliminar" activado label="Eliminar" component={InputCheckBox} />
             </Col>
             <Col sm="4" md="3" lg="3" xl="3">
-              <Field name="b_imprimir" label="Imprimir" component={InputCheckBox} />
+              <Field name="b_imprimir" activado label="Imprimir" component={InputCheckBox} />
             </Col>
           </Row>
         </Container>

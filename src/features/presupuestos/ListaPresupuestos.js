@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
 import formatarFecha from '../../common/formatarFecha';
+import formatarNumero from '../../common/formatarNumero';
 
 const columns = [
   {
@@ -27,12 +28,6 @@ const columns = [
     editable: false,
   },
   {
-    dataField: 'moneda.c_descripcion',
-    text: 'Moneda',
-    sort: true,
-    editable: false,
-  },
-  {
     dataField: 'status.c_descripcion',
     text: 'Status',
     sort: true,
@@ -45,11 +40,18 @@ const columns = [
     editable: false,
   },
   {
+    dataField: 'moneda.c_descripcion',
+    text: 'Moneda',
+    sort: true,
+    editable: false,
+  },
+  {
     dataField: 'n_total',
     text: 'Total',
     sort: true,
     editable: false,
     searchable: false,
+    formatter: formatarNumero,
   },
   {
     dataField: 'updatedAt',

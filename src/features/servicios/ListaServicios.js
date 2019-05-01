@@ -48,7 +48,7 @@ const columns = [
     text: 'Activo',
     sort: true,
     editable: false,
-    searchable: true,
+    searchable: false,
   },
 ];
 

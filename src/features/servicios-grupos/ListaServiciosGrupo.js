@@ -35,10 +35,9 @@ const columns = [
   },
   {
     dataField: 'updatedAt',
-    text: 'Atualizado',
+    text: 'Actualizado',
     sort: true,
     editable: false,
-    searchable: false,
     formatter: formatarFecha
   },
 ];

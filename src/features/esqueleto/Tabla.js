@@ -25,6 +25,7 @@ import { Button, Row, Col } from 'reactstrap';
 import { ModalForm } from './';
 import history from '../../common/history';
 import api_axio from '../../common/api_axios';
+import mostraMensajeError from '../../common/mostraMensajeError';
 
 const CustomTotal = (from, to, size) => (
   <span className="react-bootstrap-table-pagination-total">
@@ -187,18 +188,7 @@ const RemoteAll = ({
                 });
               })
               .catch(err => {
-                if (typeof err.response !== 'undefined' && err.response.status !== 401) {
-                  const { message } =
-                    typeof err.response !== 'undefined'
-                      ? err.response.data
-                      : 'Error al intentar eliminar';
-                  swal({
-                    title: 'Ops',
-                    text: message ? message : 'Error al intentar eliminar',
-                    icon: 'error',
-                    button: 'OK!',
-                  });
-                }
+                mostraMensajeError({err,msgPadron:'Error al intentar eliminar'});
               });
           }
         });
@@ -230,18 +220,7 @@ const RemoteAll = ({
         done(true);
       })
       .catch(err => {
-        if (typeof err.response !== 'undefined' && err.response.status !== 401) {
-          const { message } =
-            typeof err.response !== 'undefined'
-              ? err.response.data
-              : 'Error al intentar actualizar';
-          swal({
-            title: 'Ops',
-            text: message ? message : 'Error al intentar actualizar',
-            icon: 'error',
-            button: 'OK!',
-          });
-        }
+        mostraMensajeError({err,msgPadron:'Error al intentar actualizar'});
         done(false);
       });
     return { async: true };
@@ -370,7 +349,9 @@ export class Tabla extends Component {
       sortOrder,
       defaultSorted: JSON.stringify(defaultSorted),
     };
-    procesarTabla(params);
+    procesarTabla(params).catch(err=>{
+      mostraMensajeError({err,msgPadron:'Error al intentar traer los datos'});
+    });
   };
 
   render() {

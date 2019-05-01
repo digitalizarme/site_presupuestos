@@ -17,6 +17,7 @@ import mercaderiasSubGruposRoute from '../features/mercaderias-sub-grupos/route'
 import mercaderiasMarcasRoute from '../features/mercaderias-marcas/route';
 import mercaderiasRoute from '../features/mercaderias/route';
 import segurosRoute from '../features/seguros/route';
+import presupuestosRoute from '../features/presupuestos/route';
 
 // NOTE: DO NOT CHANGE the 'childRoutes' name and the declaration pattern.
 // This is used for Rekit cmds to register routes config for new features, and remove config when remove features, etc.
@@ -37,6 +38,7 @@ const childRoutes = [
   mercaderiasMarcasRoute,
   mercaderiasRoute,
   segurosRoute,
+  presupuestosRoute,
 ];
 
 const routes = [{

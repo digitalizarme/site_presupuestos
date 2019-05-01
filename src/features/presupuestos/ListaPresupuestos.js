@@ -3,38 +3,27 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
-import formatarNumero from '../../common/formatarNumero';
+import formatarFecha from '../../common/formatarFecha';
 
 const columns = [
   {
-    dataField: 'c_descripcion',
-    table: 'Mercaderias',
-    text: 'Descripción',
+    dataField: 'id',
+    table: 'Presupuestos',
+    text: 'Num.',
     sort: true,
+    editable: false,
+    searchable: false,
   },
   {
-    dataField: 'c_unidad',
-    text: 'Unidad',
+    dataField: 'persona.c_nombre',
+    text: 'Nombre',
     sort: true,
     editable: false,
   },
   {
-    dataField: 'marca.c_descripcion',
-    text: 'Marca',
+    dataField: 'persona.c_identificacion',
+    text: 'Identificacíon',
     sort: true,
-    editable: false,
-  },
-  {
-    dataField: 'grupo.c_descripcion',
-    text: 'Grupo',
-    sort: true,
-    editable: false,
-  },
-  {
-    dataField: 'n_venta',
-    text: 'Precio',
-    sort: true,
-    formatter: formatarNumero,
     editable: false,
   },
   {
@@ -44,37 +33,55 @@ const columns = [
     editable: false,
   },
   {
-    dataField: 'c_activo',
-    text: 'Activo',
+    dataField: 'status.c_descripcion',
+    text: 'Status',
+    sort: true,
+    editable: false,
+  },
+  {
+    dataField: 'usuario.c_usuario',
+    text: 'Creado por',
+    sort: true,
+    editable: false,
+  },
+  {
+    dataField: 'n_total',
+    text: 'Total',
     sort: true,
     editable: false,
     searchable: false,
+  },
+  {
+    dataField: 'updatedAt',
+    text: 'Actualizado',
+    sort: true,
+    editable: false,
+    formatter: formatarFecha,
   },
 ];
 
 const defaultSorted = [
   {
-    dataField: 'c_descripcion',
+    dataField: 'persona.c_nombre',
     order: 'asc',
   },
 ];
 
-export class ListaMercaderias extends Component {
+export class ListaPresupuestos extends Component {
   static propTypes = {
-    mercaderias: PropTypes.object.isRequired,
+    presupuestos: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
 
   render() {
     return (
-      <div className="mercaderias-lista-mercaderias">
+      <div className="presupuestos-lista-presupuestos">
         <PrincipalTabla
-          titulo={'Lista de Mercaderias'}
+          titulo={'Lista de Presupuestos'}
           defaultSorted={defaultSorted}
           api_funcion={columns[0].table}
           columns={columns}
-          sinModal={'mercaderias'}
-          {...this.props}
+          sinModal={'presupuestos'}
         />
       </div>
     );
@@ -84,7 +91,7 @@ export class ListaMercaderias extends Component {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    mercaderias: state.mercaderias,
+    presupuestos: state.presupuestos,
   };
 }
 
@@ -98,4 +105,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ListaMercaderias);
+)(ListaPresupuestos);

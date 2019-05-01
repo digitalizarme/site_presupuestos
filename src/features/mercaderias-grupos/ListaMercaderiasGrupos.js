@@ -36,7 +36,6 @@ const columns = [
     text: 'Atualizado',
     sort: true,
     editable: false,
-    searchable: false,
     formatter: formatarFecha,
   },
 ];

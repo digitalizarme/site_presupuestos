@@ -83,7 +83,7 @@ export class ListaPresupuestos extends Component {
           defaultSorted={defaultSorted}
           api_funcion={columns[0].table}
           columns={columns}
-          sinModal={'presupuestos'}
+          sinModal={'/presupuestos'}
         />
       </div>
     );

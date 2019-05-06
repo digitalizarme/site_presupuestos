@@ -12,6 +12,8 @@ const initialState = {
   personas: [],
   traerPersonasPending: false,
   traerPersonasError: null,
+  traePersonasTodasPending: false,
+  traePersonasTodasError: null,
 };
 
 export default initialState;

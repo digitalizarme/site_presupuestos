@@ -6,6 +6,14 @@
 
 // NOTE: initialState constant is necessary so that Rekit could auto add initial state when creating async actions.
 const initialState = {
+  traeStatusPending: false,
+  traeStatusError: null,
+  status:[],
+  traerPresupuestoPending: false,
+  traerPresupuestoError: null,
+  traeFrecuenciasPending: false,
+  traeFrecuenciasError: null,
+  frecuencias:[],
 };
 
 export default initialState;

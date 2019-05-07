@@ -71,6 +71,7 @@ class FormPresupuestos extends Component {
       agregar,
       editar,
       eliminar,
+      items,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -150,7 +151,22 @@ class FormPresupuestos extends Component {
                         <th>Seguro</th>
                       </tr>
                     </thead>
-                    <tbody />
+                    <tbody>
+                      {items.map((item,indice) =>(
+                      <tr>
+                        <td>{item.c_descripcion}</td>
+                        <td>{item.n_cantidad}</td>
+                        <td>{item.n_unitario}</td>
+                        <td>{item.n_exentas}</td>
+                        <td>{item.n_gravadas_5}</td>
+                        <td>{item.n_gravadas_10}</td>
+                        <td>{item.n_peso}</td>
+                        <td>{item.n_flete}</td>
+                        <td>{item.c_seguro}</td>
+                      </tr>
+
+                      ))}
+                    </tbody>
                   </table>
                 </Collapse>
               </Col>
@@ -328,7 +344,7 @@ class FormPresupuestos extends Component {
               <Col>
                 <Collapse isOpen={this.state.collapseTotalG}>
                   <Row>
-                    <Col sm="4">
+                    <Col sm="12">
                       <Field
                         name="n_desc_redondeo"
                         label="Descuento/Redondeo : "
@@ -337,7 +353,7 @@ class FormPresupuestos extends Component {
                         className="field form-control-lg form-control"
                       />
                     </Col>
-                    <Col sm="4">
+                    <Col sm="12">
                       <Field
                         name="n_total_general"
                         label="Total General (Comision + Flete + Seguro + Items + Descuento/Redondeo) : "
@@ -346,7 +362,7 @@ class FormPresupuestos extends Component {
                         className="field form-control-lg form-control"
                       />
                     </Col>
-                    <Col sm="4">
+                    <Col sm="12">
                       <Field
                         name="n_total_general_gs"
                         label="Total en Gs : "

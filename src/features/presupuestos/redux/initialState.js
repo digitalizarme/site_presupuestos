@@ -14,6 +14,9 @@ const initialState = {
   traeFrecuenciasPending: false,
   traeFrecuenciasError: null,
   frecuencias:[],
+  traeItemsPending: false,
+  traeItemsError: null,
+  items:[],
 };
 
 export default initialState;

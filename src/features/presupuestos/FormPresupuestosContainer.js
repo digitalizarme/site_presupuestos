@@ -9,7 +9,7 @@ import { traePersonasTodas } from '../personas/redux/actions';
 import { traeFletes } from '../fletes/redux/actions';
 import { traeSeguros } from '../seguros/redux/actions';
 
-import { traerPresupuesto, traeStatus, traeFrecuencias } from './redux/actions';
+import { traerPresupuesto, traeStatus, traeFrecuencias,traeItems } from './redux/actions';
 import { Principal } from '../esqueleto';
 
 import { FormPresupuestos } from './';
@@ -157,6 +157,7 @@ export class FormPresupuestosContainer extends Component {
       traeFletes,
       traeSeguros,
       traeFrecuencias,
+      traeItems,
     } = this.props.actions;
     const { path } = this.props.match;
 
@@ -174,7 +175,7 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      traerPresupuesto(params).then(toggleCargando());
+      traerPresupuesto(params).then(traeItems(params).then(toggleCargando()));
     } else {
       toggleCargando();
     }
@@ -215,9 +216,12 @@ function mapStateToProps(state) {
   const initialValues = modoNuevo
     ? {}
     : typeof state.esqueleto.selected[0] !== 'undefined'
-    ? state.esqueleto.selected[0]
-    : state.presupuestos.mercaderia;
-
+    ? {
+        ...state.esqueleto.selected[0]
+        ,items:state.presupuestos.items
+      }
+    : state.presupuestos.dados;
+console.log(initialValues)
   const optionsMonedas = [];
   let monedaObj = {};
   for (let moneda of state.cotizaciones.monedas) {
@@ -310,7 +314,7 @@ function mapStateToProps(state) {
     : 2;
   decimales = decimales ? decimales.decimales : 2;
   return {
-    presupuestos: state.presupuestos,
+    items: state.presupuestos.items,
     esqueleto: state.esqueleto,
     usuario:state.acceder.usuario.c_usuario,
     initialValues,
@@ -339,6 +343,7 @@ function mapDispatchToProps(dispatch) {
         traeFletes,
         traeSeguros,
         traeFrecuencias,
+        traeItems,
       },
       dispatch,
     ),

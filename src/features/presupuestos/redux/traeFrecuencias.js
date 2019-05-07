@@ -9,13 +9,12 @@ import api_axio from '../../../common/api_axios';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeFrecuencias() {
-      return api_axio({
-    api_funcion:`frecuencias/todas`,
+  return api_axio({
+    api_funcion: `frecuencias/todas`,
     type_begin: { type: PRESUPUESTOS_TRAE_FRECUENCIAS_BEGIN },
     type_success: { type: PRESUPUESTOS_TRAE_FRECUENCIAS_SUCCESS },
     type_failure: { type: PRESUPUESTOS_TRAE_FRECUENCIAS_FAILURE },
   });
-
 }
 
 // Async action saves request error by default, this method is used to dismiss the error info.
@@ -42,7 +41,7 @@ export function reducer(state, action) {
         ...state,
         traeFrecuenciasPending: false,
         traeFrecuenciasError: null,
-        frecuencias:action.data,
+        frecuencias: action.data,
       };
 
     case PRESUPUESTOS_TRAE_FRECUENCIAS_FAILURE:

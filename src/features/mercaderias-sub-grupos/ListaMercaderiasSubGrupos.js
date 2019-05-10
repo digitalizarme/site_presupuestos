@@ -130,10 +130,19 @@ ListaMercaderiasSubGrupos = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+
+  let initialValues = state.esqueleto.selected[0];
+  const modoNuevo = initialValues ? false : true;
+  if (modoNuevo) {
+    initialValues = {
+      b_activo: true,
+    };
+  }
+  
   return {
     mercaderiasSubGrupos: state.mercaderiasSubGrupos,
     esqueleto: state.esqueleto,
-    initialValues:state.esqueleto.selected[0],
+    initialValues,
     edicion: state.esqueleto.selected[0] ? true : false,
   };
 }

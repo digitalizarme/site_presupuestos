@@ -223,6 +223,18 @@ function mapStateToProps(state) {
   }
   const modoNuevo = initialValues ? false : true;
 
+  if(modoNuevo)
+  {
+    initialValues = 
+    {
+      b_activo:true
+      ,b_cadastrar:true
+      ,b_editar:true
+      ,b_eliminar:true
+      ,b_imprimir:true
+    }
+  }
+
   const optionsPersonas = [];
   let personaObj = {};
   for (let persona of state.personas.personas) {

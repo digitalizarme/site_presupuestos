@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormServGrupo } from './';
-import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
@@ -23,22 +23,19 @@ const validationConstraints = {
   },
 };
 
-
 const columns = [
   {
     dataField: 'c_descripcion',
     table: 'serviciosGrupos',
     text: 'Descripción',
     sort: true,
-    
-
   },
   {
     dataField: 'updatedAt',
     text: 'Actualizado',
     sort: true,
     editable: false,
-    formatter: formatarFecha
+    formatter: formatarFecha,
   },
 ];
 
@@ -61,7 +58,7 @@ export class ListaServiciosGrupo extends Component {
     const { esqueleto } = this.props;
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     toggleCargando();
     return api_axio({
@@ -74,7 +71,7 @@ export class ListaServiciosGrupo extends Component {
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
-          columns:JSON.stringify(columns),
+          columns: JSON.stringify(columns),
           searchText: esqueleto.searchText,
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
@@ -123,17 +120,24 @@ export class ListaServiciosGrupo extends Component {
 
 ListaServiciosGrupo = reduxForm({
   // a unique name for the form
-    form: 'formServGrupo',
-    enableReinitialize: true,
-    validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(ListaServiciosGrupo);
+  form: 'formServGrupo',
+  enableReinitialize: true,
+  validate: values => validate(values, validationConstraints, { fullMessages: false }),
+})(ListaServiciosGrupo);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+  let initialValues = state.esqueleto.selected[0];
+  const modoNuevo = initialValues ? false : true;
+  if (modoNuevo) {
+    initialValues = {
+      b_activo: true,
+    };
+  }
   return {
     serviciosGrupos: state.serviciosGrupos,
     esqueleto: state.esqueleto,
-    initialValues:state.esqueleto.selected[0],
+    initialValues,
     edicion: state.esqueleto.selected[0] ? true : false,
   };
 }

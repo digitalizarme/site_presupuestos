@@ -168,6 +168,15 @@ ListaFletes = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+
+  let initialValues = state.esqueleto.selected[0];
+  const modoNuevo = initialValues ? false : true;
+  if (modoNuevo) {
+    initialValues = {
+      b_activo: true,
+    };
+  }
+  
   const optionsMonedas = [];
   let monedaObj = {};
   for (let moneda of state.cotizaciones.monedas) {
@@ -187,7 +196,7 @@ function mapStateToProps(state) {
   return {
     fletes: state.fletes,
     esqueleto: state.esqueleto,
-    initialValues: state.esqueleto.selected[0],
+    initialValues,
     edicion: state.esqueleto.selected[0] ? true : false,
     optionsMonedas,
     decimales,

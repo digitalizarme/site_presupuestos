@@ -133,8 +133,13 @@ ListaMercaderiasGrupos = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  const initialValues = state.esqueleto.selected[0];
-  const modoNuevo = initialValues?false:true;
+  let initialValues = state.esqueleto.selected[0];
+  const modoNuevo = initialValues ? false : true;
+  if (modoNuevo) {
+    initialValues = {
+      b_activo: true,
+    };
+  }
 
   const optionsFletes = [];
   let fleteObj = {};

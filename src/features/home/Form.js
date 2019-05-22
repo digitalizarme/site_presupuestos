@@ -13,7 +13,7 @@ const FraseDeslogado = () => (
 const FraseLogado = () => (
   <div>
     <p>Deseas empezar ahora? haga click abajo para crear un nuevo presupuesto.</p>
-    <a className="btn btn-primary btn-lg" href="/servicios-grupo" role="button">
+    <a className="btn btn-primary btn-lg" href="/presupuestos/nuevo" role="button">
       Nuevo Presupuesto
     </a>
   </div>

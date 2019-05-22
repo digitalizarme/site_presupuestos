@@ -163,7 +163,7 @@ export class Menu extends Component {
       <div className="esqueleto-menu">
         <Navbar  color="dark" dark   expand="md">
           <NavbarBrand href="/">
-            <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" />
+            <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" style={{maxWidth:'50px'}} />
           </NavbarBrand>
           <NavbarToggler color="success" onClick={menuToggle} />
           {usuario.persona ? (

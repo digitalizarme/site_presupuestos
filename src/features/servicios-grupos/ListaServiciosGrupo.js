@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormServGrupo } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
@@ -9,7 +8,6 @@ import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
-import validate from 'validate.js';
 
 const validationConstraints = {
   c_descripcion: {
@@ -99,7 +97,7 @@ export class ListaServiciosGrupo extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="servicios-grupos-lista-servicios-grupo">
@@ -107,23 +105,17 @@ export class ListaServiciosGrupo extends Component {
           titulo={'Lista de Grupo de servicios'}
           defaultSorted={defaultSorted}
           api_funcion={'serviciosGrupos'}
+          validationConstraints={validationConstraints}
           columns={columns}
           cuerpoModal={FormServGrupo}
           tituloModal={edicion ? 'Editar Grupo de Servicios' : 'Nuevo Grupo de Servicios'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaServiciosGrupo = reduxForm({
-  // a unique name for the form
-  form: 'formServGrupo',
-  enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
-})(ListaServiciosGrupo);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

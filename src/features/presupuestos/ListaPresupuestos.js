@@ -46,7 +46,7 @@ const columns = [
     editable: false,
   },
   {
-    dataField: 'n_total',
+    dataField: 'n_total_general',
     text: 'Total',
     sort: true,
     editable: false,
@@ -64,9 +64,9 @@ const columns = [
 
 const defaultSorted = [
   {
-    dataField: 'persona.c_nombre',
-    order: 'asc',
-  },
+    dataField: 'id',
+    order: 'desc',
+  }
 ];
 
 export class ListaPresupuestos extends Component {

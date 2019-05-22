@@ -124,7 +124,7 @@ export class ListaCotizaciones extends Component {
     const { guardarCotizaciones, procesarTabla, toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
     toggleCargando();
-    guardarCotizaciones({ base: 'USD', monedas: 'PYG,BRL,ARS,EUR' })
+    guardarCotizaciones('USD_PYG,USD_BRL,USD_ARS,USD_EUR')
       .then(res => {
         procesarTabla({
           api_funcion: 'cotizaciones',
@@ -160,7 +160,7 @@ export class ListaCotizaciones extends Component {
       toggleCargando();
       values = {
         ...values,
-        c_monedaOrigemDestino: values.c_monedaOrigem + '' + values.c_monedaDestino,
+        c_monedaOrigemDestino: values.c_monedaOrigem + '_' + values.c_monedaDestino,
       };
 
       const params = {

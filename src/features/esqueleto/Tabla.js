@@ -102,10 +102,9 @@ const RemoteAll = ({
 
   const agregar = () => {
     if (usuario.b_cadastrar) {
-      const { reset } = props;
       limpiarItemLinea();
       
-      sinModal ? history.push(`${sinModal}/nuevo`) :  reset() && modalToggle();
+      sinModal ? history.push(`${sinModal}/nuevo`) :  modalToggle();
     } else {
       sinPrivilegios();
     }

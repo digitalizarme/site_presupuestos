@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormSeguros } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
@@ -9,11 +9,10 @@ import { listaMonedas } from '../cotizaciones/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
-import validate from 'validate.js';
 import formatarNumero from '../../common/formatarNumero';
 
 // Decorate with connect to read form values
-const selector = formValueSelector('formSeguros'); // <-- same as form name
+const selector = formValueSelector('formModal'); // <-- same as form name
 
 const validationConstraints = {
   n_id_moneda: {
@@ -146,7 +145,7 @@ export class ListaSeguros extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="seguros-lista-seguros">
@@ -157,8 +156,9 @@ export class ListaSeguros extends Component {
           columns={columns}
           cuerpoModal={FormSeguros}
           sizeModal="lg"
+          validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Seguro' : 'Nuevo Seguro'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
           {...this.props}
         />
       </div>
@@ -166,12 +166,6 @@ export class ListaSeguros extends Component {
   }
 }
 
-ListaSeguros = reduxForm({
-  // a unique name for the form
-  form: 'formSeguros',
-  enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
-})(ListaSeguros);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

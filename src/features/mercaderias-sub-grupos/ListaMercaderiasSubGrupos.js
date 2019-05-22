@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormMercaderiasSubGrupos } from './';
 import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
@@ -9,7 +8,6 @@ import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
-import validate from 'validate.js';
 
 const validationConstraints = {
   c_descripcion: {
@@ -102,7 +100,7 @@ export class ListaMercaderiasSubGrupos extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="mercaderias-sub-grupos-lista-mercaderias-sub-grupos">
@@ -111,22 +109,16 @@ export class ListaMercaderiasSubGrupos extends Component {
           defaultSorted={defaultSorted}
           api_funcion={'mercaderiasSubGrupos'}
           columns={columns}
+          validationConstraints={validationConstraints}
           cuerpoModal={FormMercaderiasSubGrupos}
           tituloModal={edicion ? 'Editar Sub-grupo de Mercaderias' : 'Nuevo Sub-grupo de Mercaderias'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaMercaderiasSubGrupos = reduxForm({
-  // a unique name for the form
-    form: 'formMercaderiasSubGrupos',
-    enableReinitialize: true,
-    validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(ListaMercaderiasSubGrupos);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

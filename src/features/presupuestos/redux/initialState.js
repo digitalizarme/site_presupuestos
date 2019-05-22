@@ -11,12 +11,16 @@ const initialState = {
   status:[],
   traerPresupuestoPending: false,
   traerPresupuestoError: null,
+  presupuesto:{},
   traeFrecuenciasPending: false,
   traeFrecuenciasError: null,
   frecuencias:[],
   traeItemsPending: false,
   traeItemsError: null,
   items:[],
+  traeMercaderiasServiciosPending: false,
+  traeMercaderiasServiciosError: null,
+  mercaderiasServicios:[]
 };
 
 export default initialState;

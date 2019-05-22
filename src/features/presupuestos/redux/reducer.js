@@ -11,12 +11,16 @@ import { reducer as traeStatusReducer } from './traeStatus';
 import { reducer as traerPresupuestoReducer } from './traerPresupuesto';
 import { reducer as traeFrecuenciasReducer } from './traeFrecuencias';
 import { reducer as traeItemsReducer } from './traeItems';
+import { reducer as traeMercaderiasServiciosReducer } from './traeMercaderiasServicios';
+import { reducer as limpiaItemsReducer } from './limpiaItems';
 
 const reducers = [
   traeStatusReducer,
   traerPresupuestoReducer,
   traeFrecuenciasReducer,
   traeItemsReducer,
+  traeMercaderiasServiciosReducer,
+  limpiaItemsReducer,
 ];
 
 export default function reducer(state = initialState, action) {

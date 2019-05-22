@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Form, Row, Col, Container, Collapse } from 'reactstrap';
+import { Button, Form, Row, Col, Container, Collapse, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { InputText, InputNumber, SuperSelect } from '../esqueleto';
+import { InputText, InputNumber, SuperSelect, ModalForm } from '../esqueleto';
 import { Field } from 'redux-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FormItemsMercaderiasServicios } from './';
+import formatarNumero from '../../common/formatarNumero';
 
 class FormPresupuestos extends Component {
   static propTypes = {
@@ -14,15 +16,21 @@ class FormPresupuestos extends Component {
 
   constructor(props) {
     super(props);
-    this.toggleItems        = this.toggleItems.bind(this);
-    this.toggleTotal        = this.toggleTotal.bind(this);
+    this.toggleItems = this.toggleItems.bind(this);
+    this.toggleTotal = this.toggleTotal.bind(this);
     this.toggleComisionista = this.toggleComisionista.bind(this);
-    this.toggleFlete        = this.toggleFlete.bind(this);
-    this.toggleSeguro       = this.toggleSeguro.bind(this);
-    this.toggleTotalG       = this.toggleTotalG.bind(this);
-    this.togglePlazo        = this.togglePlazo.bind(this);
-    
-    this.state = { collapseItems: false,collapseTotal: false,collapseComisionista: false,collapseFlete: false,collapseSeguro: false,collapseTotalG: false,collapsePlazo: false };
+    this.toggleSeguro = this.toggleSeguro.bind(this);
+    this.toggleTotalG = this.toggleTotalG.bind(this);
+    this.togglePlazo = this.togglePlazo.bind(this);
+
+    this.state = {
+      collapseItems: false,
+      collapseTotal: false,
+      collapseComisionista: false,
+      collapseSeguro: false,
+      collapseTotalG: false,
+      collapsePlazo: false,
+    };
   }
 
   toggleItems() {
@@ -35,10 +43,6 @@ class FormPresupuestos extends Component {
 
   toggleComisionista() {
     this.setState(state => ({ collapseComisionista: !state.collapseComisionista }));
-  }
-
-  toggleFlete() {
-    this.setState(state => ({ collapseFlete: !state.collapseFlete }));
   }
 
   toggleSeguro() {
@@ -66,29 +70,65 @@ class FormPresupuestos extends Component {
       optionsFletes,
       optionsSeguros,
       optionsFrecuencias,
+      optionsItems,
       decimales,
+      descMoneda,
       usuario,
-      agregar,
-      editar,
-      eliminar,
+      agregarItem,
+      editarItem,
+      eliminarItem,
       items,
+      enviarItems,
+      atualizouFormModal,
+      itemSeleccionado,
+      onChangeItems,
+      esqueleto,
+      onChangeMoneda,
+      onChangePersona,
+      initialValuesModal,
+      tipoItem,
+      modoEdicionItem,
+      onChangeComisionista
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
         <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Presupuesto</div>
         <Container>
+          <ModalForm
+            tituloModal={modoEdicionItem?'Editar Item': 'Nuevo Item'}
+            esqueleto={esqueleto}
+            descMoneda={descMoneda}
+            decimales={decimales}
+            itemSeleccionado={itemSeleccionado}
+            onChangeItems={onChangeItems}
+            optionsItems={optionsItems}
+            enviarFormulario={enviarItems}
+            cuerpoModal={FormItemsMercaderiasServicios}
+            atualizouForm={atualizouFormModal}
+            initialValues={initialValuesModal}
+            tipoItem={tipoItem}
+            sizeModal="xl"
+          />
           <Form onSubmit={enviarFormulario} className="form_border">
             <Field name="id" component="input" type="hidden" />
+            <Field name="n_id_usuario" component="input" type="hidden" />
+
             <Row>
               <Col sm="6" md="4" lg="4" xl="4">
                 <label>Creado por</label>
-                <input type="text" value={usuario} disabled className="field form-control-lg form-control" />
+                <input
+                  type="text"
+                  value={usuario}
+                  disabled
+                  className="field form-control-lg form-control"
+                />
               </Col>
               <Col sm="6" md="4" lg="4" xl="4">
                 <Field
                   name="n_id_moneda"
                   label="Moneda"
                   options={optionsMonedas}
+                  onChange={onChangeMoneda}
                   component={SuperSelect}
                   placeholder="Elija"
                 />
@@ -111,19 +151,14 @@ class FormPresupuestos extends Component {
                   options={optionsClientes}
                   component={SuperSelect}
                   placeholder="Elija"
+                  onChange={onChangePersona}
                 />
               </Col>
             </Row>
             <Row>
               <Col xs="12" lg="6" className="espacio_abajo">
-                <Button type="button" color="success" size="md" onClick={agregar}>
+                <Button type="button" color="success" size="md" onClick={agregarItem}>
                   <FontAwesomeIcon icon={faPlus} /> Agregar
-                </Button>{' '}
-                <Button type="button" color="info" size="md" onClick={editar}>
-                  <FontAwesomeIcon icon={faEdit} /> Editar
-                </Button>{' '}
-                <Button type="button" color="danger" size="md" onClick={eliminar}>
-                  <FontAwesomeIcon icon={faTrashAlt} /> Eliminar
                 </Button>{' '}
               </Col>
             </Row>
@@ -137,37 +172,58 @@ class FormPresupuestos extends Component {
             <Row>
               <Col>
                 <Collapse isOpen={this.state.collapseItems}>
-                  <table className="table table-responsive">
+                  <div className="scroll">
+                  <Table striped responsive hover>
                     <thead>
                       <tr>
-                        <th style={{ width: '20%' }}>Desc.</th>
-                        <th>Cant.</th>
-                        <th>Unit.</th>
-                        <th>Exent.</th>
-                        <th>Grav. 5%</th>
-                        <th>Grav. 10%</th>
-                        <th>Peso</th>
-                        <th>Flete</th>
-                        <th>Seguro</th>
+                        <th style={{ width: '25%' }}>Desc.</th>
+                        <th style={{ width: '5%' }}>Cant.</th>
+                        <th style={{ width: '10%' }}>Unit.</th>
+                        <th style={{ width: '10%' }}>Exent.</th>
+                        <th style={{ width: '10%' }}>Grav. 5%</th>
+                        <th style={{ width: '10%' }}>Grav. 10%</th>
+                        <th style={{ width: '10%' }}>Peso</th>
+                        <th style={{ width: '10%' }}>Flete</th>
+                        <th style={{ width: '10%' }}>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {items.map((item,indice) =>(
-                      <tr>
-                        <td>{item.c_descripcion}</td>
-                        <td>{item.n_cantidad}</td>
-                        <td>{item.n_unitario}</td>
-                        <td>{item.n_exentas}</td>
-                        <td>{item.n_gravadas_5}</td>
-                        <td>{item.n_gravadas_10}</td>
-                        <td>{item.n_peso}</td>
-                        <td>{item.n_flete}</td>
-                        <td>{item.c_seguro}</td>
-                      </tr>
-
-                      ))}
+                      {items && items.length > 0 ? (
+                        items.map((item, indice) => (
+                          <tr
+                            key={indice}
+                            onDoubleClick={() => {
+                              editarItem(item);
+                            }}
+                          >
+                            <td>{item.c_descripcion}</td>
+                            <td>{formatarNumero(item.n_cantidad)}</td>
+                            <td>{formatarNumero(item.n_unitario)}</td>
+                            <td>{formatarNumero(item.n_exentas)}</td>
+                            <td>{formatarNumero(item.n_gravadas_5)}</td>
+                            <td>{formatarNumero(item.n_gravadas_10)}</td>
+                            <td>{formatarNumero(item.n_peso)}</td>
+                            <td>{formatarNumero(item.n_flete)}</td>
+                            <td>
+                              <Button type="button" color="info" size="sm" onClick={()=>{editarItem(item)}}>
+                                <FontAwesomeIcon icon={faEdit} />
+                              </Button>{' '}
+                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(item.id)}}>
+                                <FontAwesomeIcon icon={faTrashAlt} />
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="9" className="text-center">
+                            No hay items
+                          </td>
+                        </tr>
+                      )}
                     </tbody>
-                  </table>
+                  </Table>
+                  </div>
                 </Collapse>
               </Col>
             </Row>
@@ -182,35 +238,87 @@ class FormPresupuestos extends Component {
               <Col>
                 <Collapse isOpen={this.state.collapseTotal}>
                   <Row>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>Exentas :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="2" xl="2">
+                      <Field
+                        name="n_total_exentas"
+                        label="Exentas :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>Gravadas 5% :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="2" xl="2">
+                      <Field
+                        name="n_total_flete"
+                        label="Total Flete :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>Gravadas 10% :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="2" xl="2">
+                      <Field
+                        name="n_total_5"
+                        label="Gravadas 5% :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>Total Items :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="2" xl="2">
+                      <Field
+                        name="n_total_10"
+                        label="Gravadas 10% :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
+                    </Col>
+                    <Col sm="6" md="4" lg="4" xl="4">
+                      <Field
+                        name="n_total_items"
+                        label="Total Items :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
                   </Row>
                   <Row>
-                    <Col sm="6" md={{ size: 3, offset: 3 }}>
-                      <label>IVA Gravadas 5% :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg={{size:2, offset:4}} xl="2">
+                      <Field
+                        name="n_total_iva_5"
+                        label="IVA Grav. 5% :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>IVA Gravadas 10% :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="2" xl="2">
+                      <Field
+                        name="n_total_iva_10"
+                        label="IVA Grav. 10% :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
-                    <Col sm="6" md="3" lg="3" xl="3">
-                      <label>Total IVA Items :</label>
-                      <input type="text" disabled className="field form-control-lg form-control" />
+                    <Col sm="6" md="4" lg="4" xl="4">
+                      <Field
+                        name="n_total_iva"
+                        label="Total IVA Items :"
+                        disabled
+                        component={InputNumber}
+                        decimalScale={decimales}
+                        className="field form-control-lg form-control"
+                      />
                     </Col>
                   </Row>
                 </Collapse>
@@ -232,6 +340,7 @@ class FormPresupuestos extends Component {
                         name="n_id_persona_comisionista"
                         label="Comicionista"
                         options={optionsComisionista}
+                        onChange={onChangeComisionista}
                         component={SuperSelect}
                         placeholder="Elija"
                       />
@@ -240,48 +349,6 @@ class FormPresupuestos extends Component {
                       <Field
                         name="n_valor_comision"
                         label="Valor"
-                        component={InputNumber}
-                        decimalScale={decimales}
-                        className="field form-control-lg form-control"
-                      />
-                    </Col>
-                  </Row>
-                </Collapse>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <div className="titulo_sesion bg-dark mano" onClick={this.toggleFlete}>
-                  Flete
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Collapse isOpen={this.state.collapseFlete}>
-                  <Row>
-                    <Col sm="4">
-                      <Field
-                        name="n_id_flete"
-                        label="Tipo : "
-                        options={optionsFletes}
-                        component={SuperSelect}
-                        placeholder="Elija"
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
-                        name="n_tipo_flete_valor"
-                        label="Cantidad tipo del flete : "
-                        component={InputNumber}
-                        decimalScale={2}
-                        className="field form-control-lg form-control"
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
-                        name="n_valor_flete"
-                        label="Valor flete : "
                         component={InputNumber}
                         decimalScale={decimales}
                         className="field form-control-lg form-control"
@@ -356,7 +423,7 @@ class FormPresupuestos extends Component {
                     <Col sm="12">
                       <Field
                         name="n_total_general"
-                        label="Total General (Comision + Flete + Seguro + Items + Descuento/Redondeo) : "
+                        label="Total General (Comisión + Seguro + Items con flete + Descuento/Redondeo) : "
                         component={InputNumber}
                         decimalScale={decimales}
                         className="field form-control-lg form-control"

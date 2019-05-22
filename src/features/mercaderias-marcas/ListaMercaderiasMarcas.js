@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormMercaderiasMarcas } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
@@ -9,7 +8,6 @@ import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
-import validate from 'validate.js';
 
 const validationConstraints = {
   c_descripcion: {
@@ -102,7 +100,7 @@ export class ListaMercaderiasMarcas extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="mercaderias-Marcas-lista-mercaderias-Marcas">
@@ -112,21 +110,15 @@ export class ListaMercaderiasMarcas extends Component {
           api_funcion={'mercaderiasMarcas'}
           columns={columns}
           cuerpoModal={FormMercaderiasMarcas}
+          validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Marcas de Mercaderias' : 'Nuevo Marcas de Mercaderias'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaMercaderiasMarcas = reduxForm({
-  // a unique name for the form
-    form: 'formMercaderiasMarcas',
-    enableReinitialize: true,
-    validate: values => validate(values, validationConstraints, { fullMessages: false }),
-  })(ListaMercaderiasMarcas);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

@@ -9,10 +9,12 @@
 import initialState from './initialState';
 import { reducer as guardarCotizacionesReducer } from './guardarCotizaciones';
 import { reducer as listaMonedasReducer } from './listaMonedas';
+import { reducer as traeUltimasCotizacionesMonedaReducer } from './traeUltimasCotizacionesMoneda';
 
 const reducers = [
   guardarCotizacionesReducer,
   listaMonedasReducer,
+  traeUltimasCotizacionesMonedaReducer,
 ];
 
 export default function reducer(state = initialState, action) {

@@ -6,12 +6,14 @@
 
 // NOTE: initialState constant is necessary so that Rekit could auto add initial state when creating async actions.
 const initialState = {
-  cotizaciones:{base:"", monedas:{}},
+  cotizaciones:[],
   guardarCotizacionesPending: false,
   guardarCotizacionesError: null,
   listaMonedasPending: false,
   listaMonedasError: null,
-  monedas:[]
+  monedas:[],
+  traeUltimasCotizacionesMonedaPending: false,
+  traeUltimasCotizacionesMonedaError: null
 };
 
 export default initialState;

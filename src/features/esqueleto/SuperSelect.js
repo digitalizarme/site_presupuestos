@@ -19,7 +19,7 @@ export default class SuperSelect extends Component {
         <FormGroup className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>
           {label ? <Label>{label}</Label> : null}
           <Select
-            value={options.find(option => option.value === input.value)}
+            value={options && options.find(option => option.value === input.value)}
             onChange={option => input.onChange(option.value)}
             onBlur={option => input.onBlur(option.value)}
             autoFocus={autoFocus}

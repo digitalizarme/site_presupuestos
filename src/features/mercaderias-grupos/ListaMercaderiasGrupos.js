@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { FormMercaderiasGrupos } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
@@ -10,7 +9,6 @@ import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
-import validate from 'validate.js';
 
 const validationConstraints = {
   c_descripcion: {
@@ -105,7 +103,7 @@ export class ListaMercaderiasGrupos extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="mercaderias-grupos-lista-mercaderias-grupos">
@@ -114,22 +112,16 @@ export class ListaMercaderiasGrupos extends Component {
           defaultSorted={defaultSorted}
           api_funcion={'mercaderiasGrupos'}
           columns={columns}
+          validationConstraints={validationConstraints}
           cuerpoModal={FormMercaderiasGrupos}
           tituloModal={edicion ? 'Editar Grupo de Mercaderias' : 'Nuevo Grupo de Mercaderias'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaMercaderiasGrupos = reduxForm({
-  // a unique name for the form
-  form: 'formMercaderiasGrupos',
-  enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
-})(ListaMercaderiasGrupos);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

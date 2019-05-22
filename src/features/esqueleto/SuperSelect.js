@@ -11,6 +11,7 @@ export default class SuperSelect extends Component {
       placeholder,
       label,
       autoFocus,
+      disabled,
       meta: { touched, error, warning },
     } = this.props;
 
@@ -25,6 +26,7 @@ export default class SuperSelect extends Component {
             autoFocus={autoFocus}
             name={input.name}
             options={options}
+            isDisabled={disabled}
             placeholder={placeholder}
             classNamePrefix="react-select"
           />

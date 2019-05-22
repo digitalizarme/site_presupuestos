@@ -129,6 +129,7 @@ class FormPresupuestos extends Component {
                   label="Moneda"
                   options={optionsMonedas}
                   onChange={onChangeMoneda}
+                  disabled={items && items.length > 0}
                   component={SuperSelect}
                   placeholder="Elija"
                 />

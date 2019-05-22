@@ -191,22 +191,23 @@ export class FormPresupuestosContainer extends Component {
 
   onChangePersona = idPersona => {
     const { moneda, handleSubmit, id } = this.props;
-
-    if (idPersona && idPersona !== '' && moneda && moneda !== '') {
-      this.props.dispatch(change('formPresupuestos', `n_id_persona`, idPersona));
-      if (!id) {
-        setTimeout(() => {
-          this.props.dispatch(handleSubmit(this.preSubmit));
-        }, 500);
-      }
+    if (idPersona && moneda && !id) {
+      setTimeout(() => {
+        this.props.dispatch(handleSubmit(this.preSubmit));
+      }, 500);
     }
   };
 
   onChangeMoneda = idMoneda => {
     const { guardarCotizaciones } = this.props.actions;
-    const { optionsMonedas } = this.props;
+    const { optionsMonedas, persona, id, handleSubmit } = this.props;
     if (idMoneda) {
       preparaMonedasGuardar(optionsMonedas, idMoneda, guardarCotizaciones);
+      if (persona && !id) {
+        setTimeout(() => {
+          this.props.dispatch(handleSubmit(this.preSubmit));
+        }, 500);
+      }
     }
   };
 

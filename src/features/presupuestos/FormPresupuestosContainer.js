@@ -463,15 +463,24 @@ export class FormPresupuestosContainer extends Component {
 
   componentDidUpdate = () => {
     const { toggleCargando } = this.props.actions;
-    const { initialValues, esqueleto, items, traeItemsPending } = this.props;
+    const { initialValues, esqueleto, items, traeItemsPending, modoNuevo } = this.props;
     if (
-      initialValues &&
-      initialValues.id &&
-      ((initialValues.items && initialValues.items.length > 0) ||
-        (items && !traeItemsPending && items.length > 0) ||
-        (items && !traeItemsPending && items.length === 0)) &&
+        (modoNuevo ||
+        (
+          initialValues &&
+          initialValues.id &&
+          (
+            (initialValues.items && initialValues.items.length > 0) ||
+            (items && !traeItemsPending && items.length > 0 ) ||
+            
+            (items && !traeItemsPending && items.length === 0)
+          ) 
+        )
+      )
+      &&
       esqueleto.cargando === true &&
       !this.parei
+      
     ) {
       toggleCargando();
       this.parei = true;
@@ -710,6 +719,7 @@ function mapStateToProps(state) {
 
   return {
     items: state.presupuestos.items,
+    modoNuevo,
     traeItemsPending: state.presupuestos.traeItemsPending,
     cotizaciones: state.cotizaciones.cotizaciones,
     esqueleto: state.esqueleto,

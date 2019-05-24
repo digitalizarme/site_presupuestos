@@ -11,24 +11,28 @@ const columns = [
     table: 'Mercaderias',
     text: 'Descripción',
     sort: true,
+    attrs: { width: '40%' },
   },
   {
     dataField: 'c_unidad',
     text: 'Unidad',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'marca.c_descripcion',
     text: 'Marca',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'grupo.c_descripcion',
     text: 'Grupo',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'n_venta',
@@ -36,12 +40,14 @@ const columns = [
     sort: true,
     formatter: formatarNumero,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'moneda.c_descripcion',
     text: 'Moneda',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_activo',
@@ -49,6 +55,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
 ];
 

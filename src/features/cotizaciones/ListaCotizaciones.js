@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {  reduxForm } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { FormCotizaciones } from './';
-import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { guardarCotizaciones, listaMonedas } from './redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
@@ -13,7 +13,6 @@ import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
 import validate from 'validate.js';
 import NumberFormat from 'react-number-format';
-
 
 const validationConstraints = {
   c_monedaOrigem: {
@@ -46,7 +45,6 @@ const validationConstraints = {
     },
   },
 };
-
 
 class EditarCotizacion extends React.Component {
   static propTypes = {
@@ -81,6 +79,7 @@ const columns = [
     table: 'Cotizaciones',
     text: 'Monedas',
     sort: true,
+    attrs: { width: '70%' },
   },
   {
     dataField: 'n_valor',
@@ -91,6 +90,7 @@ const columns = [
     editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
       <EditarCotizacion {...editorProps} value={value} />
     ),
+    attrs: { width: '15%' },
   },
   {
     dataField: 'updatedAt',
@@ -99,6 +99,7 @@ const columns = [
     editable: false,
     searchable: false,
     formatter: formatarFecha,
+    attrs: { width: '15%' },
   },
 ];
 
@@ -154,7 +155,7 @@ export class ListaCotizaciones extends Component {
   };
 
   submit = values => {
-    const { api_axio, procesarTabla, modalToggle,toggleCargando } = this.props.actions;
+    const { api_axio, procesarTabla, modalToggle, toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;
     if (values.c_monedaOrigem !== values.c_monedaDestino) {
       toggleCargando();
@@ -165,7 +166,7 @@ export class ListaCotizaciones extends Component {
 
       const params = {
         data: values,
-        method: values.id && values.id !== ''?'put':'post',
+        method: values.id && values.id !== '' ? 'put' : 'post',
       };
       return api_axio({
         api_funcion: 'cotizaciones',
@@ -194,7 +195,7 @@ export class ListaCotizaciones extends Component {
             typeof err.response !== 'undefined'
               ? err.response.data
               : 'Error al intentar guardar los datos';
-          toggleCargando();    
+          toggleCargando();
           swal({
             title: 'Ops',
             text: message ? message : 'Error al intentar guardar los datos',
@@ -215,7 +216,7 @@ export class ListaCotizaciones extends Component {
   componentDidMount = () => {
     const { listaMonedas, toggleCargando } = this.props.actions;
     toggleCargando();
-    listaMonedas().then( toggleCargando());
+    listaMonedas().then(toggleCargando());
   };
 
   render() {

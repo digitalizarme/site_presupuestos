@@ -21,22 +21,21 @@ const validationConstraints = {
   },
 };
 
-
 const columns = [
   {
     dataField: 'c_descripcion',
     table: 'mercaderiasMarcas',
     text: 'Descripción',
     sort: true,
-    
-
+    attrs: { width: '80%' },
   },
   {
     dataField: 'updatedAt',
     text: 'Atualizado',
     sort: true,
     editable: false,
-    formatter: formatarFecha
+    formatter: formatarFecha,
+    attrs: { width: '20%' },
   },
 ];
 
@@ -59,7 +58,7 @@ export class ListaMercaderiasMarcas extends Component {
     const { esqueleto } = this.props;
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     toggleCargando();
     return api_axio({
@@ -72,7 +71,7 @@ export class ListaMercaderiasMarcas extends Component {
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
-          columns:JSON.stringify(columns),
+          columns: JSON.stringify(columns),
           searchText: esqueleto.searchText,
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
@@ -112,7 +111,7 @@ export class ListaMercaderiasMarcas extends Component {
           cuerpoModal={FormMercaderiasMarcas}
           validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Marcas de Mercaderias' : 'Nuevo Marcas de Mercaderias'}
-          enviarFormulario={(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>

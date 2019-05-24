@@ -28,6 +28,7 @@ const columns = [
     table: 'mercaderiasGrupos',
     text: 'Descripción',
     sort: true,
+    attrs: { width: '80%' },
   },
   {
     dataField: 'updatedAt',
@@ -35,6 +36,7 @@ const columns = [
     sort: true,
     editable: false,
     formatter: formatarFecha,
+    attrs: { width: '20%' },
   },
 ];
 
@@ -115,7 +117,7 @@ export class ListaMercaderiasGrupos extends Component {
           validationConstraints={validationConstraints}
           cuerpoModal={FormMercaderiasGrupos}
           tituloModal={edicion ? 'Editar Grupo de Mercaderias' : 'Nuevo Grupo de Mercaderias'}
-          enviarFormulario={(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FormMercaderiasSubGrupos } from './';
-import {  procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
+import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
@@ -21,22 +21,21 @@ const validationConstraints = {
   },
 };
 
-
 const columns = [
   {
     dataField: 'c_descripcion',
     table: 'mercaderiasSubGrupos',
     text: 'Descripción',
     sort: true,
-    
-
+    attrs: { width: '80%' },
   },
   {
     dataField: 'updatedAt',
     text: 'Atualizado',
     sort: true,
     editable: false,
-    formatter: formatarFecha
+    formatter: formatarFecha,
+    attrs: { width: '20%' },
   },
 ];
 
@@ -59,7 +58,7 @@ export class ListaMercaderiasSubGrupos extends Component {
     const { esqueleto } = this.props;
     const params = {
       data: values,
-      method: values.id && values.id !== ''?'put':'post',
+      method: values.id && values.id !== '' ? 'put' : 'post',
     };
     toggleCargando();
     return api_axio({
@@ -72,7 +71,7 @@ export class ListaMercaderiasSubGrupos extends Component {
           offset: 0,
           sizePerPage: esqueleto.sizePerPage,
           page: 1,
-          columns:JSON.stringify(columns),
+          columns: JSON.stringify(columns),
           searchText: esqueleto.searchText,
           sortField: esqueleto.sortField,
           sortOrder: esqueleto.sortOrder,
@@ -111,8 +110,10 @@ export class ListaMercaderiasSubGrupos extends Component {
           columns={columns}
           validationConstraints={validationConstraints}
           cuerpoModal={FormMercaderiasSubGrupos}
-          tituloModal={edicion ? 'Editar Sub-grupo de Mercaderias' : 'Nuevo Sub-grupo de Mercaderias'}
-          enviarFormulario={(this.submit)}
+          tituloModal={
+            edicion ? 'Editar Sub-grupo de Mercaderias' : 'Nuevo Sub-grupo de Mercaderias'
+          }
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>
@@ -122,7 +123,6 @@ export class ListaMercaderiasSubGrupos extends Component {
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-
   let initialValues = state.esqueleto.selected[0];
   const modoNuevo = initialValues ? false : true;
   if (modoNuevo) {
@@ -130,7 +130,7 @@ function mapStateToProps(state) {
       b_activo: true,
     };
   }
-  
+
   return {
     mercaderiasSubGrupos: state.mercaderiasSubGrupos,
     esqueleto: state.esqueleto,

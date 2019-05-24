@@ -24,7 +24,7 @@ class FormPresupuestos extends Component {
     this.togglePlazo = this.togglePlazo.bind(this);
 
     this.state = {
-      collapseItems: false,
+      collapseItems: true,
       collapseTotal: false,
       collapseComisionista: false,
       collapseSeguro: false,
@@ -209,7 +209,7 @@ class FormPresupuestos extends Component {
                               <Button type="button" color="info" size="sm" onClick={()=>{editarItem(item)}}>
                                 <FontAwesomeIcon icon={faEdit} />
                               </Button>{' '}
-                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(item.id)}}>
+                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(item)}}>
                                 <FontAwesomeIcon icon={faTrashAlt} />
                               </Button>
                             </td>
@@ -498,14 +498,15 @@ class FormPresupuestos extends Component {
                 />
               </Col>
             </Row>
-            <Row>
+            <Row className='text-right'>
               <Col sm="12">
-                <Button type="submit" color="success" disabled={pristine || submitting}>
-                  {submitting ? 'Guardando' : 'Guardar'}
-                </Button>{' '}
                 <Link to="/presupuestos" className="btn btn-primary">
                   Cancelar
                 </Link>
+                {' '}
+                <Button type="submit" color="success" disabled={pristine || submitting}>
+                  {submitting ? 'Guardando' : 'Guardar'}
+                </Button>
               </Col>
             </Row>
           </Form>

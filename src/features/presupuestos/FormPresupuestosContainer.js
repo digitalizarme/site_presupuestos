@@ -141,7 +141,6 @@ const atualizouForm = (values, dispatch, props) => {
 
 const atualizouFormModal = (values, dispatch, props) => {
   // const item = props.itemSeleccionado;
-  // console.log(item, 'item');
   // dispatch(change('formModal', `n_cantidad`, 1));
 };
 
@@ -222,86 +221,96 @@ export class FormPresupuestosContainer extends Component {
   onChangeItems = idItem => {
     const { optionsItems, monedaSeleccionada } = this.props;
     const { traeUltimasCotizacionesMoneda, toggleCargando } = this.props.actions;
-    toggleCargando();
-    this.props.dispatch(change('formModal', `n_cantidad`, 1));
-    let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
-    itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
-    const tipo = itemSeleccionado.c_tipo;
-    const obs = itemSeleccionado.t_observacion;
-    let unitario = itemSeleccionado.n_unitario;
-    let exentas = itemSeleccionado.n_exentas;
-    let gravadas_5 = itemSeleccionado.n_gravadas_5;
-    let gravadas_10 = itemSeleccionado.n_gravadas_10;
-    let peso = itemSeleccionado.n_peso;
-    let flete = peso * itemSeleccionado.n_flete;
-    if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
-      const c_monedaOrigemDestino =
-        itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
+    toggleCargando().then(res => {
+      this.props.dispatch(change('formModal', `n_cantidad`, 1));
+      let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
+      itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
+      const tipo = itemSeleccionado.c_tipo;
+      const obs = itemSeleccionado.t_observacion;
+      let unitario = itemSeleccionado.n_unitario;
+      let exentas = itemSeleccionado.n_exentas;
+      let gravadas_5 = itemSeleccionado.n_gravadas_5;
+      let gravadas_10 = itemSeleccionado.n_gravadas_10;
+      let peso = itemSeleccionado.n_peso;
+      let flete = peso * itemSeleccionado.n_flete;
+      if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
+        const c_monedaOrigemDestino =
+          itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
 
-      traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
-        if (res.data && res.data.length > 0) {
-          const cotizacion = res.data[0];
-          unitario *= cotizacion.n_valor;
-          exentas *= cotizacion.n_valor;
-          gravadas_5 *= cotizacion.n_valor;
-          gravadas_10 *= cotizacion.n_valor;
-          atualizaCamposItem({
-            dispatch: this.props.dispatch,
-            unitario,
-            exentas,
-            gravadas_5,
-            gravadas_10,
-            peso,
-            tipo,
-            obs,
-          });
-        } else {
-          swal({
-            title: 'Ops',
-            text: 'No fue posible obtener las ultimas cotizaciones.',
-            icon: 'warning',
-            button: 'OK!',
-          });
-        }
-      });
-    } else {
-      atualizaCamposItem({
-        dispatch: this.props.dispatch,
-        unitario,
-        exentas,
-        gravadas_5,
-        gravadas_10,
-        peso,
-        tipo,
-        obs,
-      });
-    }
-    if (
-      itemSeleccionado.c_tipo === 'M' &&
-      itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
-    ) {
-      const c_monedaOrigemDestino =
-        itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
+          if (res.data && res.data.length > 0) {
+            const cotizacion = res.data[0];
+            unitario *= cotizacion.n_valor;
+            unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
 
-      traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
-        if (res.data && res.data.length > 0) {
-          const cotizacion = res.data[0];
-          flete *= cotizacion.n_valor;
-          atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-        } else {
-          swal({
-            title: 'Ops',
-            text: 'No fue posible obtener las ultimas cotizaciones para el flete',
-            icon: 'warning',
-            button: 'OK!',
-          });
-        }
+            exentas *= cotizacion.n_valor;
+            exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
+
+            gravadas_5 *= cotizacion.n_valor;
+            gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
+
+            gravadas_10 *= cotizacion.n_valor;
+            gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
+
+            atualizaCamposItem({
+              dispatch: this.props.dispatch,
+              unitario,
+              exentas,
+              gravadas_5,
+              gravadas_10,
+              peso,
+              tipo,
+              obs,
+            });
+          } else {
+            swal({
+              title: 'Ops',
+              text: 'No fue posible obtener las ultimas cotizaciones.',
+              icon: 'warning',
+              button: 'OK!',
+            });
+          }
+        });
+      } else {
+        atualizaCamposItem({
+          dispatch: this.props.dispatch,
+          unitario,
+          exentas,
+          gravadas_5,
+          gravadas_10,
+          peso,
+          tipo,
+          obs,
+        });
+      }
+      if (
+        itemSeleccionado.c_tipo === 'M' &&
+        itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
+      ) {
+        const c_monedaOrigemDestino =
+          itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
+
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
+          if (res.data && res.data.length > 0) {
+            const cotizacion = res.data[0];
+            flete *= cotizacion.n_valor;
+            flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
+            atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+          } else {
+            swal({
+              title: 'Ops',
+              text: 'No fue posible obtener las ultimas cotizaciones para el flete',
+              icon: 'warning',
+              button: 'OK!',
+            });
+          }
+          toggleCargando();
+        });
+      } else {
+        atualizaCamposItem({ dispatch: this.props.dispatch, flete });
         toggleCargando();
-      });
-    } else {
-      atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-      toggleCargando();
-    }
+      }
+    });
   };
 
   agregarItem = () => {
@@ -328,8 +337,60 @@ export class FormPresupuestosContainer extends Component {
       const valor = arrayDatos[1];
       return this.props.dispatch(change('formModal', campo, valor));
     });
-    //console.log(datos, 'datos');
     modalToggle();
+  };
+
+  eliminarItem = item => {
+    const { api_axio, toggleCargando, traeItems } = this.props.actions;
+    swal({
+      title: 'Estás seguro?',
+      text: 'Esta acción no podrá ser cancelada',
+      icon: 'warning',
+      buttons: {
+        cancel: {
+          text: 'Cancelar',
+          value: null,
+          visible: true,
+          className: '',
+          closeModal: true,
+        },
+        confirm: {
+          text: 'Sí, estoy',
+          value: true,
+          visible: true,
+          className: '',
+          closeModal: true,
+        },
+      },
+      dangerMode: true,
+    }).then(willDelete => {
+      if (willDelete) {
+        toggleCargando();
+        const params = {
+          method: 'delete',
+        };
+        return api_axio({
+          api_funcion: `presupuestos/item/${item.id}/${item.c_tipo}`,
+          params,
+        })
+          .then(res => {
+            const params = {
+              id: item.n_id_presupuesto,
+            };
+            traeItems(params).then(res => {
+              toggleCargando();
+              swal({
+                icon: 'success',
+                timer: 1000,
+              });
+            });
+          })
+          .catch(err => {
+            mostraMensajeError({ err, msgPadron: 'Error al intentar eliminar' });
+            toggleCargando();
+          });
+      }
+    });
   };
 
   submitItem = values => {
@@ -374,6 +435,7 @@ export class FormPresupuestosContainer extends Component {
   preSubmit = values => {
     const { api_axio, toggleCargando } = this.props.actions;
     toggleCargando();
+
     const params = {
       data: values,
       method: values.id && values.id !== '' ? 'put' : 'post',
@@ -397,6 +459,25 @@ export class FormPresupuestosContainer extends Component {
       });
   };
 
+  parei = false;
+
+  componentDidUpdate = () => {
+    const { toggleCargando } = this.props.actions;
+    const { initialValues, esqueleto, items, traeItemsPending } = this.props;
+    if (
+      initialValues &&
+      initialValues.id &&
+      ((initialValues.items && initialValues.items.length > 0) ||
+        (items && !traeItemsPending && items.length > 0) ||
+        (items && !traeItemsPending && items.length === 0)) &&
+      esqueleto.cargando === true &&
+      !this.parei
+    ) {
+      toggleCargando();
+      this.parei = true;
+    }
+  };
+
   componentDidMount = () => {
     const {
       listaMonedas,
@@ -411,7 +492,6 @@ export class FormPresupuestosContainer extends Component {
       traeMercaderiasServicios,
     } = this.props.actions;
     const { path } = this.props.match;
-
     toggleCargando();
     limpiaItems();
     listaMonedas();
@@ -420,6 +500,7 @@ export class FormPresupuestosContainer extends Component {
     traeSeguros();
     traeFrecuencias();
     traeMercaderiasServicios();
+    traePersonasTodas();
 
     //MODO EDICION
     if (path.indexOf('editar') !== -1) {
@@ -427,10 +508,8 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      traePersonasTodas();
-      traerPresupuesto(params).then(res => traeItems(params).then(res => toggleCargando()));
-    } else {
-      traePersonasTodas().then(res => toggleCargando());
+      traerPresupuesto(params);
+      traeItems(params);
     }
   };
 
@@ -450,6 +529,7 @@ export class FormPresupuestosContainer extends Component {
           {...this.props}
           agregarItem={this.agregarItem}
           editarItem={this.editarItem}
+          eliminarItem={this.eliminarItem}
           enviarFormulario={handleSubmit(this.submit)}
           enviarItems={this.submitItem}
           atualizouFormModal={atualizouFormModal}
@@ -630,6 +710,7 @@ function mapStateToProps(state) {
 
   return {
     items: state.presupuestos.items,
+    traeItemsPending: state.presupuestos.traeItemsPending,
     cotizaciones: state.cotizaciones.cotizaciones,
     esqueleto: state.esqueleto,
     usuario: state.acceder.usuario.c_usuario,

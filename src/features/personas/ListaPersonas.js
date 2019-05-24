@@ -10,21 +10,25 @@ const columns = [
     table: 'Personas',
     text: 'Identificación',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_nombre',
     text: 'Nombre',
     sort: true,
+    attrs: { width: '20%' },
   },
   {
     dataField: 'c_direccion',
     text: 'Dirección',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_cel1',
     text: 'Celular',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_activo',
@@ -32,6 +36,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_cliente',
@@ -39,6 +44,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_comisionista',
@@ -46,6 +52,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_funcionario',
@@ -53,6 +60,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_usuario',
@@ -60,10 +68,9 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
-  
 ];
-
 
 const defaultSorted = [
   {
@@ -78,9 +85,7 @@ export class ListaPersonas extends Component {
     actions: PropTypes.object.isRequired,
   };
 
-
   render() {
-
     return (
       <div className="personas-lista-personas">
         <PrincipalTabla
@@ -105,7 +110,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({  }, dispatch),
+    actions: bindActionCreators({}, dispatch),
   };
 }
 

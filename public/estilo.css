@@ -1,0 +1,4 @@
+table.table.table-striped.table-hover.table-bordered.table-responsive thead>tr>th:last-child
+{
+  width: 100%;
+}

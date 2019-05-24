@@ -49,12 +49,14 @@ const columns = [
     table: 'Fletes',
     text: 'Tipo',
     sort: true,
+    attrs: { width: '35%' },
   },
   {
     dataField: 'moneda.c_descripcion',
     text: 'Moneda',
     sort: true,
     editable: false,
+    attrs: { width: '15%' },
   },
   {
     dataField: 'n_valor',
@@ -62,6 +64,7 @@ const columns = [
     sort: true,
     formatter: formatarNumero,
     editable: false,
+    attrs: { width: '25%' },
   },
   {
     dataField: 'updatedAt',
@@ -70,6 +73,7 @@ const columns = [
     editable: false,
     searchable: false,
     formatter: formatarFecha,
+    attrs: { width: '25%' },
   },
 ];
 
@@ -151,7 +155,7 @@ export class ListaFletes extends Component {
           sizeModal="lg"
           validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Flete' : 'Nuevo Flete'}
-          enviarFormulario={(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>
@@ -168,7 +172,6 @@ export class ListaFletes extends Component {
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-
   let initialValues = state.esqueleto.selected[0];
   const modoNuevo = initialValues ? false : true;
   if (modoNuevo) {
@@ -176,7 +179,7 @@ function mapStateToProps(state) {
       b_activo: true,
     };
   }
-  
+
   const optionsMonedas = [];
   let monedaObj = {};
   for (let moneda of state.cotizaciones.monedas) {

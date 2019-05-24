@@ -53,11 +53,13 @@ const columns = [
     table: 'Seguros',
     text: 'Valor a exhibir',
     sort: true,
+    attrs: { width: '25%' },
   },
   {
     dataField: 'c_tipo_select2',
     text: 'Tipo a exhibir',
     sort: true,
+    attrs: { width: '25%' },
   },
   {
     dataField: 'n_valor',
@@ -65,18 +67,21 @@ const columns = [
     sort: true,
     formatter: formatarNumero,
     editable: false,
+    attrs: { width: '15%' },
   },
   {
     dataField: 'c_tipo_campo_valor',
     text: 'Tipo campo valor',
     sort: true,
     editable: false,
+    attrs: { width: '15%' },
   },
   {
     dataField: 'moneda.c_descripcion',
     text: 'Moneda',
     sort: true,
     editable: false,
+    attrs: { width: '15%' },
   },
 ];
 
@@ -158,7 +163,7 @@ export class ListaSeguros extends Component {
           sizeModal="lg"
           validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Seguro' : 'Nuevo Seguro'}
-          enviarFormulario={(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>
@@ -166,10 +171,8 @@ export class ListaSeguros extends Component {
   }
 }
 
-
 /* istanbul ignore next */
 function mapStateToProps(state) {
-
   let initialValues = state.esqueleto.selected[0];
   const modoNuevo = initialValues ? false : true;
   if (modoNuevo) {

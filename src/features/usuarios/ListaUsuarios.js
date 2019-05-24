@@ -56,11 +56,13 @@ const columns = [
     table: 'Usuarios',
     text: 'Usuario',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'persona.c_nombre',
     text: 'Nome',
     sort: true,
+    attrs: { width: '30%' },
   },
   {
     dataField: 'c_activo',
@@ -68,6 +70,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_administrador',
@@ -75,6 +78,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_cadastrar',
@@ -82,6 +86,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_editar',
@@ -89,6 +94,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_eliminar',
@@ -96,6 +102,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_imprimir',
@@ -103,6 +110,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
 ];
 
@@ -223,16 +231,14 @@ function mapStateToProps(state) {
   }
   const modoNuevo = initialValues ? false : true;
 
-  if(modoNuevo)
-  {
-    initialValues = 
-    {
-      b_activo:true
-      ,b_cadastrar:true
-      ,b_editar:true
-      ,b_eliminar:true
-      ,b_imprimir:true
-    }
+  if (modoNuevo) {
+    initialValues = {
+      b_activo: true,
+      b_cadastrar: true,
+      b_editar: true,
+      b_eliminar: true,
+      b_imprimir: true,
+    };
   }
 
   const optionsPersonas = [];

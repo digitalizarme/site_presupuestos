@@ -14,36 +14,42 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '5%' },
   },
   {
     dataField: 'persona.c_nombre',
     text: 'Nombre',
     sort: true,
     editable: false,
+    attrs: { width: '30%' },
   },
   {
     dataField: 'persona.c_identificacion',
     text: 'Identificacíon',
     sort: true,
     editable: false,
+    attrs: { width: '15%' },
   },
   {
     dataField: 'status.c_descripcion',
     text: 'Status',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'usuario.c_usuario',
     text: 'Creado por',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'moneda.c_descripcion',
     text: 'Moneda',
     sort: true,
     editable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'n_total_general',
@@ -52,6 +58,7 @@ const columns = [
     editable: false,
     searchable: false,
     formatter: formatarNumero,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'updatedAt',
@@ -59,6 +66,7 @@ const columns = [
     sort: true,
     editable: false,
     formatter: formatarFecha,
+    attrs: { width: '10%' },
   },
 ];
 
@@ -66,7 +74,7 @@ const defaultSorted = [
   {
     dataField: 'id',
     order: 'desc',
-  }
+  },
 ];
 
 export class ListaPresupuestos extends Component {

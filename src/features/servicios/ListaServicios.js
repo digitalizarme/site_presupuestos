@@ -11,22 +11,26 @@ const columns = [
     table: 'Servicios',
     text: 'Descripción',
     sort: true,
+    attrs: { width: '40%' },
   },
   {
     dataField: 'c_unidad',
     text: 'Unidad',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'servicioGrupo.c_descripcion',
     text: 'Grupo',
     sort: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'n_valor',
     text: 'Precio',
     sort: true,
     formatter: formatarNumero,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'n_comision',
@@ -35,6 +39,7 @@ const columns = [
     editable: false,
     searchable: true,
     formatter: formatarNumero,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'moneda.c_descripcion',
@@ -42,6 +47,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: true,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'c_activo',
@@ -49,6 +55,7 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
+    attrs: { width: '10%' },
   },
 ];
 

@@ -27,6 +27,7 @@ const columns = [
     table: 'serviciosGrupos',
     text: 'Descripción',
     sort: true,
+    attrs: { width: '80%' },
   },
   {
     dataField: 'updatedAt',
@@ -34,6 +35,7 @@ const columns = [
     sort: true,
     editable: false,
     formatter: formatarFecha,
+    attrs: { width: '20%' },
   },
 ];
 
@@ -109,7 +111,7 @@ export class ListaServiciosGrupo extends Component {
           columns={columns}
           cuerpoModal={FormServGrupo}
           tituloModal={edicion ? 'Editar Grupo de Servicios' : 'Nuevo Grupo de Servicios'}
-          enviarFormulario={(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>

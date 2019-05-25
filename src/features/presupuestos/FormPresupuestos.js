@@ -88,7 +88,8 @@ class FormPresupuestos extends Component {
       initialValuesModal,
       tipoItem,
       modoEdicionItem,
-      onChangeComisionista
+      onChangeComisionista,
+      onChangeSeguro
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -375,6 +376,7 @@ class FormPresupuestos extends Component {
                         name="n_id_seguro"
                         label="Tipo : "
                         options={optionsSeguros}
+                        onChange={onChangeSeguro}
                         component={SuperSelect}
                         placeholder="Elija"
                       />

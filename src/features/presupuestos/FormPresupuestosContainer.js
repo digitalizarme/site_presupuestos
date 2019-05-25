@@ -134,30 +134,21 @@ const preparaMonedasGuardar = (optionsMonedas, idMoneda, guardarCotizaciones) =>
 };
 
 const totalizaComision = ({ props }) => {
-  // setTimeout(()=>{
-
   const { n_total_items, n_valor_porcentaje_comision } = props;
-  console.log(n_total_items, 'n_total_items');
-  console.log(n_valor_porcentaje_comision, 'n_valor_porcentaje_comision');
-
   const valorComision = (parseFloat(n_total_items) * parseFloat(n_valor_porcentaje_comision)) / 100;
   props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
-  console.log(valorComision, 'tot comision');
-  // },1000);
-
 };
 
-const totalizaGeneral = ({ props }) => {
-  const n_total_general = parseFloat(props.n_total_items) + parseFloat(props.n_valor_comision) + parseFloat(props.n_valor_seguro);
-  props.dispatch(change('formPresupuestos', `n_total_general`, n_total_general));
-  console.log(props.n_total_items, 'n_total_items');
-  console.log(props.n_valor_comision, 'n_total_items');
-  console.log(props.n_total_items, 'n_total_items');
-  console.log(n_total_general, 'n_total_general');
-
+const totalizaSeguro = ({ props }) => {
+  const { optionsSeguros, seguro, n_tipo_seguro_valor } = props;
+  const seguroElejido = optionsSeguros.find(objSeguro => objSeguro.value === seguro);
+  const valorSeguro = parseFloat(n_tipo_seguro_valor) * parseFloat(seguroElejido.extra.n_valor);
+  props.dispatch(change('formPresupuestos', `n_valor_seguro`, valorSeguro));
 };
 
 const totalizaItems = ({ items, props }) => {
+  const { n_valor_porcentaje_comision } = props;
+
   let totExentas = 0;
   let totFletes = 0;
   let tot5 = 0;
@@ -173,11 +164,9 @@ const totalizaItems = ({ items, props }) => {
       totFletes += objItem.n_flete;
       tot5 += objItem.n_gravadas_5;
       tot10 += objItem.n_gravadas_10;
-      console.log(objItem.b_seguro,'item tem seguro?');
       if (objItem.b_seguro) {
-      console.log('sim tem seguro');
-
-        totSeguro += totExentas + totFletes + tot5 + tot10;
+        totSeguro +=
+          objItem.n_exentas + objItem.n_flete + objItem.n_gravadas_5 + objItem.n_gravadas_10;
       }
       return true;
     });
@@ -186,6 +175,9 @@ const totalizaItems = ({ items, props }) => {
     totIVA10 = tot10 / 11;
     totIVA = totIVA5 + totIVA10;
   }
+  const valorComision = (parseFloat(totItems) * parseFloat(n_valor_porcentaje_comision)) / 100;
+  const n_total_general =
+    parseFloat(totItems) + parseFloat(valorComision) + parseFloat(props.n_valor_seguro);
 
   props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
   props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
@@ -196,17 +188,22 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
   props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
   props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
+  props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+  props.dispatch(change('formPresupuestos', `n_total_general`, n_total_general));
 };
 
 const atualizouForm = (values, dispatch, props) => {
-  if ((values.n_id_moneda || values.n_id_persona) && !values.n_id_status) {
-    dispatch(change('formPresupuestos', `n_id_status`, 1));
+  if (
+    !props.traeStatusPending &&
+    !props.traerPresupuestoPending &&
+    !props.traeFrecuenciasPending &&
+    !props.traeItemsPending &&
+    !props.traeMercaderiasServiciosPending
+  ) {
+    if ((values.n_id_moneda || values.n_id_persona) && !values.n_id_status) {
+      dispatch(change('formPresupuestos', `n_id_status`, 1));
+    }
   }
-  // setTimeout(() => {
-  // }, 3000);
-      totalizaGeneral({ props });
-    totalizaComision({ props });
-
 };
 
 const atualizouFormModal = (values, dispatch, props) => {
@@ -283,9 +280,14 @@ export class FormPresupuestosContainer extends Component {
   onChangeComisionista = idPersona => {
     if (idPersona) {
       totalizaComision({ props: this.props });
-      // const { n_total_general, n_valor_porcentaje_comision } = this.props;
-      // const valorComision = (n_total_general * n_valor_porcentaje_comision) / 100;
-      // this.props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+    }
+  };
+
+  onChangeSeguro = idSeguro => {
+    if (idSeguro) {
+      setTimeout(() => {
+        totalizaSeguro({ props: this.props });
+      }, 500);
     }
   };
 
@@ -467,7 +469,6 @@ export class FormPresupuestosContainer extends Component {
   };
 
   submitItem = values => {
-    console.log(values, 'item');
     const { modalToggle, api_axio, toggleCargando, traeItems } = this.props.actions;
     const props = this.props;
     toggleCargando();
@@ -570,6 +571,7 @@ export class FormPresupuestosContainer extends Component {
       traeMercaderiasServicios,
     } = this.props.actions;
     const { path } = this.props.match;
+    const props = this.props;
     toggleCargando();
     limpiaItems();
     listaMonedas();
@@ -586,8 +588,12 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      traerPresupuesto(params);
-      traeItems(params);
+      traerPresupuesto(params).then(resp => {
+        traeItems(params).then(res => {
+          totalizaItems({ items: res.data, props });
+          // toggleCargando();
+        });
+      });
     }
   };
 
@@ -615,6 +621,7 @@ export class FormPresupuestosContainer extends Component {
           onChangeItems={this.onChangeItems}
           onChangePersona={this.onChangePersona}
           onChangeComisionista={this.onChangeComisionista}
+          onChangeSeguro={this.onChangeSeguro}
         />
       </div>
     );
@@ -740,6 +747,7 @@ function mapStateToProps(state) {
         seguroObj = {
           label: seguro.c_valor_exhibir,
           value: seguro.id,
+          extra: seguro,
         };
         optionsSeguros.push(seguroObj);
       }
@@ -788,6 +796,7 @@ function mapStateToProps(state) {
 
   return {
     items: state.presupuestos.items,
+    presupuestos: state.presupuestos,
     modoNuevo,
     traeItemsPending: state.presupuestos.traeItemsPending,
     cotizaciones: state.cotizaciones.cotizaciones,
@@ -809,7 +818,9 @@ function mapStateToProps(state) {
     moneda: selector(state, 'n_id_moneda'),
     status: selector(state, 'n_id_status'),
     persona: selector(state, 'n_id_persona'),
+    seguro: selector(state, 'n_id_seguro'),
     n_total_general: selector(state, 'n_total_general') || 0,
+    n_tipo_seguro_valor: selector(state, 'n_tipo_seguro_valor') || 0,
     n_desc_redondeo: selector(state, 'n_desc_redondeo') || 0,
     n_total_items: selector(state, 'n_total_items') || 0,
     n_valor_comision: selector(state, 'n_valor_comision') || 0,
@@ -817,7 +828,8 @@ function mapStateToProps(state) {
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     tipoItem: selectorItem(state, 'c_tipo'),
-    n_valor_porcentaje_comision: state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
+    n_valor_porcentaje_comision:
+      state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
   };
 }
 

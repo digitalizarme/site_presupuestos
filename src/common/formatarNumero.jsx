@@ -4,7 +4,7 @@ import React from 'react';
 const formatarNumero = (cell) => {
   return (
     <NumberFormat
-      defaultValue={cell}
+      value={cell}
       thousandSeparator="."
       decimalSeparator=","
       displayType={'text'}

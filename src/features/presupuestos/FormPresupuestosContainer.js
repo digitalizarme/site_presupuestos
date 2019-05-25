@@ -133,10 +133,80 @@ const preparaMonedasGuardar = (optionsMonedas, idMoneda, guardarCotizaciones) =>
   });
 };
 
+const totalizaComision = ({ props }) => {
+  // setTimeout(()=>{
+
+  const { n_total_items, n_valor_porcentaje_comision } = props;
+  console.log(n_total_items, 'n_total_items');
+  console.log(n_valor_porcentaje_comision, 'n_valor_porcentaje_comision');
+
+  const valorComision = (parseFloat(n_total_items) * parseFloat(n_valor_porcentaje_comision)) / 100;
+  props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+  console.log(valorComision, 'tot comision');
+  // },1000);
+
+};
+
+const totalizaGeneral = ({ props }) => {
+  const n_total_general = parseFloat(props.n_total_items) + parseFloat(props.n_valor_comision) + parseFloat(props.n_valor_seguro);
+  props.dispatch(change('formPresupuestos', `n_total_general`, n_total_general));
+  console.log(props.n_total_items, 'n_total_items');
+  console.log(props.n_valor_comision, 'n_total_items');
+  console.log(props.n_total_items, 'n_total_items');
+  console.log(n_total_general, 'n_total_general');
+
+};
+
+const totalizaItems = ({ items, props }) => {
+  let totExentas = 0;
+  let totFletes = 0;
+  let tot5 = 0;
+  let tot10 = 0;
+  let totItems = 0;
+  let totIVA5 = 0;
+  let totIVA10 = 0;
+  let totIVA = 0;
+  let totSeguro = 0;
+  if (items && items.length > 0) {
+    items.map((objItem, indice) => {
+      totExentas += objItem.n_exentas;
+      totFletes += objItem.n_flete;
+      tot5 += objItem.n_gravadas_5;
+      tot10 += objItem.n_gravadas_10;
+      console.log(objItem.b_seguro,'item tem seguro?');
+      if (objItem.b_seguro) {
+      console.log('sim tem seguro');
+
+        totSeguro += totExentas + totFletes + tot5 + tot10;
+      }
+      return true;
+    });
+    totItems = totExentas + totFletes + tot5 + tot10;
+    totIVA5 = tot5 / 21;
+    totIVA10 = tot10 / 11;
+    totIVA = totIVA5 + totIVA10;
+  }
+
+  props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
+  props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
+  props.dispatch(change('formPresupuestos', `n_total_5`, tot5));
+  props.dispatch(change('formPresupuestos', `n_total_10`, tot10));
+  props.dispatch(change('formPresupuestos', `n_total_items`, totItems));
+  props.dispatch(change('formPresupuestos', `n_total_iva_5`, totIVA5));
+  props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
+  props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
+  props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
+};
+
 const atualizouForm = (values, dispatch, props) => {
   if ((values.n_id_moneda || values.n_id_persona) && !values.n_id_status) {
     dispatch(change('formPresupuestos', `n_id_status`, 1));
   }
+  // setTimeout(() => {
+  // }, 3000);
+      totalizaGeneral({ props });
+    totalizaComision({ props });
+
 };
 
 const atualizouFormModal = (values, dispatch, props) => {
@@ -212,9 +282,10 @@ export class FormPresupuestosContainer extends Component {
 
   onChangeComisionista = idPersona => {
     if (idPersona) {
-      const { n_total_general, n_valor_porcentaje_comision } = this.props;
-      const valorComision = (n_total_general * n_valor_porcentaje_comision) / 100;
-      this.props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+      totalizaComision({ props: this.props });
+      // const { n_total_general, n_valor_porcentaje_comision } = this.props;
+      // const valorComision = (n_total_general * n_valor_porcentaje_comision) / 100;
+      // this.props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
     }
   };
 
@@ -342,6 +413,7 @@ export class FormPresupuestosContainer extends Component {
 
   eliminarItem = item => {
     const { api_axio, toggleCargando, traeItems } = this.props.actions;
+    const props = this.props;
     swal({
       title: 'Estás seguro?',
       text: 'Esta acción no podrá ser cancelada',
@@ -378,6 +450,7 @@ export class FormPresupuestosContainer extends Component {
               id: item.n_id_presupuesto,
             };
             traeItems(params).then(res => {
+              totalizaItems({ items: res.data, props });
               toggleCargando();
               swal({
                 icon: 'success',
@@ -394,7 +467,9 @@ export class FormPresupuestosContainer extends Component {
   };
 
   submitItem = values => {
+    console.log(values, 'item');
     const { modalToggle, api_axio, toggleCargando, traeItems } = this.props.actions;
+    const props = this.props;
     toggleCargando();
     const params = {
       data: values,
@@ -412,6 +487,8 @@ export class FormPresupuestosContainer extends Component {
           // if (this.props.status === 1) {
           //   this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
           // }
+          totalizaItems({ items: res.data, props });
+
           toggleCargando();
           modalToggle();
           swal({
@@ -428,6 +505,10 @@ export class FormPresupuestosContainer extends Component {
 
   submit = values => {
     this.preSubmit(values).then(res => {
+      swal({
+        icon: 'success',
+        timer: 1000,
+      });
       history.push('/presupuestos');
     });
   };
@@ -448,10 +529,6 @@ export class FormPresupuestosContainer extends Component {
         this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
 
         toggleCargando();
-        swal({
-          icon: 'success',
-          timer: 1000,
-        });
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: `Error al intentar guardar` });
@@ -465,22 +542,14 @@ export class FormPresupuestosContainer extends Component {
     const { toggleCargando } = this.props.actions;
     const { initialValues, esqueleto, items, traeItemsPending, modoNuevo } = this.props;
     if (
-        (modoNuevo ||
-        (
-          initialValues &&
+      (modoNuevo ||
+        (initialValues &&
           initialValues.id &&
-          (
-            (initialValues.items && initialValues.items.length > 0) ||
-            (items && !traeItemsPending && items.length > 0 ) ||
-            
-            (items && !traeItemsPending && items.length === 0)
-          ) 
-        )
-      )
-      &&
+          ((initialValues.items && initialValues.items.length > 0) ||
+            (items && !traeItemsPending && items.length > 0) ||
+            (items && !traeItemsPending && items.length === 0)))) &&
       esqueleto.cargando === true &&
       !this.parei
-      
     ) {
       toggleCargando();
       this.parei = true;
@@ -741,6 +810,10 @@ function mapStateToProps(state) {
     status: selector(state, 'n_id_status'),
     persona: selector(state, 'n_id_persona'),
     n_total_general: selector(state, 'n_total_general'),
+    n_desc_redondeo: selector(state, 'n_desc_redondeo'),
+    n_total_items: selector(state, 'n_total_items'),
+    n_valor_comision: selector(state, 'n_valor_comision'),
+    n_valor_seguro: selector(state, 'n_valor_seguro'),
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     tipoItem: selectorItem(state, 'c_tipo'),

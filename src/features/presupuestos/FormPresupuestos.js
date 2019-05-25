@@ -189,27 +189,27 @@ class FormPresupuestos extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {items && items.length > 0 ? (
-                        items.map((item, indice) => (
+                      { items && items.length > 0 ? (
+                        items.map((objItem, indice) => (
                           <tr
                             key={indice}
                             onDoubleClick={() => {
-                              editarItem(item);
+                              editarItem(objItem);
                             }}
                           >
-                            <td>{item.c_descripcion}</td>
-                            <td>{formatarNumero(item.n_cantidad)}</td>
-                            <td>{formatarNumero(item.n_unitario)}</td>
-                            <td>{formatarNumero(item.n_exentas)}</td>
-                            <td>{formatarNumero(item.n_gravadas_5)}</td>
-                            <td>{formatarNumero(item.n_gravadas_10)}</td>
-                            <td>{formatarNumero(item.n_peso)}</td>
-                            <td>{formatarNumero(item.n_flete)}</td>
+                            <td>{objItem.c_descripcion}</td>
+                            <td>{formatarNumero(objItem.n_cantidad)}</td>
+                            <td>{formatarNumero(objItem.n_unitario)}</td>
+                            <td>{formatarNumero(objItem.n_exentas)}</td>
+                            <td>{formatarNumero(objItem.n_gravadas_5)}</td>
+                            <td>{formatarNumero(objItem.n_gravadas_10)}</td>
+                            <td>{formatarNumero(objItem.n_peso)}</td>
+                            <td>{formatarNumero(objItem.n_flete)}</td>
                             <td>
-                              <Button type="button" color="info" size="sm" onClick={()=>{editarItem(item)}}>
+                              <Button type="button" color="info" size="sm" onClick={()=>{editarItem(objItem)}}>
                                 <FontAwesomeIcon icon={faEdit} />
                               </Button>{' '}
-                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(item)}}>
+                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(objItem)}}>
                                 <FontAwesomeIcon icon={faTrashAlt} />
                               </Button>
                             </td>
@@ -328,7 +328,7 @@ class FormPresupuestos extends Component {
             <Row>
               <Col>
                 <div className="titulo_sesion bg-info mano" onClick={this.toggleComisionista}>
-                  Comisionista
+                  Comisión
                 </div>
               </Col>
             </Row>
@@ -385,6 +385,7 @@ class FormPresupuestos extends Component {
                         label="Cantidad asegurada : "
                         component={InputNumber}
                         decimalScale={2}
+                        disabled
                         className="field form-control-lg form-control"
                       />
                     </Col>
@@ -426,6 +427,7 @@ class FormPresupuestos extends Component {
                         name="n_total_general"
                         label="Total General (Comisión + Seguro + Items con flete + Descuento/Redondeo) : "
                         component={InputNumber}
+                        disabled
                         decimalScale={decimales}
                         className="field form-control-lg form-control"
                       />
@@ -435,6 +437,7 @@ class FormPresupuestos extends Component {
                         name="n_total_general_gs"
                         label="Total en Gs : "
                         component={InputNumber}
+                        disabled
                         decimalScale={0}
                         className="field form-control-lg form-control"
                       />

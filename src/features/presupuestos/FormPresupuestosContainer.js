@@ -809,15 +809,15 @@ function mapStateToProps(state) {
     moneda: selector(state, 'n_id_moneda'),
     status: selector(state, 'n_id_status'),
     persona: selector(state, 'n_id_persona'),
-    n_total_general: selector(state, 'n_total_general'),
-    n_desc_redondeo: selector(state, 'n_desc_redondeo'),
-    n_total_items: selector(state, 'n_total_items'),
-    n_valor_comision: selector(state, 'n_valor_comision'),
-    n_valor_seguro: selector(state, 'n_valor_seguro'),
+    n_total_general: selector(state, 'n_total_general') || 0,
+    n_desc_redondeo: selector(state, 'n_desc_redondeo') || 0,
+    n_total_items: selector(state, 'n_total_items') || 0,
+    n_valor_comision: selector(state, 'n_valor_comision') || 0,
+    n_valor_seguro: selector(state, 'n_valor_seguro') || 0,
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     tipoItem: selectorItem(state, 'c_tipo'),
-    n_valor_porcentaje_comision: state.configuraciones.configuracion.n_valor_porcentaje_comision,
+    n_valor_porcentaje_comision: state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
   };
 }
 

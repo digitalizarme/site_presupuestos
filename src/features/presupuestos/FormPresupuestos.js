@@ -67,7 +67,6 @@ class FormPresupuestos extends Component {
       optionsStatus,
       optionsClientes,
       optionsComisionista,
-      optionsFletes,
       optionsSeguros,
       optionsFrecuencias,
       optionsItems,
@@ -89,14 +88,15 @@ class FormPresupuestos extends Component {
       tipoItem,
       modoEdicionItem,
       onChangeComisionista,
-      onChangeSeguro
+      onChangeSeguro,
+      onChangeCamposValores,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
         <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Presupuesto</div>
         <Container>
           <ModalForm
-            tituloModal={modoEdicionItem?'Editar Item': 'Nuevo Item'}
+            tituloModal={modoEdicionItem ? 'Editar Item' : 'Nuevo Item'}
             esqueleto={esqueleto}
             descMoneda={descMoneda}
             decimales={decimales}
@@ -175,56 +175,70 @@ class FormPresupuestos extends Component {
               <Col>
                 <Collapse isOpen={this.state.collapseItems}>
                   <div className="scroll">
-                  <Table striped responsive hover>
-                    <thead>
-                      <tr>
-                        <th style={{ width: '25%' }}>Desc.</th>
-                        <th style={{ width: '5%' }}>Cant.</th>
-                        <th style={{ width: '10%' }}>Unit.</th>
-                        <th style={{ width: '10%' }}>Exent.</th>
-                        <th style={{ width: '10%' }}>Grav. 5%</th>
-                        <th style={{ width: '10%' }}>Grav. 10%</th>
-                        <th style={{ width: '10%' }}>Peso</th>
-                        <th style={{ width: '10%' }}>Flete</th>
-                        <th style={{ width: '10%' }}>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      { items && items.length > 0 ? (
-                        items.map((objItem, indice) => (
-                          <tr
-                            key={indice}
-                            onDoubleClick={() => {
-                              editarItem(objItem);
-                            }}
-                          >
-                            <td>{objItem.c_descripcion}</td>
-                            <td>{formatarNumero(objItem.n_cantidad)}</td>
-                            <td>{formatarNumero(objItem.n_unitario)}</td>
-                            <td>{formatarNumero(objItem.n_exentas)}</td>
-                            <td>{formatarNumero(objItem.n_gravadas_5)}</td>
-                            <td>{formatarNumero(objItem.n_gravadas_10)}</td>
-                            <td>{formatarNumero(objItem.n_peso)}</td>
-                            <td>{formatarNumero(objItem.n_flete)}</td>
-                            <td>
-                              <Button type="button" color="info" size="sm" onClick={()=>{editarItem(objItem)}}>
-                                <FontAwesomeIcon icon={faEdit} />
-                              </Button>{' '}
-                              <Button type="button" color="danger" size="sm" onClick={()=>{eliminarItem(objItem)}}>
-                                <FontAwesomeIcon icon={faTrashAlt} />
-                              </Button>
+                    <Table striped responsive hover>
+                      <thead>
+                        <tr>
+                          <th style={{ width: '25%' }}>Desc.</th>
+                          <th style={{ width: '5%' }}>Cant.</th>
+                          <th style={{ width: '10%' }}>Unit.</th>
+                          <th style={{ width: '10%' }}>Exent.</th>
+                          <th style={{ width: '10%' }}>Grav. 5%</th>
+                          <th style={{ width: '10%' }}>Grav. 10%</th>
+                          <th style={{ width: '10%' }}>Peso</th>
+                          <th style={{ width: '10%' }}>Flete</th>
+                          <th style={{ width: '10%' }}>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {items && items.length > 0 ? (
+                          items.map((objItem, indice) => (
+                            <tr
+                              key={indice}
+                              onDoubleClick={() => {
+                                editarItem(objItem);
+                              }}
+                            >
+                              <td>{objItem.c_descripcion}</td>
+                              <td>{formatarNumero(objItem.n_cantidad)}</td>
+                              <td>{formatarNumero(objItem.n_unitario)}</td>
+                              <td>{formatarNumero(objItem.n_exentas)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_5)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_10)}</td>
+                              <td>{formatarNumero(objItem.n_peso)}</td>
+                              <td>{formatarNumero(objItem.n_flete)}</td>
+                              <td>
+                                <Button
+                                  type="button"
+                                  color="info"
+                                  size="sm"
+                                  onClick={() => {
+                                    editarItem(objItem);
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faEdit} />
+                                </Button>{' '}
+                                <Button
+                                  type="button"
+                                  color="danger"
+                                  size="sm"
+                                  onClick={() => {
+                                    eliminarItem(objItem);
+                                  }}
+                                >
+                                  <FontAwesomeIcon icon={faTrashAlt} />
+                                </Button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="9" className="text-center">
+                              No hay items
                             </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="9" className="text-center">
-                            No hay items
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
+                        )}
+                      </tbody>
+                    </Table>
                   </div>
                 </Collapse>
               </Col>
@@ -292,7 +306,7 @@ class FormPresupuestos extends Component {
                     </Col>
                   </Row>
                   <Row>
-                    <Col sm="6" md="4" lg={{size:2, offset:4}} xl="2">
+                    <Col sm="6" md="4" lg={{ size: 2, offset: 4 }} xl="2">
                       <Field
                         name="n_total_iva_5"
                         label="IVA Grav. 5% :"
@@ -353,6 +367,14 @@ class FormPresupuestos extends Component {
                         label="Valor"
                         component={InputNumber}
                         decimalScale={decimales}
+                        onChange={valor => {
+                          onChangeCamposValores({
+                            n_valor_comision: valor,
+                            seguro: this.props.seguro,
+                            n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
+                            n_desc_redondeo: this.props.n_desc_redondeo,
+                          });
+                        }}
                         className="field form-control-lg form-control"
                       />
                     </Col>
@@ -386,8 +408,15 @@ class FormPresupuestos extends Component {
                         name="n_tipo_seguro_valor"
                         label="Cantidad asegurada : "
                         component={InputNumber}
-                        decimalScale={2}
-                        disabled
+                        decimalScale={decimales}
+                        onChange={valor => {
+                          onChangeCamposValores({
+                            n_valor_comision: this.props.n_valor_comision,
+                            seguro: this.props.seguro,
+                            n_tipo_seguro_valor: valor,
+                            n_desc_redondeo: this.props.n_desc_redondeo,
+                          });
+                        }}
                         className="field form-control-lg form-control"
                       />
                     </Col>
@@ -396,6 +425,7 @@ class FormPresupuestos extends Component {
                         name="n_valor_seguro"
                         label="Valor seguro : "
                         component={InputNumber}
+                        readonly
                         decimalScale={decimales}
                         className="field form-control-lg form-control"
                       />
@@ -421,6 +451,14 @@ class FormPresupuestos extends Component {
                         label="Descuento/Redondeo : "
                         component={InputNumber}
                         decimalScale={decimales}
+                        onChange={valor => {
+                          onChangeCamposValores({
+                            n_valor_comision: this.props.n_valor_comision,
+                            seguro: this.props.seguro,
+                            n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
+                            n_desc_redondeo: valor,
+                          });
+                        }}
                         className="field form-control-lg form-control"
                       />
                     </Col>
@@ -429,7 +467,7 @@ class FormPresupuestos extends Component {
                         name="n_total_general"
                         label="Total General (Comisión + Seguro + Items con flete + Descuento/Redondeo) : "
                         component={InputNumber}
-                        disabled
+                        readonly
                         decimalScale={decimales}
                         className="field form-control-lg form-control"
                       />
@@ -503,12 +541,11 @@ class FormPresupuestos extends Component {
                 />
               </Col>
             </Row>
-            <Row className='text-right'>
+            <Row className="text-right">
               <Col sm="12">
                 <Link to="/presupuestos" className="btn btn-primary">
                   Cancelar
-                </Link>
-                {' '}
+                </Link>{' '}
                 <Button type="submit" color="success" disabled={pristine || submitting}>
                   {submitting ? 'Guardando' : 'Guardar'}
                 </Button>

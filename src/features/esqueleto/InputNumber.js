@@ -11,6 +11,7 @@ export default class InputNumber extends Component {
       label,
       className,
       disabled,
+      readonly,
       decimalScale,
 
       meta: { touched, error, warning },
@@ -29,6 +30,7 @@ export default class InputNumber extends Component {
             thousandSeparator="."
             decimalSeparator=","
             disabled={disabled?'disabled':false}
+            readOnly={readonly}
             decimalScale={decimalScale?decimalScale:0}
             className={className}
           />

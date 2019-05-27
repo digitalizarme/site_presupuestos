@@ -137,17 +137,24 @@ const totalizaComision = ({ props }) => {
   const { n_total_items, n_valor_porcentaje_comision } = props;
   const valorComision = (parseFloat(n_total_items) * parseFloat(n_valor_porcentaje_comision)) / 100;
   props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+  return valorComision;
 };
 
-const totalizaSeguro = ({ props }) => {
-  const { optionsSeguros, seguro, n_tipo_seguro_valor } = props;
+const totalizaSeguro = ({ props, totSeguro }) => {
+  let { optionsSeguros, seguro, n_tipo_seguro_valor } = props;
+
+  if (typeof totSeguro !== "undefined") {
+    n_tipo_seguro_valor = totSeguro;
+
+  }
   const seguroElejido = optionsSeguros.find(objSeguro => objSeguro.value === seguro);
   const valorSeguro = parseFloat(n_tipo_seguro_valor) * parseFloat(seguroElejido.extra.n_valor);
   props.dispatch(change('formPresupuestos', `n_valor_seguro`, valorSeguro));
+  return valorSeguro;
 };
 
 const totalizaItems = ({ items, props }) => {
-  const { n_valor_porcentaje_comision } = props;
+  const { n_valor_porcentaje_comision, seguro } = props;
 
   let totExentas = 0;
   let totFletes = 0;
@@ -190,6 +197,9 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
   props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
   props.dispatch(change('formPresupuestos', `n_total_general`, n_total_general));
+  if (seguro) {
+    totalizaSeguro({ props, totSeguro });
+  }
 };
 
 const atualizouForm = (values, dispatch, props) => {
@@ -254,6 +264,22 @@ export class FormPresupuestosContainer extends Component {
     actions: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
   };
+
+  onChangeCamposValores = (campos) =>
+  {
+      const { optionsSeguros,dispatch,n_total_items } = this.props;
+      const props = 
+      {
+        ...campos
+        ,optionsSeguros
+        ,dispatch
+      }
+      const valorSeguro = totalizaSeguro({props});
+      const totalGeneral = parseFloat(n_total_items) + parseFloat(campos.n_valor_comision) + parseFloat(valorSeguro) + parseFloat(campos.n_desc_redondeo);
+      this.props.dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
+
+
+  }
 
   onChangePersona = idPersona => {
     const { moneda, handleSubmit, id } = this.props;
@@ -571,7 +597,6 @@ export class FormPresupuestosContainer extends Component {
       traeMercaderiasServicios,
     } = this.props.actions;
     const { path } = this.props.match;
-    const props = this.props;
     toggleCargando();
     limpiaItems();
     listaMonedas();
@@ -588,12 +613,8 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      traerPresupuesto(params).then(resp => {
-        traeItems(params).then(res => {
-          totalizaItems({ items: res.data, props });
-          // toggleCargando();
-        });
-      });
+      traerPresupuesto(params);
+      traeItems(params);
     }
   };
 
@@ -622,6 +643,7 @@ export class FormPresupuestosContainer extends Component {
           onChangePersona={this.onChangePersona}
           onChangeComisionista={this.onChangeComisionista}
           onChangeSeguro={this.onChangeSeguro}
+          onChangeCamposValores={this.onChangeCamposValores}
         />
       </div>
     );

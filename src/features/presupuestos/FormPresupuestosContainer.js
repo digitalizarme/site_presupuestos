@@ -272,7 +272,7 @@ export class FormPresupuestosContainer extends Component {
       parseFloat(campos.n_valor_comision) +
       parseFloat(valorSeguro) +
       parseFloat(campos.n_desc_redondeo);
-    if (monedaSeleccionada.extra.id !== 1) {
+    if (monedaSeleccionada && monedaSeleccionada.extra.id !== 1) {
       const c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_PYG';
       const { traeUltimasCotizacionesMoneda } = this.props.actions;
       traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)

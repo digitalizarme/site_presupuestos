@@ -9,7 +9,7 @@ import formatarNumero from '../../common/formatarNumero';
 const columns = [
   {
     dataField: 'id',
-    table: 'Presupuestos',
+    table: 'presupuestos',
     text: 'Num.',
     sort: true,
     editable: false,

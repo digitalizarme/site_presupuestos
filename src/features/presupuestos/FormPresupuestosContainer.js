@@ -251,6 +251,28 @@ const atualizaCamposItem = ({
   }
 };
 
+const setaValorGs = ({
+  monedaSeleccionada,
+  totalGeneral,
+  dispatch,
+  traeUltimasCotizacionesMoneda,
+}) => {
+  if (monedaSeleccionada && monedaSeleccionada.extra.id !== 1) {
+    const c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_PYG';
+    traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+      .then(res => {
+        if (res.data && res.data.length > 0) {
+          const cotizacion = res.data[0].n_valor || 0;
+          const totGs = totalGeneral * cotizacion;
+          dispatch(change('formPresupuestos', `n_total_general_gs`, totGs));
+        }
+      })
+      .catch(err => {
+        mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+      });
+  }
+};
+
 export class FormPresupuestosContainer extends Component {
   static propTypes = {
     // presupuestos: PropTypes.object.isRequired,
@@ -265,6 +287,7 @@ export class FormPresupuestosContainer extends Component {
       optionsSeguros,
       dispatch,
     };
+    const { traeUltimasCotizacionesMoneda } = this.props.actions;
 
     const valorSeguro = totalizaSeguro({ props });
     const totalGeneral =
@@ -272,21 +295,13 @@ export class FormPresupuestosContainer extends Component {
       parseFloat(campos.n_valor_comision || 0) +
       parseFloat(valorSeguro || 0) +
       parseFloat(campos.n_desc_redondeo || 0);
-    if (monedaSeleccionada && monedaSeleccionada.extra.id !== 1) {
-      const c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_PYG';
-      const { traeUltimasCotizacionesMoneda } = this.props.actions;
-      traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
-        .then(res => {
-          if (res.data && res.data.length > 0) {
-            const cotizacion = res.data[0].n_valor || 0;
-            const totGs = totalGeneral * cotizacion;
-            this.props.dispatch(change('formPresupuestos', `n_total_general_gs`, totGs));
-          }
-        })
-        .catch(err => {
-          mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
-        });
-    }
+
+    setaValorGs({
+      monedaSeleccionada,
+      totalGeneral,
+      dispatch: this.props.dispatch,
+      traeUltimasCotizacionesMoneda,
+    });
     this.props.dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
   };
 
@@ -613,6 +628,7 @@ export class FormPresupuestosContainer extends Component {
       traeItems,
       limpiaItems,
       traeMercaderiasServicios,
+      traeUltimasCotizacionesMoneda
     } = this.props.actions;
     const { path } = this.props.match;
     toggleCargando();
@@ -631,7 +647,14 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      traerPresupuesto(params);
+      traerPresupuesto(params).then(res => {
+        const datos = res.data;
+        const monedaSeleccionada =
+        {
+          extra:datos.moneda
+        }
+        setaValorGs({ monedaSeleccionada, totalGeneral:datos.n_total_general, dispatch:this.props.dispatch, traeUltimasCotizacionesMoneda });
+      });
       traeItems(params);
     }
   };

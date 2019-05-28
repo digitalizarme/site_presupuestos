@@ -57,7 +57,9 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
-    formatter: formatarNumero,
+    formatter: (cell,row) => {
+      return formatarNumero(cell,row.moneda.n_decimales);
+    },
     attrs: { width: '10%' },
   },
   {

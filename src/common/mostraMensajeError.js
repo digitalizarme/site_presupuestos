@@ -4,7 +4,7 @@ const mostraMensajeError = ({err, msgPadron}) => {
 
         if (typeof err.response !== 'undefined' && err.response.status !== 401) {
           const { message } =
-            typeof err.response !== 'undefined'
+            typeof err.response !== 'undefined' && typeof err.response.data !== 'undefined'
               ? err.response.data
               : msgPadron;
           swal({

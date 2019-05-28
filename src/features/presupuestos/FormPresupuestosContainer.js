@@ -133,22 +133,16 @@ const preparaMonedasGuardar = (optionsMonedas, idMoneda, guardarCotizaciones) =>
   });
 };
 
-const totalizaComision = ({ props }) => {
-  const { n_total_items, n_valor_porcentaje_comision } = props;
-  const valorComision = (parseFloat(n_total_items) * parseFloat(n_valor_porcentaje_comision)) / 100;
-  props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
-  return valorComision;
-};
-
 const totalizaSeguro = ({ props, totSeguro }) => {
   let { optionsSeguros, seguro, n_tipo_seguro_valor } = props;
 
-  if (typeof totSeguro !== "undefined") {
+  if (typeof totSeguro !== 'undefined') {
     n_tipo_seguro_valor = totSeguro;
-
   }
   const seguroElejido = optionsSeguros.find(objSeguro => objSeguro.value === seguro);
-  const valorSeguro = parseFloat(n_tipo_seguro_valor) * parseFloat(seguroElejido.extra.n_valor);
+  const valorSeguro = seguroElejido
+    ? parseFloat(n_tipo_seguro_valor) * parseFloat(seguroElejido.extra.n_valor)
+    : 0;
   props.dispatch(change('formPresupuestos', `n_valor_seguro`, valorSeguro));
   return valorSeguro;
 };
@@ -182,9 +176,9 @@ const totalizaItems = ({ items, props }) => {
     totIVA10 = tot10 / 11;
     totIVA = totIVA5 + totIVA10;
   }
-  const valorComision = (parseFloat(totItems) * parseFloat(n_valor_porcentaje_comision)) / 100;
-  const n_total_general =
-    parseFloat(totItems) + parseFloat(valorComision) + parseFloat(props.n_valor_seguro);
+  const valorComision =
+    ((parseFloat(totItems) - parseFloat(totFletes)) * parseFloat(n_valor_porcentaje_comision)) /
+    100;
 
   props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
   props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
@@ -196,7 +190,6 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
   props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
   props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
-  props.dispatch(change('formPresupuestos', `n_total_general`, n_total_general));
   if (seguro) {
     totalizaSeguro({ props, totSeguro });
   }
@@ -265,21 +258,37 @@ export class FormPresupuestosContainer extends Component {
     esqueleto: PropTypes.object.isRequired,
   };
 
-  onChangeCamposValores = (campos) =>
-  {
-      const { optionsSeguros,dispatch,n_total_items } = this.props;
-      const props = 
-      {
-        ...campos
-        ,optionsSeguros
-        ,dispatch
-      }
-      const valorSeguro = totalizaSeguro({props});
-      const totalGeneral = parseFloat(n_total_items) + parseFloat(campos.n_valor_comision) + parseFloat(valorSeguro) + parseFloat(campos.n_desc_redondeo);
-      this.props.dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
+  onChangeCamposValores = campos => {
+    const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada } = this.props;
+    const props = {
+      ...campos,
+      optionsSeguros,
+      dispatch,
+    };
 
-
-  }
+    const valorSeguro = totalizaSeguro({ props });
+    const totalGeneral =
+      parseFloat(n_total_items) +
+      parseFloat(campos.n_valor_comision) +
+      parseFloat(valorSeguro) +
+      parseFloat(campos.n_desc_redondeo);
+    if (monedaSeleccionada.extra.id !== 1) {
+      const c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_PYG';
+      const { traeUltimasCotizacionesMoneda } = this.props.actions;
+      traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+        .then(res => {
+          if (res.data && res.data.length > 0) {
+            const cotizacion = res.data[0].n_valor;
+            const totGs = totalGeneral * cotizacion;
+            this.props.dispatch(change('formPresupuestos', `n_total_general_gs`, totGs));
+          }
+        })
+        .catch(err => {
+          mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+        });
+    }
+    this.props.dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
+  };
 
   onChangePersona = idPersona => {
     const { moneda, handleSubmit, id } = this.props;
@@ -303,17 +312,13 @@ export class FormPresupuestosContainer extends Component {
     }
   };
 
-  onChangeComisionista = idPersona => {
-    if (idPersona) {
-      totalizaComision({ props: this.props });
-    }
-  };
-
   onChangeSeguro = idSeguro => {
     if (idSeguro) {
-      setTimeout(() => {
-        totalizaSeguro({ props: this.props });
-      }, 500);
+      const props = {
+        ...this.props,
+        seguro: idSeguro,
+      };
+      totalizaSeguro({ props });
     }
   };
 
@@ -336,40 +341,45 @@ export class FormPresupuestosContainer extends Component {
         const c_monedaOrigemDestino =
           itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
 
-        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
-          if (res.data && res.data.length > 0) {
-            const cotizacion = res.data[0];
-            unitario *= cotizacion.n_valor;
-            unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+          .then(res => {
+            if (res.data && res.data.length > 0) {
+              const cotizacion = res.data[0];
+              unitario *= cotizacion.n_valor;
+              unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
 
-            exentas *= cotizacion.n_valor;
-            exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
+              exentas *= cotizacion.n_valor;
+              exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
 
-            gravadas_5 *= cotizacion.n_valor;
-            gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
+              gravadas_5 *= cotizacion.n_valor;
+              gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
 
-            gravadas_10 *= cotizacion.n_valor;
-            gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
+              gravadas_10 *= cotizacion.n_valor;
+              gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
 
-            atualizaCamposItem({
-              dispatch: this.props.dispatch,
-              unitario,
-              exentas,
-              gravadas_5,
-              gravadas_10,
-              peso,
-              tipo,
-              obs,
-            });
-          } else {
-            swal({
-              title: 'Ops',
-              text: 'No fue posible obtener las ultimas cotizaciones.',
-              icon: 'warning',
-              button: 'OK!',
-            });
-          }
-        });
+              atualizaCamposItem({
+                dispatch: this.props.dispatch,
+                unitario,
+                exentas,
+                gravadas_5,
+                gravadas_10,
+                peso,
+                tipo,
+                obs,
+              });
+            } else {
+              swal({
+                title: 'Ops',
+                text: 'No fue posible obtener las ultimas cotizaciones.',
+                icon: 'warning',
+                button: 'OK!',
+              });
+            }
+          })
+          .catch(err => {
+            toggleCargando();
+            mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+          });
       } else {
         atualizaCamposItem({
           dispatch: this.props.dispatch,
@@ -389,22 +399,28 @@ export class FormPresupuestosContainer extends Component {
         const c_monedaOrigemDestino =
           itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
 
-        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino).then(res => {
-          if (res.data && res.data.length > 0) {
-            const cotizacion = res.data[0];
-            flete *= cotizacion.n_valor;
-            flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
-            atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-          } else {
-            swal({
-              title: 'Ops',
-              text: 'No fue posible obtener las ultimas cotizaciones para el flete',
-              icon: 'warning',
-              button: 'OK!',
-            });
-          }
-          toggleCargando();
-        });
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+          .then(res => {
+            if (res.data && res.data.length > 0) {
+              const cotizacion = res.data[0];
+              flete *= cotizacion.n_valor;
+              flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
+              atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+            } else {
+              swal({
+                title: 'Ops',
+                text: 'No fue posible obtener las ultimas cotizaciones para el flete',
+                icon: 'warning',
+                button: 'OK!',
+              });
+            }
+            toggleCargando();
+          })
+          .catch(err => {
+            atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
+            toggleCargando();
+            mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+          });
       } else {
         atualizaCamposItem({ dispatch: this.props.dispatch, flete });
         toggleCargando();
@@ -479,6 +495,8 @@ export class FormPresupuestosContainer extends Component {
             };
             traeItems(params).then(res => {
               totalizaItems({ items: res.data, props });
+              this.props.dispatch(this.props.handleSubmit(this.preSubmit));
+
               toggleCargando();
               swal({
                 icon: 'success',
@@ -515,7 +533,7 @@ export class FormPresupuestosContainer extends Component {
           //   this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
           // }
           totalizaItems({ items: res.data, props });
-
+          this.props.dispatch(this.props.handleSubmit(this.preSubmit));
           toggleCargando();
           modalToggle();
           swal({
@@ -641,7 +659,6 @@ export class FormPresupuestosContainer extends Component {
           onChangeMoneda={this.onChangeMoneda}
           onChangeItems={this.onChangeItems}
           onChangePersona={this.onChangePersona}
-          onChangeComisionista={this.onChangeComisionista}
           onChangeSeguro={this.onChangeSeguro}
           onChangeCamposValores={this.onChangeCamposValores}
         />

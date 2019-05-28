@@ -87,9 +87,8 @@ class FormPresupuestos extends Component {
       initialValuesModal,
       tipoItem,
       modoEdicionItem,
-      onChangeComisionista,
-      onChangeSeguro,
       onChangeCamposValores,
+      moneda,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -356,7 +355,6 @@ class FormPresupuestos extends Component {
                         name="n_id_persona_comisionista"
                         label="Comicionista"
                         options={optionsComisionista}
-                        onChange={onChangeComisionista}
                         component={SuperSelect}
                         placeholder="Elija"
                       />
@@ -398,7 +396,14 @@ class FormPresupuestos extends Component {
                         name="n_id_seguro"
                         label="Tipo : "
                         options={optionsSeguros}
-                        onChange={onChangeSeguro}
+                        onChange={valor => {
+                          onChangeCamposValores({
+                            n_valor_comision: this.props.n_valor_comision,
+                            seguro: valor,
+                            n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
+                            n_desc_redondeo: this.props.n_desc_redondeo,
+                          });
+                        }}
                         component={SuperSelect}
                         placeholder="Elija"
                       />
@@ -472,7 +477,7 @@ class FormPresupuestos extends Component {
                         className="field form-control-lg form-control"
                       />
                     </Col>
-                    <Col sm="12">
+                    {moneda!==1 && <Col sm="12">
                       <Field
                         name="n_total_general_gs"
                         label="Total en Gs : "
@@ -481,7 +486,7 @@ class FormPresupuestos extends Component {
                         decimalScale={0}
                         className="field form-control-lg form-control"
                       />
-                    </Col>
+                    </Col>}
                   </Row>
                 </Collapse>
               </Col>

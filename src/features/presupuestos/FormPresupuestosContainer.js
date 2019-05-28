@@ -141,7 +141,7 @@ const totalizaSeguro = ({ props, totSeguro }) => {
   }
   const seguroElejido = optionsSeguros.find(objSeguro => objSeguro.value === seguro);
   const valorSeguro = seguroElejido
-    ? parseFloat(n_tipo_seguro_valor) * parseFloat(seguroElejido.extra.n_valor)
+    ? parseFloat(n_tipo_seguro_valor || 0) * parseFloat(seguroElejido.extra.n_valor || 0)
     : 0;
   props.dispatch(change('formPresupuestos', `n_valor_seguro`, valorSeguro));
   return valorSeguro;
@@ -268,17 +268,17 @@ export class FormPresupuestosContainer extends Component {
 
     const valorSeguro = totalizaSeguro({ props });
     const totalGeneral =
-      parseFloat(n_total_items) +
-      parseFloat(campos.n_valor_comision) +
-      parseFloat(valorSeguro) +
-      parseFloat(campos.n_desc_redondeo);
+      parseFloat(n_total_items || 0) +
+      parseFloat(campos.n_valor_comision || 0) +
+      parseFloat(valorSeguro || 0) +
+      parseFloat(campos.n_desc_redondeo || 0);
     if (monedaSeleccionada && monedaSeleccionada.extra.id !== 1) {
       const c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_PYG';
       const { traeUltimasCotizacionesMoneda } = this.props.actions;
       traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
         .then(res => {
           if (res.data && res.data.length > 0) {
-            const cotizacion = res.data[0].n_valor;
+            const cotizacion = res.data[0].n_valor || 0;
             const totGs = totalGeneral * cotizacion;
             this.props.dispatch(change('formPresupuestos', `n_total_general_gs`, totGs));
           }

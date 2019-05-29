@@ -193,6 +193,7 @@ const totalizaItems = ({ items, props }) => {
   if (seguro) {
     totalizaSeguro({ props, totSeguro });
   }
+
 };
 
 const atualizouForm = (values, dispatch, props) => {
@@ -511,12 +512,7 @@ export class FormPresupuestosContainer extends Component {
             traeItems(params).then(res => {
               totalizaItems({ items: res.data, props });
               this.props.dispatch(this.props.handleSubmit(this.preSubmit));
-
               toggleCargando();
-              swal({
-                icon: 'success',
-                timer: 1000,
-              });
             });
           })
           .catch(err => {
@@ -551,10 +547,6 @@ export class FormPresupuestosContainer extends Component {
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
           toggleCargando();
           modalToggle();
-          swal({
-            icon: 'success',
-            timer: 1000,
-          });
         });
       })
       .catch(err => {

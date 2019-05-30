@@ -9,13 +9,12 @@ import api_axio from '../../../common/api_axios';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeSeguros() {
-    return api_axio({
-    api_funcion:`seguros/todos`,
+  return api_axio({
+    api_funcion: `seguros/todos`,
     type_begin: { type: SEGUROS_TRAE_SEGUROS_BEGIN },
     type_success: { type: SEGUROS_TRAE_SEGUROS_SUCCESS },
     type_failure: { type: SEGUROS_TRAE_SEGUROS_FAILURE },
   });
-
 }
 
 // Async action saves request error by default, this method is used to dismiss the error info.
@@ -34,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeSegurosPending: true,
         traeSegurosError: null,
+        seguros: [],
       };
 
     case SEGUROS_TRAE_SEGUROS_SUCCESS:
@@ -42,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeSegurosPending: false,
         traeSegurosError: null,
-        seguros:action.data,
+        seguros: action.data,
       };
 
     case SEGUROS_TRAE_SEGUROS_FAILURE:

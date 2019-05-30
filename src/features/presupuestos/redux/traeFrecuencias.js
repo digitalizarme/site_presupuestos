@@ -33,6 +33,8 @@ export function reducer(state, action) {
         ...state,
         traeFrecuenciasPending: true,
         traeFrecuenciasError: null,
+        frecuencias: [],
+
       };
 
     case PRESUPUESTOS_TRAE_FRECUENCIAS_SUCCESS:

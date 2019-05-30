@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeFletesPending: true,
         traeFletesError: null,
+        fletes: [],
       };
 
     case FLETES_TRAE_FLETES_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeFletesPending: false,
         traeFletesError: null,
-        fletes:action.data,
+        fletes: action.data,
       };
 
     case FLETES_TRAE_FLETES_FAILURE:

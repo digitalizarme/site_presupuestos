@@ -7,16 +7,15 @@ import {
 
 import api_axio from '../../../common/api_axios';
 
-
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function guardar(data) {
   return api_axio({
-    api_funcion:`configuraciones`,
+    api_funcion: `configuraciones`,
     type_begin: { type: CONFIGURACIONES_GUARDAR_BEGIN },
     type_success: { type: CONFIGURACIONES_GUARDAR_SUCCESS },
     type_failure: { type: CONFIGURACIONES_GUARDAR_FAILURE },
-    params:{method:'put',data},
+    params: { method: 'put', data },
   });
 }
 
@@ -36,6 +35,7 @@ export function reducer(state, action) {
         ...state,
         guardarPending: true,
         guardarError: null,
+        configuracion: {},
       };
 
     case CONFIGURACIONES_GUARDAR_SUCCESS:
@@ -44,7 +44,7 @@ export function reducer(state, action) {
         ...state,
         guardarPending: false,
         guardarError: null,
-        configuracion:action.data
+        configuracion: action.data,
       };
 
     case CONFIGURACIONES_GUARDAR_FAILURE:

@@ -10,7 +10,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeServiciosGrupos() {
   return api_axio({
-    api_funcion:`serviciosGrupos/todos`,
+    api_funcion: `serviciosGrupos/todos`,
     type_begin: { type: SERVICIOS_GRUPOS_TRAE_SERVICIOS_GRUPOS_BEGIN },
     type_success: { type: SERVICIOS_GRUPOS_TRAE_SERVICIOS_GRUPOS_SUCCESS },
     type_failure: { type: SERVICIOS_GRUPOS_TRAE_SERVICIOS_GRUPOS_FAILURE },
@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeServiciosGruposPending: true,
         traeServiciosGruposError: null,
+        grupos: [],
       };
 
     case SERVICIOS_GRUPOS_TRAE_SERVICIOS_GRUPOS_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeServiciosGruposPending: false,
         traeServiciosGruposError: null,
-        grupos:action.data,
+        grupos: action.data,
       };
 
     case SERVICIOS_GRUPOS_TRAE_SERVICIOS_GRUPOS_FAILURE:

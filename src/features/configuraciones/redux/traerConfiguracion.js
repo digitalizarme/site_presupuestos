@@ -10,7 +10,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traerConfiguracion() {
   return api_axio({
-    api_funcion:`configuraciones`,
+    api_funcion: `configuraciones`,
     type_begin: { type: CONFIGURACIONES_TRAER_CONFIGURACION_BEGIN },
     type_success: { type: CONFIGURACIONES_TRAER_CONFIGURACION_SUCCESS },
     type_failure: { type: CONFIGURACIONES_TRAER_CONFIGURACION_FAILURE },
@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traerConfiguracionPending: true,
         traerConfiguracionError: null,
+        configuracion: {},
       };
 
     case CONFIGURACIONES_TRAER_CONFIGURACION_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traerConfiguracionPending: false,
         traerConfiguracionError: null,
-        configuracion:action.data,
+        configuracion: action.data,
       };
 
     case CONFIGURACIONES_TRAER_CONFIGURACION_FAILURE:

@@ -8,8 +8,7 @@ import api_axio from '../../../common/api_axios';
 
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-export function guardarCotizaciones(monedas= 'USD_PYG,USD_BRL,USD_ARS,USD_EUR') {
-
+export function guardarCotizaciones(monedas = 'USD_PYG,USD_BRL,USD_ARS,USD_EUR') {
   return api_axio({
     api_funcion: `cotizaciones/ultimas?monedas=${monedas}`,
     type_begin: { type: COTIZACIONES_GUARDAR_COTIZACIONES_BEGIN },
@@ -34,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         guardarCotizacionesPending: true,
         guardarCotizacionesError: null,
+        cotizaciones: [],
       };
 
     case COTIZACIONES_GUARDAR_COTIZACIONES_SUCCESS:

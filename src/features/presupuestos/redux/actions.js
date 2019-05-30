@@ -3,4 +3,4 @@ export { traerPresupuesto, dismissTraerPresupuestoError } from './traerPresupues
 export { traeFrecuencias, dismissTraeFrecuenciasError } from './traeFrecuencias';
 export { traeItems, dismissTraeItemsError } from './traeItems';
 export { traeMercaderiasServicios, dismissTraeMercaderiasServiciosError } from './traeMercaderiasServicios';
-export { limpiaItems } from './limpiaItems';
+export { limpiarItems } from './limpiarItems';

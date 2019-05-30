@@ -11,7 +11,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traerPersona(params) {
   return api_axio({
-    api_funcion:`personas/${params.id}`,
+    api_funcion: `personas/${params.id}`,
     type_begin: { type: PERSONAS_TRAER_PERSONA_BEGIN },
     type_success: { type: PERSONAS_TRAER_PERSONA_SUCCESS },
     type_failure: { type: PERSONAS_TRAER_PERSONA_FAILURE },
@@ -34,6 +34,7 @@ export function reducer(state, action) {
         ...state,
         traerPersonaPending: true,
         traerPersonaError: null,
+        persona: {},
       };
 
     case PERSONAS_TRAER_PERSONA_SUCCESS:
@@ -42,7 +43,7 @@ export function reducer(state, action) {
         ...state,
         traerPersonaPending: false,
         traerPersonaError: null,
-        persona: action.data
+        persona: action.data,
       };
 
     case PERSONAS_TRAER_PERSONA_FAILURE:

@@ -34,6 +34,8 @@ export function reducer(state, action) {
         ...state,
         traerPresupuestoPending: true,
         traerPresupuestoError: null,
+        presupuesto:[],
+
       };
 
     case PRESUPUESTOS_TRAER_PRESUPUESTO_SUCCESS:

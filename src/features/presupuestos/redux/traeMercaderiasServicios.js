@@ -34,6 +34,8 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasServiciosPending: true,
         traeMercaderiasServiciosError: null,
+        mercaderiasServicios:[],
+
       };
 
     case PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_SUCCESS:

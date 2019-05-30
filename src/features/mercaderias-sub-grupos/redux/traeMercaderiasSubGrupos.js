@@ -10,7 +10,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeMercaderiasSubGrupos(args = {}) {
   return api_axio({
-    api_funcion:`mercaderiasSubGrupos/todos`,
+    api_funcion: `mercaderiasSubGrupos/todos`,
     type_begin: { type: MERCADERIAS_SUB_GRUPOS_TRAE_MERCADERIAS_SUB_GRUPOS_BEGIN },
     type_success: { type: MERCADERIAS_SUB_GRUPOS_TRAE_MERCADERIAS_SUB_GRUPOS_SUCCESS },
     type_failure: { type: MERCADERIAS_SUB_GRUPOS_TRAE_MERCADERIAS_SUB_GRUPOS_FAILURE },
@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasSubGruposPending: true,
         traeMercaderiasSubGruposError: null,
+        subGrupos: [],
       };
 
     case MERCADERIAS_SUB_GRUPOS_TRAE_MERCADERIAS_SUB_GRUPOS_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasSubGruposPending: false,
         traeMercaderiasSubGruposError: null,
-        subGrupos:action.data,
+        subGrupos: action.data,
       };
 
     case MERCADERIAS_SUB_GRUPOS_TRAE_MERCADERIAS_SUB_GRUPOS_FAILURE:

@@ -85,7 +85,9 @@ const columns = [
     dataField: 'n_valor',
     text: 'Cotización',
     sort: false,
-    formatter: formatarNumero,
+    formatter: (cell, row) => {
+      return formatarNumero(cell, 5);
+    },
     align: 'right',
     editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (
       <EditarCotizacion {...editorProps} value={value} />
@@ -261,7 +263,7 @@ function mapStateToProps(state) {
   if (initialValues) {
     const { c_monedaOrigemDestino } = initialValues;
     const c_monedaOrigem = c_monedaOrigemDestino.slice(0, 3);
-    const c_monedaDestino = c_monedaOrigemDestino.slice(3, 6);
+    const c_monedaDestino = c_monedaOrigemDestino.slice(4, 7);
     initialValues = {
       ...initialValues,
       c_monedaOrigem,

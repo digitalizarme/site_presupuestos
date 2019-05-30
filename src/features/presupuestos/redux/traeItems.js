@@ -33,6 +33,8 @@ export function reducer(state, action) {
         ...state,
         traeItemsPending: true,
         traeItemsError: null,
+        items:[],
+
       };
 
     case PRESUPUESTOS_TRAE_ITEMS_SUCCESS:

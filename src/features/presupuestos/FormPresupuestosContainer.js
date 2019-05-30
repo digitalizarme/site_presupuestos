@@ -18,8 +18,8 @@ import {
   traerPresupuesto,
   traeStatus,
   traeFrecuencias,
+  limpiarItems,
   traeItems,
-  limpiaItems,
   traeMercaderiasServicios,
 } from './redux/actions';
 import { Principal } from '../esqueleto';
@@ -617,14 +617,14 @@ export class FormPresupuestosContainer extends Component {
       traeFletes,
       traeSeguros,
       traeFrecuencias,
+      limpiarItems,
       traeItems,
-      limpiaItems,
       traeMercaderiasServicios,
       traeUltimasCotizacionesMoneda
     } = this.props.actions;
     const { path } = this.props.match;
     toggleCargando();
-    limpiaItems();
+    limpiarItems();
     listaMonedas();
     traeStatus();
     traeFletes();
@@ -903,8 +903,8 @@ function mapDispatchToProps(dispatch) {
         traeFletes,
         traeSeguros,
         traeFrecuencias,
+        limpiarItems,
         traeItems,
-        limpiaItems,
         traeMercaderiasServicios,
         modalToggle,
       },

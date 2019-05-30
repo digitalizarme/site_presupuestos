@@ -8,13 +8,11 @@
 
 import initialState from './initialState';
 import { reducer as traerPersonaReducer } from './traerPersona';
-import { reducer as limpiarPersonaReducer } from './limpiarPersona';
 import { reducer as traerPersonasReducer } from './traerPersonas';
 import { reducer as traePersonasTodasReducer } from './traePersonasTodas';
 
 const reducers = [
   traerPersonaReducer,
-  limpiarPersonaReducer,
   traerPersonasReducer,
   traePersonasTodasReducer,
 ];

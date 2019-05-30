@@ -10,7 +10,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traerServicio(params) {
   return api_axio({
-    api_funcion:`servicios/${params.id}`,
+    api_funcion: `servicios/${params.id}`,
     type_begin: { type: SERVICIOS_TRAER_SERVICIO_BEGIN },
     type_success: { type: SERVICIOS_TRAER_SERVICIO_SUCCESS },
     type_failure: { type: SERVICIOS_TRAER_SERVICIO_FAILURE },
@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traerServicioPending: true,
         traerServicioError: null,
+        servicio: {},
       };
 
     case SERVICIOS_TRAER_SERVICIO_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traerServicioPending: false,
         traerServicioError: null,
-        servicio:action.data,
+        servicio: action.data,
       };
 
     case SERVICIOS_TRAER_SERVICIO_FAILURE:

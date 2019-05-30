@@ -10,7 +10,7 @@ import api_axio from '../../../common/api_axios';
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeMercaderiasMarcas() {
   return api_axio({
-    api_funcion:`mercaderiasMarcas/todas`,
+    api_funcion: `mercaderiasMarcas/todas`,
     type_begin: { type: MERCADERIAS_MARCAS_TRAE_MERCADERIAS_MARCAS_BEGIN },
     type_success: { type: MERCADERIAS_MARCAS_TRAE_MERCADERIAS_MARCAS_SUCCESS },
     type_failure: { type: MERCADERIAS_MARCAS_TRAE_MERCADERIAS_MARCAS_FAILURE },
@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasMarcasPending: true,
         traeMercaderiasMarcasError: null,
+        marcas: [],
       };
 
     case MERCADERIAS_MARCAS_TRAE_MERCADERIAS_MARCAS_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasMarcasPending: false,
         traeMercaderiasMarcasError: null,
-        marcas:action.data,
+        marcas: action.data,
       };
 
     case MERCADERIAS_MARCAS_TRAE_MERCADERIAS_MARCAS_FAILURE:

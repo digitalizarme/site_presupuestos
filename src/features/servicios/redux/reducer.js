@@ -8,11 +8,9 @@
 
 import initialState from './initialState';
 import { reducer as traerServicioReducer } from './traerServicio';
-import { reducer as limpiarServicioReducer } from './limpiarServicio';
 
 const reducers = [
   traerServicioReducer,
-  limpiarServicioReducer,
 ];
 
 export default function reducer(state = initialState, action) {

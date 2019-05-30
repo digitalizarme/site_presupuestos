@@ -33,6 +33,8 @@ export function reducer(state, action) {
         ...state,
         traeUltimasCotizacionesMonedaPending: true,
         traeUltimasCotizacionesMonedaError: null,
+        cotizaciones: [],
+
       };
 
     case COTIZACIONES_TRAE_ULTIMAS_COTIZACIONES_MONEDA_SUCCESS:

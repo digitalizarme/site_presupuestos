@@ -9,13 +9,12 @@ import api_axio from '../../../common/api_axios';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeStatus() {
-    return api_axio({
-    api_funcion:`status`,
+  return api_axio({
+    api_funcion: `status`,
     type_begin: { type: PRESUPUESTOS_TRAE_STATUS_BEGIN },
     type_success: { type: PRESUPUESTOS_TRAE_STATUS_SUCCESS },
     type_failure: { type: PRESUPUESTOS_TRAE_STATUS_FAILURE },
   });
-
 }
 
 // Async action saves request error by default, this method is used to dismiss the error info.
@@ -34,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeStatusPending: true,
         traeStatusError: null,
+        status: [],
       };
 
     case PRESUPUESTOS_TRAE_STATUS_SUCCESS:
@@ -42,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traeStatusPending: false,
         traeStatusError: null,
-        status:action.data,
+        status: action.data,
       };
 
     case PRESUPUESTOS_TRAE_STATUS_FAILURE:

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { toggleCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 
-import { traerPersona, limpiarPersona } from './redux/actions';
+import { traerPersona } from './redux/actions';
 import { Principal } from '../esqueleto';
 import { setaUsuarioPersona } from '../acceder/redux/actions';
 
@@ -205,7 +205,6 @@ function mapDispatchToProps(dispatch) {
       {
         api_axio,
         traerPersona,
-        limpiarPersona,
         setaUsuarioPersona,
         toggleCargando,
       },

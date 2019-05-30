@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         listaMonedasPending: true,
         listaMonedasError: null,
+        monedas: [],
       };
 
     case COTIZACIONES_LISTA_MONEDAS_SUCCESS:
@@ -41,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         listaMonedasPending: false,
         listaMonedasError: null,
-        monedas: action.data
+        monedas: action.data,
       };
 
     case COTIZACIONES_LISTA_MONEDAS_FAILURE:

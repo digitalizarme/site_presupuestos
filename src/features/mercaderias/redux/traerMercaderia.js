@@ -34,6 +34,8 @@ export function reducer(state, action) {
         ...state,
         traerMercaderiaPending: true,
         traerMercaderiaError: null,
+        mercaderia:{},
+
       };
 
     case MERCADERIAS_TRAER_MERCADERIA_SUCCESS:

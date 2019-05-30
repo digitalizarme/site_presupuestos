@@ -9,13 +9,12 @@ import api_axio from '../../../common/api_axios';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traePersonasTodas() {
-    return api_axio({
-    api_funcion:`personas/todas`,
+  return api_axio({
+    api_funcion: `personas/todas`,
     type_begin: { type: PERSONAS_TRAE_PERSONAS_TODAS_BEGIN },
     type_success: { type: PERSONAS_TRAE_PERSONAS_TODAS_SUCCESS },
     type_failure: { type: PERSONAS_TRAE_PERSONAS_TODAS_FAILURE },
   });
-
 }
 
 // Async action saves request error by default, this method is used to dismiss the error info.
@@ -34,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traePersonasTodasPending: true,
         traePersonasTodasError: null,
+        personas: [],
       };
 
     case PERSONAS_TRAE_PERSONAS_TODAS_SUCCESS:
@@ -42,7 +42,7 @@ export function reducer(state, action) {
         ...state,
         traePersonasTodasPending: false,
         traePersonasTodasError: null,
-        personas:action.data,
+        personas: action.data,
       };
 
     case PERSONAS_TRAE_PERSONAS_TODAS_FAILURE:

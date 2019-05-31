@@ -18,7 +18,6 @@ import {
   traerPresupuesto,
   traeStatus,
   traeFrecuencias,
-  limpiarItems,
   traeItems,
   traeMercaderiasServicios,
 } from './redux/actions';
@@ -617,14 +616,12 @@ export class FormPresupuestosContainer extends Component {
       traeFletes,
       traeSeguros,
       traeFrecuencias,
-      limpiarItems,
       traeItems,
       traeMercaderiasServicios,
       traeUltimasCotizacionesMoneda
     } = this.props.actions;
     const { path } = this.props.match;
     toggleCargando();
-    limpiarItems();
     listaMonedas();
     traeStatus();
     traeFletes();
@@ -903,7 +900,6 @@ function mapDispatchToProps(dispatch) {
         traeFletes,
         traeSeguros,
         traeFrecuencias,
-        limpiarItems,
         traeItems,
         traeMercaderiasServicios,
         modalToggle,

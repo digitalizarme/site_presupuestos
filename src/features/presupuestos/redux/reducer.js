@@ -12,7 +12,6 @@ import { reducer as traerPresupuestoReducer } from './traerPresupuesto';
 import { reducer as traeFrecuenciasReducer } from './traeFrecuencias';
 import { reducer as traeItemsReducer } from './traeItems';
 import { reducer as traeMercaderiasServiciosReducer } from './traeMercaderiasServicios';
-import { reducer as limpiarItemsReducer } from './limpiarItems';
 
 const reducers = [
   traeStatusReducer,
@@ -20,7 +19,6 @@ const reducers = [
   traeFrecuenciasReducer,
   traeItemsReducer,
   traeMercaderiasServiciosReducer,
-  limpiarItemsReducer,
 ];
 
 export default function reducer(state = initialState, action) {

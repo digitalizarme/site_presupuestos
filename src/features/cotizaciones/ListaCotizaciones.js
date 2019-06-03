@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 import { FormCotizaciones } from './';
 import { procesarTabla, modalToggle, toggleCargando } from '../esqueleto/redux/actions';
 import { guardarCotizaciones, listaMonedas } from './redux/actions';
@@ -11,7 +10,6 @@ import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
 import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
-import validate from 'validate.js';
 import NumberFormat from 'react-number-format';
 
 const validationConstraints = {
@@ -222,7 +220,7 @@ export class ListaCotizaciones extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
 
     return (
       <div className="cotizaciones-lista-cotizaciones">
@@ -232,21 +230,15 @@ export class ListaCotizaciones extends Component {
           api_funcion={'cotizaciones'}
           columns={columns}
           cuerpoModal={FormCotizaciones}
+          validationConstraints={validationConstraints}
           tituloModal={edicion ? 'Editar Cotizaciones' : 'Nueva Cotización'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={this.submit}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaCotizaciones = reduxForm({
-  // a unique name for the form
-  form: 'formCotizaciones',
-  enableReinitialize: true,
-  validate: values => validate(values, validationConstraints, { fullMessages: false }),
-})(ListaCotizaciones);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { modalToggle } from './redux/actions';
+import { modalToggle, limpiarLineaSeleccionada } from './redux/actions';
 import { Button, Form, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { reduxForm } from 'redux-form'; 
 import validate from 'validate.js';
@@ -17,7 +17,8 @@ export class ModalForm extends Component {
   };
 
   cerrarModal = () => {
-    const { modalToggle } = this.props.actions;
+    const { modalToggle, limpiarLineaSeleccionada } = this.props.actions;
+    limpiarLineaSeleccionada();
     modalToggle();
   };
 
@@ -73,7 +74,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ modalToggle }, dispatch),
+    actions: bindActionCreators({ modalToggle,limpiarLineaSeleccionada }, dispatch),
   };
 }
 

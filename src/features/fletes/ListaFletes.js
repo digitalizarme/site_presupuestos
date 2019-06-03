@@ -163,13 +163,6 @@ export class ListaFletes extends Component {
   }
 }
 
-// ListaFletes = reduxForm({
-//   // a unique name for the form
-//   form: 'formFletes',
-//   enableReinitialize: true,
-//   validate: values => validate(values, validationConstraints, { fullMessages: false }),
-// })(ListaFletes);
-
 /* istanbul ignore next */
 function mapStateToProps(state) {
   let initialValues = state.esqueleto.selected[0];

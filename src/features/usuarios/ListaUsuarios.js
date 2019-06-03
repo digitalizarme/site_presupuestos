@@ -8,9 +8,7 @@ import { setaUsuario } from '../acceder/redux/actions';
 import api_axio from '../../common/api_axios';
 import { PrincipalTabla } from '../esqueleto';
 import swal from 'sweetalert';
-import validate from 'validate.js';
 import { FormUsuario } from './';
-import { reduxForm } from 'redux-form';
 
 const validationConstraintsEmail = {
   c_contrasena: {
@@ -191,7 +189,7 @@ export class ListaUsuarios extends Component {
   };
 
   render() {
-    const { handleSubmit, edicion } = this.props;
+    const { edicion } = this.props;
     return (
       <div className="usuarios-lista-usuarios">
         <PrincipalTabla
@@ -202,23 +200,14 @@ export class ListaUsuarios extends Component {
           cuerpoModal={FormUsuario}
           sizeModal="lg"
           tituloModal={edicion ? 'Editar Usuario' : 'Nuevo Usuario'}
-          enviarFormulario={handleSubmit(this.submit)}
+          enviarFormulario={(this.submit)}
+          validationConstraints={edicion?validationConstraintsEdicion:validationConstraintsNuevo}
           {...this.props}
         />
       </div>
     );
   }
 }
-
-ListaUsuarios = reduxForm({
-  // a unique name for the form
-  form: 'formUsuario',
-  enableReinitialize: true,
-  validate: values =>
-    validate(values, !values.id ? validationConstraintsNuevo : validationConstraintsEdicion, {
-      fullMessages: false,
-    }),
-})(ListaUsuarios);
 
 /* istanbul ignore next */
 function mapStateToProps(state) {

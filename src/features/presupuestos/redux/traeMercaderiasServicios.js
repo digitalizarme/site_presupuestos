@@ -9,13 +9,12 @@ import api_axio from '../../../common/api_axios';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function traeMercaderiasServicios() {
-    return api_axio({
+  return api_axio({
     api_funcion: `presupuestos/mercaderiasServicios`,
     type_begin: { type: PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_BEGIN },
     type_success: { type: PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_SUCCESS },
     type_failure: { type: PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_FAILURE },
   });
-
 }
 
 // Async action saves request error by default, this method is used to dismiss the error info.
@@ -34,8 +33,8 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasServiciosPending: true,
         traeMercaderiasServiciosError: null,
-        mercaderiasServicios:[],
-
+        mercaderiasServicios: [],
+        items: [],
       };
 
     case PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_SUCCESS:
@@ -44,7 +43,7 @@ export function reducer(state, action) {
         ...state,
         traeMercaderiasServiciosPending: false,
         traeMercaderiasServiciosError: null,
-        mercaderiasServicios:action.data,
+        mercaderiasServicios: action.data,
       };
 
     case PRESUPUESTOS_TRAE_MERCADERIAS_SERVICIOS_FAILURE:

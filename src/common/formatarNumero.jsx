@@ -8,7 +8,7 @@ const formatarNumero = (cell,digitos) => {
       thousandSeparator="."
       decimalSeparator=","
       displayType={'text'}
-      decimalScale={typeof digitos !== "undefined"?digitos:2}
+      decimalScale={typeof digitos === "number"?digitos:2}
 
     />
   );

@@ -31,7 +31,7 @@ export default class InputNumber extends Component {
             decimalSeparator=","
             disabled={disabled?'disabled':false}
             readOnly={readonly}
-            decimalScale={decimalScale?decimalScale:0}
+            decimalScale={typeof decimalScale !== "undefined"?decimalScale:0}
             className={className}
           />
           {touched &&

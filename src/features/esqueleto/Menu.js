@@ -7,6 +7,7 @@ import { limpiarUsuario } from '../acceder/redux/actions';
 import { traerConfiguracion } from '../configuraciones/redux/actions';
 import logo from '../../images/logo_digitalizarame.png';
 import { dropToken } from '../../common/tokenManager';
+import { Link } from 'react-router-dom';
 
 import {
   Collapse,
@@ -15,7 +16,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -33,9 +33,9 @@ const MenuDeslogado = ({ isOpen }) => (
   <Collapse isOpen={isOpen} navbar>
     <Nav className="ml-auto" navbar>
       <NavItem>
-        <NavLink className="text-primary" href="/acceder">
+        <Link className="text-primary" to="/acceder">
           Acceder
-        </NavLink>
+        </Link>
       </NavItem>
     </Nav>
   </Collapse>
@@ -51,15 +51,15 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
         <DropdownMenu right>
           <DropdownItem>
             <NavItem>
-              <NavLink href="/presupuestos/nuevo">Nuevo</NavLink>
+              <Link className="nav-link" to="/presupuestos/nuevo">Nuevo</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/presupuestos/pendientes">Pendientes</NavLink>
+              <Link className="nav-link" to="/presupuestos/pendientes">Pendientes</Link>
             </NavItem>
           </DropdownItem>
           <DropdownItem>
             <NavItem>
-              <NavLink href="/presupuestos/aprobados">Aprobados</NavLink>
+              <Link className="nav-link" to="/presupuestos/aprobados">Aprobados</Link>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>
@@ -71,32 +71,32 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
         <DropdownMenu left="true">
           <DropdownItem>
             <NavItem>
-              <NavLink href="/personas">Personas</NavLink>
+              <Link className="nav-link" to="/personas">Personas</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/mercaderias">Mercaderias</NavLink>
+              <Link className="nav-link" to="/mercaderias">Mercaderias</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/servicios">Servicios</NavLink>
+              <Link className="nav-link" to="/servicios">Servicios</Link>
             </NavItem>
              <DropdownItem divider />
             <NavItem>
-              <NavLink href="/mercaderias-marcas">Mercaderias marcas</NavLink>
+              <Link className="nav-link" to="/mercaderias-marcas">Mercaderias marcas</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/mercaderias-grupos">Mercaderias grupos</NavLink>
+              <Link className="nav-link" to="/mercaderias-grupos">Mercaderias grupos</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/mercaderias-sub-grupos">Mercaderias sub-grupos</NavLink>
+              <Link className="nav-link" to="/mercaderias-sub-grupos">Mercaderias sub-grupos</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/servicios-grupos">Servicios grupos</NavLink>
+              <Link className="nav-link" to="/servicios-grupos">Servicios grupos</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/fletes">Fletes</NavLink>
+              <Link className="nav-link" to="/fletes">Fletes</Link>
             </NavItem>
             <NavItem>
-              <NavLink href="/seguros">Seguros</NavLink>
+              <Link className="nav-link" to="/seguros">Seguros</Link>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>
@@ -109,13 +109,13 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
           <DropdownMenu right>
             <DropdownItem>
               <NavItem>
-                <NavLink href="/configuraciones">Configuraciones</NavLink>
+                <Link className="nav-link" to="/configuraciones">Configuraciones</Link>
               </NavItem>
               <NavItem>
-                <NavLink href="/cotizaciones">Cotizaciones</NavLink>
+                <Link className="nav-link" to="/cotizaciones">Cotizaciones</Link>
               </NavItem>
               <NavItem>
-                <NavLink href="/usuarios">Usuários</NavLink>
+                <Link className="nav-link" to="/usuarios">Usuários</Link>
               </NavItem>
             </DropdownItem>
           </DropdownMenu>
@@ -132,9 +132,9 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
         <DropdownMenu right>
           <DropdownItem>
             <NavItem>
-              <NavLink href="#deslogar" onClick={() => deslogar(limpiarUsuario)}>
+              <Link className="nav-link" to="#deslogar" onClick={() => deslogar(limpiarUsuario)}>
                 Salir
-              </NavLink>
+              </Link>
             </NavItem>
           </DropdownItem>
         </DropdownMenu>
@@ -162,7 +162,7 @@ export class Menu extends Component {
     return (
       <div className="esqueleto-menu">
         <Navbar  color="dark" dark   expand="md">
-          <NavbarBrand href="/">
+          <NavbarBrand to="/">
             <img src={configuracion.t_logo?configuracion.t_logo:logo} className="img-responsive pull-left logo" alt="Logo" style={{maxWidth:'50px'}} />
           </NavbarBrand>
           <NavbarToggler color="success" onClick={menuToggle} />

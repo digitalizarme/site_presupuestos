@@ -7,7 +7,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import history from './common/history';
 import swal from 'sweetalert';
-
 let logado = false;
 let soyAdmin = false;
 
@@ -16,7 +15,7 @@ function estoyLogueado(store) {
     const { getState } = store;
     const { acceder } = getState();
     logado = acceder.usuario.c_usuario ? true : false;
-    soyAdmin  = acceder.usuario ? acceder.usuario.b_administrador : false;
+    soyAdmin = acceder.usuario ? acceder.usuario.b_administrador : false;
     // console.log(soyAdmin,'soyadm');
   }
 }
@@ -24,7 +23,9 @@ function estoyLogueado(store) {
 function redireciona(props, logado) {
   swal({
     title: 'Ops',
-    text: !logado?'Debes iniciar sesion antes acceder a ciertas paginas':'No tienes los permisos necesarios para acceder a aquella pagina',
+    text: !logado
+      ? 'Debes iniciar sesion antes acceder a ciertas paginas'
+      : 'No tienes los permisos necesarios para acceder a aquella pagina',
     icon: 'error',
     button: 'OK!',
   });

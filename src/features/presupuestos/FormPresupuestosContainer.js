@@ -13,6 +13,7 @@ import { traePersonasTodas } from '../personas/redux/actions';
 import { traeFletes } from '../fletes/redux/actions';
 import { traeSeguros } from '../seguros/redux/actions';
 import mostraMensajeError from '../../common/mostraMensajeError';
+import formatarNumero from '../../common/formatarNumero';
 
 import {
   traerPresupuesto,
@@ -148,7 +149,7 @@ const totalizaSeguro = ({ props, totSeguro }) => {
 
 const totalizaItems = ({ items, props }) => {
   const { n_valor_porcentaje_comision, seguro } = props;
-
+console.log(items,'items');
   let totExentas = 0;
   let totFletes = 0;
   let tot5 = 0;
@@ -160,20 +161,20 @@ const totalizaItems = ({ items, props }) => {
   let totSeguro = 0;
   if (items && items.length > 0) {
     items.map((objItem, indice) => {
-      totExentas += objItem.n_exentas;
-      totFletes += objItem.n_flete;
-      tot5 += objItem.n_gravadas_5;
-      tot10 += objItem.n_gravadas_10;
+      totExentas += parseFloat(objItem.n_exentas);
+      totFletes += parseFloat(objItem.n_flete);
+      tot5 += parseFloat(objItem.n_gravadas_5);
+      tot10 += parseFloat(objItem.n_gravadas_10);
       if (objItem.b_seguro) {
         totSeguro +=
-          objItem.n_exentas + objItem.n_flete + objItem.n_gravadas_5 + objItem.n_gravadas_10;
+          parseFloat(objItem.n_exentas) + parseFloat(objItem.n_flete) + parseFloat(objItem.n_gravadas_5) + parseFloat(objItem.n_gravadas_10);
       }
       return true;
     });
-    totItems = totExentas + totFletes + tot5 + tot10;
-    totIVA5 = tot5 / 21;
-    totIVA10 = tot10 / 11;
-    totIVA = totIVA5 + totIVA10;
+    totItems = parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
+    totIVA5 = parseFloat(tot5) / 21;
+    totIVA10 = parseFloat(tot10) / 11;
+    totIVA = parseFloat(totIVA5) + parseFloat(totIVA10);
   }
   const valorComision =
     ((parseFloat(totItems) - parseFloat(totFletes)) * parseFloat(n_valor_porcentaje_comision)) /
@@ -224,6 +225,8 @@ const atualizaCamposItem = ({
   flete,
   tipo,
   obs,
+  c_monedaOrigemDestino,
+  n_cotizacion
 }) => {
   if (typeof unitario !== 'undefined') {
     dispatch(change('formModal', `n_unitario`, unitario));
@@ -249,6 +252,12 @@ const atualizaCamposItem = ({
   if (typeof obs !== 'undefined') {
     dispatch(change('formModal', `t_observacion`, obs));
   }
+  if (typeof c_monedaOrigemDestino !== 'undefined') {
+    dispatch(change('formModal', `c_monedaOrigemDestino`, c_monedaOrigemDestino));
+  }
+  if (typeof n_cotizacion !== 'undefined') {
+    dispatch(change('formModal', `n_cotizacion`, n_cotizacion));
+  }
 };
 
 const setaValorGs = ({
@@ -262,8 +271,8 @@ const setaValorGs = ({
     traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
       .then(res => {
         if (res.data && res.data.length > 0) {
-          const cotizacion = res.data[0].n_valor || 0;
-          const totGs = totalGeneral * cotizacion;
+          const cotizacion = parseFloat(res.data[0].n_valor) || 0;
+          const totGs = parseFloat(totalGeneral) * cotizacion;
           dispatch(change('formPresupuestos', `n_total_general_gs`, totGs));
         }
       })
@@ -338,38 +347,40 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangeItems = idItem => {
-    const { optionsItems, monedaSeleccionada } = this.props;
+    const { monedaSeleccionada, optionsItems } = this.props;
     const { traeUltimasCotizacionesMoneda, toggleCargando } = this.props.actions;
     toggleCargando().then(res => {
       this.props.dispatch(change('formModal', `n_cantidad`, 1));
       let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
       itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
+
       const tipo = itemSeleccionado.c_tipo;
       const obs = itemSeleccionado.t_observacion;
-      let unitario = itemSeleccionado.n_unitario;
-      let exentas = itemSeleccionado.n_exentas;
-      let gravadas_5 = itemSeleccionado.n_gravadas_5;
-      let gravadas_10 = itemSeleccionado.n_gravadas_10;
-      let peso = itemSeleccionado.n_peso;
-      let flete = peso * itemSeleccionado.n_flete;
+      let unitario = parseFloat(itemSeleccionado.n_unitario);
+      let exentas = parseFloat(itemSeleccionado.n_exentas);
+      let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
+      let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
+      let peso = parseFloat(itemSeleccionado.n_peso);
+      let flete = peso * parseFloat(itemSeleccionado.n_flete);
+      let c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
+      let n_cotizacion = 1;
       if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
-        const c_monedaOrigemDestino =
-          itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
+        c_monedaOrigemDestino = itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
 
         traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
           .then(res => {
             if (res.data && res.data.length > 0) {
-              const cotizacion = res.data[0];
-              unitario *= cotizacion.n_valor;
+              n_cotizacion = parseFloat(res.data[0].n_valor);
+              unitario *= n_cotizacion;
               unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
 
-              exentas *= cotizacion.n_valor;
+              exentas *= n_cotizacion;
               exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
 
-              gravadas_5 *= cotizacion.n_valor;
+              gravadas_5 *= n_cotizacion;
               gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
 
-              gravadas_10 *= cotizacion.n_valor;
+              gravadas_10 *= n_cotizacion;
               gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
 
               atualizaCamposItem({
@@ -381,6 +392,8 @@ export class FormPresupuestosContainer extends Component {
                 peso,
                 tipo,
                 obs,
+                c_monedaOrigemDestino,
+                n_cotizacion
               });
             } else {
               swal({
@@ -405,6 +418,8 @@ export class FormPresupuestosContainer extends Component {
           peso,
           tipo,
           obs,
+          n_cotizacion,
+          c_monedaOrigemDestino
         });
       }
       if (
@@ -418,7 +433,7 @@ export class FormPresupuestosContainer extends Component {
           .then(res => {
             if (res.data && res.data.length > 0) {
               const cotizacion = res.data[0];
-              flete *= cotizacion.n_valor;
+              flete *= parseFloat(cotizacion.n_valor);
               flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
               atualizaCamposItem({ dispatch: this.props.dispatch, flete });
             } else {
@@ -639,10 +654,10 @@ export class FormPresupuestosContainer extends Component {
       traerPresupuesto(params).then(res => {
         const datos = res.data;
         const monedaSeleccionada =
-        {
-          extra:datos.moneda
-        }
-        setaValorGs({ monedaSeleccionada, totalGeneral:datos.n_total_general, dispatch:this.props.dispatch, traeUltimasCotizacionesMoneda });
+          {
+            extra: datos.moneda
+          }
+        setaValorGs({ monedaSeleccionada, totalGeneral: datos.n_total_general, dispatch: this.props.dispatch, traeUltimasCotizacionesMoneda });
       });
       traeItems(params);
     }
@@ -695,14 +710,14 @@ function mapStateToProps(state) {
   const modoNuevo = state.router.location.pathname.indexOf('nuevo') !== -1;
   let initialValues = modoNuevo
     ? {
-        n_id_usuario: state.acceder.usuario.id,
-      }
+      n_id_usuario: state.acceder.usuario.id,
+    }
     : typeof state.esqueleto.selected[0] !== 'undefined'
-    ? {
+      ? {
         ...state.esqueleto.selected[0],
         items: state.presupuestos.items,
       }
-    : state.presupuestos.presupuesto || {};
+      : state.presupuestos.presupuesto || {};
   let initialValuesModal = { n_id_presupuesto: selector(state, 'id') };
   const optionsMonedas = [];
   const optionsStatus = [];
@@ -821,8 +836,13 @@ function mapStateToProps(state) {
     let itemObj = {};
     for (let item of state.presupuestos.mercaderiasServicios) {
       if ((modoNuevo && item.b_activo) || !modoNuevo) {
+        let decimales = item.n_id_moneda
+          ? optionsMonedas.find(moneda => moneda.value === item.n_id_moneda)
+          : null;
+        decimales = decimales ? decimales.decimales : 2;
+        const valorFormatado = formatarNumero(item.n_unitario,decimales,true);
         itemObj = {
-          label: item.c_descripcion + ' | ' + item.c_desc_moneda,
+          label: item.c_descripcion + ' | ' + valorFormatado + ' ' + item.c_desc_moneda,
           value: item.c_descripcion,
           extra: item,
         };
@@ -844,6 +864,15 @@ function mapStateToProps(state) {
   let monedaSeleccionada = selector(state, 'n_id_moneda')
     ? optionsMonedas.find(moneda => moneda.value === selector(state, 'n_id_moneda'))
     : null;
+
+
+  let itemSeleccionado = selectorItem(state, 'c_descripcion') ? optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion')) : null;
+  itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
+
+  let descMonedaItem = itemSeleccionado.n_id_moneda
+    ? optionsMonedas.find(moneda => moneda.value === itemSeleccionado.n_id_moneda)
+    : null;
+  descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
 
   return {
     items: state.presupuestos.items,
@@ -879,8 +908,10 @@ function mapStateToProps(state) {
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     tipoItem: selectorItem(state, 'c_tipo'),
+    itemSeleccionado,
+    descMonedaItem,
     n_valor_porcentaje_comision:
-      state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
+    state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
   };
 }
 

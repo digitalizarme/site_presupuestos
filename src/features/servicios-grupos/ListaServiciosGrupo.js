@@ -24,7 +24,7 @@ const validationConstraints = {
 const columns = [
   {
     dataField: 'c_descripcion',
-    table: 'serviciosGrupos',
+    table: 'ServiciosGrupos',
     text: 'Descripción',
     sort: true,
     attrs: { width: '80%' },

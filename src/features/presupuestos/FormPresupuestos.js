@@ -79,7 +79,6 @@ class FormPresupuestos extends Component {
       items,
       enviarItems,
       atualizouFormModal,
-      itemSeleccionado,
       onChangeItems,
       esqueleto,
       onChangeMoneda,
@@ -89,6 +88,7 @@ class FormPresupuestos extends Component {
       modoEdicionItem,
       onChangeCamposValores,
       moneda,
+      descMonedaItem,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -99,14 +99,15 @@ class FormPresupuestos extends Component {
             esqueleto={esqueleto}
             descMoneda={descMoneda}
             decimales={decimales}
-            itemSeleccionado={itemSeleccionado}
             onChangeItems={onChangeItems}
+            moneda={moneda}
             optionsItems={optionsItems}
             enviarFormulario={enviarItems}
             cuerpoModal={FormItemsMercaderiasServicios}
             atualizouForm={atualizouFormModal}
             initialValues={initialValuesModal}
             tipoItem={tipoItem}
+            descMonedaItem={descMonedaItem}
             sizeModal="xl"
           />
           <Form onSubmit={enviarFormulario} className="form_border">
@@ -477,16 +478,18 @@ class FormPresupuestos extends Component {
                         className="field form-control-lg form-control"
                       />
                     </Col>
-                    {moneda!==1 && <Col sm="12">
-                      <Field
-                        name="n_total_general_gs"
-                        label="Total en Gs : "
-                        component={InputNumber}
-                        disabled
-                        decimalScale={0}
-                        className="field form-control-lg form-control"
-                      />
-                    </Col>}
+                    {moneda !== 1 && (
+                      <Col sm="12">
+                        <Field
+                          name="n_total_general_gs"
+                          label="Total en Gs : "
+                          component={InputNumber}
+                          disabled
+                          decimalScale={0}
+                          className="field form-control-lg form-control"
+                        />
+                      </Col>
+                    )}
                   </Row>
                 </Collapse>
               </Col>

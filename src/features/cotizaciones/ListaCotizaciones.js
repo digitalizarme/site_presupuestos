@@ -254,13 +254,16 @@ function mapStateToProps(state) {
   let initialValues = state.esqueleto.selected[0];
   if (initialValues) {
     const { c_monedaOrigemDestino } = initialValues;
-    const c_monedaOrigem = c_monedaOrigemDestino.slice(0, 3);
-    const c_monedaDestino = c_monedaOrigemDestino.slice(4, 7);
-    initialValues = {
-      ...initialValues,
-      c_monedaOrigem,
-      c_monedaDestino,
-    };
+    if (c_monedaOrigemDestino.length === 7) {
+      const c_monedaOrigem = c_monedaOrigemDestino.slice(0, 3);
+      const c_monedaDestino = c_monedaOrigemDestino.slice(4, 7);
+      initialValues = {
+        ...initialValues,
+        c_monedaOrigem,
+        c_monedaDestino,
+      };
+
+    }
   }
   return {
     cotizaciones: state.cotizaciones,

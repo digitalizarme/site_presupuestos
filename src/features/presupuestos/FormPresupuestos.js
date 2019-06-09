@@ -89,6 +89,13 @@ class FormPresupuestos extends Component {
       onChangeCamposValores,
       moneda,
       descMonedaItem,
+      onChangeImpuesto,
+      onChangeRatio,
+      n_exentas,
+      n_unitario,
+      n_cantidad,
+      n_gravadas_5,
+      n_gravadas_10,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -108,6 +115,13 @@ class FormPresupuestos extends Component {
             initialValues={initialValuesModal}
             tipoItem={tipoItem}
             descMonedaItem={descMonedaItem}
+            onChangeImpuesto={onChangeImpuesto}
+            onChangeRatio={onChangeRatio}
+            n_exentas={n_exentas}
+            n_unitario={n_unitario}
+            n_cantidad={n_cantidad}
+            n_gravadas_5={n_gravadas_5}
+            n_gravadas_10={n_gravadas_10}
             sizeModal="xl"
           />
           <Form onSubmit={enviarFormulario} className="form_border">
@@ -231,12 +245,12 @@ class FormPresupuestos extends Component {
                             </tr>
                           ))
                         ) : (
-                          <tr>
-                            <td colSpan="9" className="text-center">
-                              No hay items
+                            <tr>
+                              <td colSpan="9" className="text-center">
+                                No hay items
                             </td>
-                          </tr>
-                        )}
+                            </tr>
+                          )}
                       </tbody>
                     </Table>
                   </div>

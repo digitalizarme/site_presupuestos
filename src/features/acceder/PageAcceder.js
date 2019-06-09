@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { acceder, verificaEmail, limpiarAvatar } from './redux/actions';
 import { FormAcceder } from './';
 import { Principal } from '../esqueleto';
-import { toggleCargando } from '../esqueleto/redux/actions';
+import { toggleCargando, pararCargando } from '../esqueleto/redux/actions';
 import { setToken } from '../../common/tokenManager';
 import swal from 'sweetalert';
-import history from '../../common/history';
 import { reduxForm, formValueSelector } from 'redux-form';
-
+import { dropToken } from '../../common/tokenManager';
+import { limpiarUsuario } from '../acceder/redux/actions';
+import { Redirect } from 'react-router-dom';
 // Decorate with connect to read form values
 const selector = formValueSelector('formAcceder'); // <-- same as form name
 
@@ -28,7 +29,6 @@ export class PageAcceder extends Component {
         toggleCargando();
         const { acceder } = this.props;
         setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
-        history.push('/');
       })
       .catch(res => {
         toggleCargando();
@@ -49,7 +49,7 @@ export class PageAcceder extends Component {
   }
 
   onBlurEmail = (event, email) => {
-    const { verificaEmail,toggleCargando } = this.props.actions;
+    const { verificaEmail, toggleCargando } = this.props.actions;
     toggleCargando();
     verificaEmail(email)
       .then(res => {
@@ -81,25 +81,18 @@ export class PageAcceder extends Component {
   }
 
   componentDidMount = () => {
-    const {  limpiarAvatar } = this.props.actions;
-    // const { path } = this.props.match;
+    const { limpiarAvatar, pararCargando, limpiarUsuario } = this.props.actions;
+    dropToken();
     limpiarAvatar();
-    // if(path && path.indexOf('sinSesion') !== -1)
-    // {
-    //     swal({
-    //       title: 'Ops',
-    //       text: 'Debes iniciar sesion antes acceder a ciertas paginas',
-    //       icon: 'error',
-    //       button: 'OK!',
-    //     });
-    // }
+    limpiarUsuario();
+    pararCargando();
   };
 
   render() {
-    const { handleSubmit } = this.props;
-
+    const { handleSubmit, acceder } = this.props;
+    const estoyLogado = acceder.usuario.token ? true : false;
     return (
-      <div className="acceder-page-acceder">
+      estoyLogado ? <Redirect to="/" /> : <div className="acceder-page-acceder">
         <Principal
           titulo="Acceder"
           component={FormAcceder}
@@ -125,9 +118,9 @@ function mapStateToProps(state) {
     pathName: state.router.location.pathname,
     email: selector(state, 'email'),
     errorEmail:
-      state.acceder.existeEmail || !selector(state, 'email') || selector(state, 'email') === ''
-        ? ''
-        : state.acceder.msg,
+    state.acceder.existeEmail || !selector(state, 'email') || selector(state, 'email') === ''
+      ? ''
+      : state.acceder.msg,
   };
 }
 
@@ -135,7 +128,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { acceder, verificaEmail, limpiarAvatar, toggleCargando },
+      { acceder, verificaEmail, limpiarAvatar, toggleCargando, pararCargando, limpiarUsuario },
       dispatch,
     ),
   };

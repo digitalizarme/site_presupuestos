@@ -149,7 +149,6 @@ const totalizaSeguro = ({ props, totSeguro }) => {
 
 const totalizaItems = ({ items, props }) => {
   const { n_valor_porcentaje_comision, seguro } = props;
-console.log(items,'items');
   let totExentas = 0;
   let totFletes = 0;
   let tot5 = 0;
@@ -282,12 +281,127 @@ const setaValorGs = ({
   }
 };
 
+
+const recalcula_impuesto = (props) => {
+  let cantidad = parseFloat(props.n_cantidad || 0, 2);
+  let unitario = parseFloat(props.n_unitario || 0, 2);
+  let exentas = parseFloat(props.n_exentas, 2);
+  let cinco = parseFloat(props.n_gravadas_5, 2);
+  let diez = parseFloat(props.n_gravadas_10, 2);
+  let impuesto = parseFloat((cantidad * unitario));
+  let diferencia = 0;
+  let campo_mayor = "";
+  const valorMaximo = 9999999999999.99;
+
+  if (((impuesto * ratio_0) <= valorMaximo) && ((impuesto * ratio_5) <= valorMaximo) && ((impuesto * ratio_10) <= valorMaximo)) {
+    exentas = parseFloat(impuesto * ratio_0, 2);
+    cinco = parseFloat(impuesto * ratio_5, 2);
+    diez = parseFloat(impuesto * ratio_10, 2);
+    diferencia = impuesto - (exentas + cinco + diez);
+    campo_mayor = retorna_campo_mayor({ exentas, cinco, diez });
+    let valor = exentas;
+
+    if (exentas >= 0) {
+      props.dispatch(change('formModal', 'n_exentas', exentas));
+
+    }
+    if (cinco >= 0) {
+      props.dispatch(change('formModal', 'n_gravadas_5', cinco));
+
+    }
+    if (diez >= 0) {
+      props.dispatch(change('formModal', 'n_gravadas_10', diez));
+
+    }
+    if (campo_mayor === 'n_gravadas_5') {
+      valor = cinco;
+    }
+    else if (campo_mayor === 'n_gravadas_10') {
+      valor = diez;
+    }
+
+    valor += diferencia;
+    if (valor >= 0) {
+      props.dispatch(change('formModal', campo_mayor, valor));
+
+    }
+
+
+  }
+  else if (cantidad > 0 && unitario > 0) {
+    swal({
+      title: 'Ops',
+      text: 'Valor supera al maximo permitido',
+      icon: 'warning',
+      button: 'OK!',
+    });
+  }
+  else if ((!(impuesto) || impuesto === 0) && (exentas === 0 || cinco === 0 || diez === 0)) {
+
+    swal({
+      title: 'Ops',
+      text: 'La cantidad y el precio unitario deben ser mayor que zero',
+      icon: 'warning',
+      button: 'OK!',
+    });
+
+  }
+}
+let ratio_0, ratio_5, ratio_10;
+
+const recalcula_ratio = (props) => {
+  const cantidad = parseFloat(props.n_cantidad || 0, 2);
+  const unitario = parseFloat(props.n_unitario || 0, 2);
+  const exentas = parseFloat(props.n_exentas || 0, 2);
+  const cinco = parseFloat(props.n_gravadas_5 || 0, 2);
+  const diez = parseFloat(props.n_gravadas_10 || 0, 2);
+  const impuesto = parseFloat((cantidad * unitario));
+  ratio_0 = ((exentas * 100) / impuesto) / 100;
+  ratio_5 = ((cinco * 100) / impuesto) / 100;
+  ratio_10 = ((diez * 100) / impuesto) / 100;
+}
+
+const retorna_campo_mayor = ({ exentas, cinco, diez }) => {
+  let campo_mayor = 'n_exentas';
+  if (cinco > exentas) {
+    if (cinco > diez) {
+      campo_mayor = 'n_gravadas_5';
+    }
+    else {
+      campo_mayor = 'n_gravadas_10';
+    }
+  }
+  else if (diez > exentas) {
+    campo_mayor = 'n_gravadas_10';
+  }
+  return (campo_mayor);
+}
+
 export class FormPresupuestosContainer extends Component {
   static propTypes = {
     // presupuestos: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
   };
+
+
+  onChangeImpuesto = (campos) => {
+    const props = {
+      ...campos
+      , dispatch: this.props.dispatch
+    }
+    recalcula_impuesto(props);
+
+  }
+
+  onChangeRatio = (campos) => {
+    const props = {
+      ...campos
+      , dispatch: this.props.dispatch
+    }
+    recalcula_ratio(props);
+
+  }
 
   onChangeCamposValores = campos => {
     const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada } = this.props;
@@ -362,6 +476,15 @@ export class FormPresupuestosContainer extends Component {
       let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
       let peso = parseFloat(itemSeleccionado.n_peso);
       let flete = peso * parseFloat(itemSeleccionado.n_flete);
+      const props_ratio =
+        {
+          n_cantidad: 1
+          , n_unitario: unitario
+          , n_exentas: exentas
+          , n_gravadas_5: gravadas_5
+          , n_gravadas_10: gravadas_10
+        }
+      recalcula_ratio(props_ratio);
       let c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
       let n_cotizacion = 1;
       if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
@@ -482,6 +605,15 @@ export class FormPresupuestosContainer extends Component {
       const valor = arrayDatos[1];
       return this.props.dispatch(change('formModal', campo, valor));
     });
+    const props_ratio =
+      {
+        n_cantidad: datos.n_cantidad
+        , n_unitario: datos.n_unitario
+        , n_exentas: datos.n_exentas
+        , n_gravadas_5: datos.n_gravadas_5
+        , n_gravadas_10: datos.n_gravadas_10
+      }
+    recalcula_ratio(props_ratio);
     modalToggle();
   };
 
@@ -688,6 +820,8 @@ export class FormPresupuestosContainer extends Component {
           onChangePersona={this.onChangePersona}
           onChangeSeguro={this.onChangeSeguro}
           onChangeCamposValores={this.onChangeCamposValores}
+          onChangeImpuesto={this.onChangeImpuesto}
+          onChangeRatio={this.onChangeRatio}
         />
       </div>
     );
@@ -840,7 +974,7 @@ function mapStateToProps(state) {
           ? optionsMonedas.find(moneda => moneda.value === item.n_id_moneda)
           : null;
         decimales = decimales ? decimales.decimales : 2;
-        const valorFormatado = formatarNumero(item.n_unitario,decimales,true);
+        const valorFormatado = formatarNumero(item.n_unitario, decimales, true);
         itemObj = {
           label: item.c_descripcion + ' | ' + valorFormatado + ' ' + item.c_desc_moneda,
           value: item.c_descripcion,
@@ -873,6 +1007,7 @@ function mapStateToProps(state) {
     ? optionsMonedas.find(moneda => moneda.value === itemSeleccionado.n_id_moneda)
     : null;
   descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
+
 
   return {
     items: state.presupuestos.items,
@@ -908,6 +1043,11 @@ function mapStateToProps(state) {
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     tipoItem: selectorItem(state, 'c_tipo'),
+    n_cantidad: selectorItem(state, 'n_cantidad'),
+    n_unitario: selectorItem(state, 'n_unitario'),
+    n_exentas: selectorItem(state, 'n_exentas'),
+    n_gravadas_5: selectorItem(state, 'n_gravadas_5'),
+    n_gravadas_10: selectorItem(state, 'n_gravadas_10'),
     itemSeleccionado,
     descMonedaItem,
     n_valor_porcentaje_comision:

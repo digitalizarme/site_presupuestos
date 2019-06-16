@@ -69,6 +69,7 @@ class FormPresupuestos extends Component {
       optionsComisionista,
       optionsSeguros,
       optionsFrecuencias,
+      optionsFletes,
       optionsItems,
       decimales,
       descMoneda,
@@ -96,6 +97,9 @@ class FormPresupuestos extends Component {
       n_cantidad,
       n_gravadas_5,
       n_gravadas_10,
+      validationConstraintsItems,
+      onChangeFlete,
+      c_desc_item,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -109,6 +113,8 @@ class FormPresupuestos extends Component {
             onChangeItems={onChangeItems}
             moneda={moneda}
             optionsItems={optionsItems}
+            optionsFletes={optionsFletes}
+            onChangeFlete={onChangeFlete}
             enviarFormulario={enviarItems}
             cuerpoModal={FormItemsMercaderiasServicios}
             atualizouForm={atualizouFormModal}
@@ -122,6 +128,8 @@ class FormPresupuestos extends Component {
             n_cantidad={n_cantidad}
             n_gravadas_5={n_gravadas_5}
             n_gravadas_10={n_gravadas_10}
+            validationConstraints={validationConstraintsItems}
+            c_desc_item={c_desc_item}
             sizeModal="xl"
           />
           <Form onSubmit={enviarFormulario} className="form_border">
@@ -213,13 +221,13 @@ class FormPresupuestos extends Component {
                               }}
                             >
                               <td>{objItem.c_descripcion}</td>
-                              <td>{formatarNumero(objItem.n_cantidad)}</td>
-                              <td>{formatarNumero(objItem.n_unitario)}</td>
-                              <td>{formatarNumero(objItem.n_exentas)}</td>
-                              <td>{formatarNumero(objItem.n_gravadas_5)}</td>
-                              <td>{formatarNumero(objItem.n_gravadas_10)}</td>
-                              <td>{formatarNumero(objItem.n_peso)}</td>
-                              <td>{formatarNumero(objItem.n_flete)}</td>
+                              <td>{formatarNumero(objItem.n_cantidad,0)}</td>
+                              <td>{formatarNumero(objItem.n_unitario,decimales)}</td>
+                              <td>{formatarNumero(objItem.n_exentas,decimales)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_5,decimales)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_10,decimales)}</td>
+                              <td>{formatarNumero(objItem.n_peso,2)}</td>
+                              <td>{formatarNumero(objItem.n_flete,decimales)}</td>
                               <td>
                                 <Button
                                   type="button"

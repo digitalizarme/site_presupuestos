@@ -42,7 +42,7 @@ class FormMercaderias extends Component {
                 />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
-                <Field name="b_activo"  label="Activo" component={InputCheckBox} />
+                <Field name="b_activo" label="Activo" component={InputCheckBox} />
               </Col>
             </Row>
             <Row>
@@ -121,6 +121,7 @@ class FormMercaderias extends Component {
                   options={optionsMarcas}
                   component={SuperSelect}
                   placeholder="Elija"
+                  permiteCrear={true}
                 />
               </Col>
               <Col sm="6" md="6" lg="4" xl="4">
@@ -139,6 +140,7 @@ class FormMercaderias extends Component {
                   options={optionsSubGrupos}
                   component={SuperSelect}
                   placeholder="Elija"
+                  permiteCrear={true}
                 />
               </Col>
             </Row>

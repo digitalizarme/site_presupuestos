@@ -79,6 +79,7 @@ class FormServicios extends Component {
                   options={optionsGrupos}
                   component={SuperSelect}
                   placeholder="Elija"
+                  permiteCrear={true}
                 />
               </Col>
               <Col sm="6" md="6" lg="6" xl="6">

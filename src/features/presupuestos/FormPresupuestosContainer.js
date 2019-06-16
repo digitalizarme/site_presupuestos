@@ -35,6 +35,24 @@ const selector = formValueSelector('formPresupuestos'); // <-- same as form name
 const selectorItem = formValueSelector('formModal'); // <-- same as form name
 
 const validationConstraints = {
+  n_id_moneda: {
+    presence: {
+      message: 'Moneda es obligatorio',
+    },
+  },
+  n_id_status: {
+    presence: {
+      message: 'Status es obligatorio',
+    },
+  },
+  n_id_persona: {
+    presence: {
+      message: 'Persona es obligatorio',
+    },
+  },
+};
+
+const validationConstraintsItems = {
   c_descripcion: {
     presence: {
       message: 'Descripción es obligatorio',
@@ -44,48 +62,31 @@ const validationConstraints = {
       message: 'Su Descripción debe tener no mínimo 5 caracteres',
     },
   },
-  c_unidad: {
+  n_cotizacion: {
     presence: {
-      message: 'Unidad es obligatorio',
-    },
-  },
-  n_id_marca: {
-    presence: {
-      message: 'Marca es obligatorio',
-    },
-  },
-  n_id_grupo: {
-    presence: {
-      message: 'Grupo es obligatorio',
-    },
-  },
-  n_id_subgrupo: {
-    presence: {
-      message: 'Sub-grupo es obligatorio',
-    },
-  },
-  n_iva: {
-    presence: {
-      message: 'IVA es obligatorio',
-    },
-  },
-  n_id_moneda: {
-    presence: {
-      message: 'Moneda es obligatorio',
-    },
-  },
-  n_costo: {
-    presence: {
-      message: 'Costo es obligatorio',
+      message: 'Cotización es obligatorio',
     },
     numericality: {
       onlyInteger: false,
       notValid: 'Este valor no es válido.',
+      greaterThan: 0,
+      notGreaterThan: 'El valor debe ser mayor que zero',
     },
   },
-  n_venta: {
+  n_cantidad: {
     presence: {
-      message: 'Precio de venta es obligatorio',
+      message: 'Cantidad es obligatorio',
+    },
+    numericality: {
+      onlyInteger: false,
+      notValid: 'Este valor no es válido.',
+      greaterThan: 0,
+      notGreaterThan: 'El valor debe ser mayor que zero',
+    },
+  },
+  n_unitario: {
+    presence: {
+      message: 'Precio unitario es obligatorio',
     },
     numericality: {
       onlyInteger: false,
@@ -105,17 +106,15 @@ const validationConstraints = {
       notGreaterThan: 'El valor debe ser mayor que zero',
     },
   },
-  n_comision: {
+  n_flete: {
     presence: {
-      message: '% de la comisión es obligatorio',
+      message: 'Flete es obligatorio',
     },
     numericality: {
       onlyInteger: false,
-      notValid: 'Este valor no es válido. Debe estar entre 0 y 100',
+      notValid: 'Este valor no es válido.',
       greaterThan: 0,
       notGreaterThan: 'El valor debe ser mayor que zero',
-      lessThanOrEqualTo: 100,
-      notLessThanOrEqualTo: 'El valor debe ser menor o igual a 100',
     },
   },
 };
@@ -166,11 +165,15 @@ const totalizaItems = ({ items, props }) => {
       tot10 += parseFloat(objItem.n_gravadas_10);
       if (objItem.b_seguro) {
         totSeguro +=
-          parseFloat(objItem.n_exentas) + parseFloat(objItem.n_flete) + parseFloat(objItem.n_gravadas_5) + parseFloat(objItem.n_gravadas_10);
+          parseFloat(objItem.n_exentas) +
+          parseFloat(objItem.n_flete) +
+          parseFloat(objItem.n_gravadas_5) +
+          parseFloat(objItem.n_gravadas_10);
       }
       return true;
     });
-    totItems = parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
+    totItems =
+      parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
     totIVA5 = parseFloat(tot5) / 21;
     totIVA10 = parseFloat(tot10) / 11;
     totIVA = parseFloat(totIVA5) + parseFloat(totIVA10);
@@ -192,7 +195,6 @@ const totalizaItems = ({ items, props }) => {
   if (seguro) {
     totalizaSeguro({ props, totSeguro });
   }
-
 };
 
 const atualizouForm = (values, dispatch, props) => {
@@ -225,7 +227,8 @@ const atualizaCamposItem = ({
   tipo,
   obs,
   c_monedaOrigemDestino,
-  n_cotizacion
+  n_cotizacion,
+  idFlete,
 }) => {
   if (typeof unitario !== 'undefined') {
     dispatch(change('formModal', `n_unitario`, unitario));
@@ -257,6 +260,9 @@ const atualizaCamposItem = ({
   if (typeof n_cotizacion !== 'undefined') {
     dispatch(change('formModal', `n_cotizacion`, n_cotizacion));
   }
+  if (typeof idFlete !== 'undefined') {
+    dispatch(change('formModal', `n_id_flete`, idFlete));
+  }
 };
 
 const setaValorGs = ({
@@ -281,19 +287,22 @@ const setaValorGs = ({
   }
 };
 
-
-const recalcula_impuesto = (props) => {
+const recalcula_impuesto = props => {
   let cantidad = parseFloat(props.n_cantidad || 0, 2);
   let unitario = parseFloat(props.n_unitario || 0, 2);
   let exentas = parseFloat(props.n_exentas, 2);
   let cinco = parseFloat(props.n_gravadas_5, 2);
   let diez = parseFloat(props.n_gravadas_10, 2);
-  let impuesto = parseFloat((cantidad * unitario));
+  let impuesto = parseFloat(cantidad * unitario);
   let diferencia = 0;
-  let campo_mayor = "";
+  let campo_mayor = '';
   const valorMaximo = 9999999999999.99;
 
-  if (((impuesto * ratio_0) <= valorMaximo) && ((impuesto * ratio_5) <= valorMaximo) && ((impuesto * ratio_10) <= valorMaximo)) {
+  if (
+    impuesto * ratio_0 <= valorMaximo &&
+    impuesto * ratio_5 <= valorMaximo &&
+    impuesto * ratio_10 <= valorMaximo
+  ) {
     exentas = parseFloat(impuesto * ratio_0, 2);
     cinco = parseFloat(impuesto * ratio_5, 2);
     diez = parseFloat(impuesto * ratio_10, 2);
@@ -303,79 +312,86 @@ const recalcula_impuesto = (props) => {
 
     if (exentas >= 0) {
       props.dispatch(change('formModal', 'n_exentas', exentas));
-
     }
     if (cinco >= 0) {
       props.dispatch(change('formModal', 'n_gravadas_5', cinco));
-
     }
     if (diez >= 0) {
       props.dispatch(change('formModal', 'n_gravadas_10', diez));
-
     }
     if (campo_mayor === 'n_gravadas_5') {
       valor = cinco;
-    }
-    else if (campo_mayor === 'n_gravadas_10') {
+    } else if (campo_mayor === 'n_gravadas_10') {
       valor = diez;
     }
 
     valor += diferencia;
     if (valor >= 0) {
       props.dispatch(change('formModal', campo_mayor, valor));
-
     }
-
-
-  }
-  else if (cantidad > 0 && unitario > 0) {
+  } else if (cantidad > 0 && unitario > 0) {
     swal({
       title: 'Ops',
       text: 'Valor supera al maximo permitido',
       icon: 'warning',
       button: 'OK!',
     });
-  }
-  else if ((!(impuesto) || impuesto === 0) && (exentas === 0 || cinco === 0 || diez === 0)) {
-
+  } else if ((!impuesto || impuesto === 0) && (exentas === 0 || cinco === 0 || diez === 0)) {
     swal({
       title: 'Ops',
       text: 'La cantidad y el precio unitario deben ser mayor que zero',
       icon: 'warning',
       button: 'OK!',
     });
-
   }
-}
+};
 let ratio_0, ratio_5, ratio_10;
 
-const recalcula_ratio = (props) => {
+const recalcula_ratio = props => {
   const cantidad = parseFloat(props.n_cantidad || 0, 2);
   const unitario = parseFloat(props.n_unitario || 0, 2);
   const exentas = parseFloat(props.n_exentas || 0, 2);
   const cinco = parseFloat(props.n_gravadas_5 || 0, 2);
   const diez = parseFloat(props.n_gravadas_10 || 0, 2);
-  const impuesto = parseFloat((cantidad * unitario));
-  ratio_0 = ((exentas * 100) / impuesto) / 100;
-  ratio_5 = ((cinco * 100) / impuesto) / 100;
-  ratio_10 = ((diez * 100) / impuesto) / 100;
-}
+  const impuesto = parseFloat(cantidad * unitario);
+  ratio_0 = (exentas * 100) / impuesto / 100;
+  ratio_5 = (cinco * 100) / impuesto / 100;
+  ratio_10 = (diez * 100) / impuesto / 100;
+};
 
 const retorna_campo_mayor = ({ exentas, cinco, diez }) => {
   let campo_mayor = 'n_exentas';
   if (cinco > exentas) {
     if (cinco > diez) {
       campo_mayor = 'n_gravadas_5';
-    }
-    else {
+    } else {
       campo_mayor = 'n_gravadas_10';
     }
-  }
-  else if (diez > exentas) {
+  } else if (diez > exentas) {
     campo_mayor = 'n_gravadas_10';
   }
-  return (campo_mayor);
-}
+  return campo_mayor;
+};
+
+const validaValoresItem = values => {
+  const total = parseFloat(values.n_unitario) * parseFloat(values.n_cantidad);
+  const impuesto =
+    parseFloat(values.n_exentas) ||
+    0 + parseFloat(values.n_gravadas_5) ||
+    0 + parseFloat(values.n_gravadas_10) ||
+    0;
+  if (total !== impuesto) {
+    swal({
+      title: 'Ops',
+      text: `La suma de los valores de (Exenta + IVA 5% + IVA 10%) (${impuesto}) tiene que ser igual a (Cantidad * Unitario) (${total})`,
+      icon: 'warning',
+      button: 'OK!',
+    });
+
+    return false;
+  }
+  return true;
+};
 
 export class FormPresupuestosContainer extends Component {
   static propTypes = {
@@ -384,24 +400,21 @@ export class FormPresupuestosContainer extends Component {
     esqueleto: PropTypes.object.isRequired,
   };
 
-
-  onChangeImpuesto = (campos) => {
+  onChangeImpuesto = campos => {
     const props = {
-      ...campos
-      , dispatch: this.props.dispatch
-    }
+      ...campos,
+      dispatch: this.props.dispatch,
+    };
     recalcula_impuesto(props);
+  };
 
-  }
-
-  onChangeRatio = (campos) => {
+  onChangeRatio = campos => {
     const props = {
-      ...campos
-      , dispatch: this.props.dispatch
-    }
+      ...campos,
+      dispatch: this.props.dispatch,
+    };
     recalcula_ratio(props);
-
-  }
+  };
 
   onChangeCamposValores = campos => {
     const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada } = this.props;
@@ -460,104 +473,22 @@ export class FormPresupuestosContainer extends Component {
     }
   };
 
-  onChangeItems = idItem => {
-    const { monedaSeleccionada, optionsItems } = this.props;
-    const { traeUltimasCotizacionesMoneda, toggleCargando } = this.props.actions;
-    toggleCargando().then(res => {
-      this.props.dispatch(change('formModal', `n_cantidad`, 1));
-      let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
-      itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
+  onChangeFlete = idFlete => {
+    if (idFlete) {
+      const { optionsFletes, monedaSeleccionada, n_peso } = this.props;
+      const { traeUltimasCotizacionesMoneda } = this.props.actions;
+      let fleteSeleccionado = optionsFletes.find(item => item.value === idFlete);
+      fleteSeleccionado = fleteSeleccionado ? fleteSeleccionado.extra : {};
 
-      const tipo = itemSeleccionado.c_tipo;
-      const obs = itemSeleccionado.t_observacion;
-      let unitario = parseFloat(itemSeleccionado.n_unitario);
-      let exentas = parseFloat(itemSeleccionado.n_exentas);
-      let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
-      let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
-      let peso = parseFloat(itemSeleccionado.n_peso);
-      let flete = peso * parseFloat(itemSeleccionado.n_flete);
-      const props_ratio =
-        {
-          n_cantidad: 1
-          , n_unitario: unitario
-          , n_exentas: exentas
-          , n_gravadas_5: gravadas_5
-          , n_gravadas_10: gravadas_10
-        }
-      recalcula_ratio(props_ratio);
-      let c_monedaOrigemDestino = monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
-      let n_cotizacion = 1;
-      if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
-        c_monedaOrigemDestino = itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
-
-        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
-          .then(res => {
-            if (res.data && res.data.length > 0) {
-              n_cotizacion = parseFloat(res.data[0].n_valor);
-              unitario *= n_cotizacion;
-              unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
-
-              exentas *= n_cotizacion;
-              exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
-
-              gravadas_5 *= n_cotizacion;
-              gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
-
-              gravadas_10 *= n_cotizacion;
-              gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
-
-              atualizaCamposItem({
-                dispatch: this.props.dispatch,
-                unitario,
-                exentas,
-                gravadas_5,
-                gravadas_10,
-                peso,
-                tipo,
-                obs,
-                c_monedaOrigemDestino,
-                n_cotizacion
-              });
-            } else {
-              swal({
-                title: 'Ops',
-                text: 'No fue posible obtener las ultimas cotizaciones.',
-                icon: 'warning',
-                button: 'OK!',
-              });
-            }
-          })
-          .catch(err => {
-            toggleCargando();
-            mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
-          });
-      } else {
-        atualizaCamposItem({
-          dispatch: this.props.dispatch,
-          unitario,
-          exentas,
-          gravadas_5,
-          gravadas_10,
-          peso,
-          tipo,
-          obs,
-          n_cotizacion,
-          c_monedaOrigemDestino
-        });
-      }
-      if (
-        itemSeleccionado.c_tipo === 'M' &&
-        itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
-      ) {
+      if (fleteSeleccionado.n_id_moneda !== monedaSeleccionada.value) {
         const c_monedaOrigemDestino =
-          itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
+          fleteSeleccionado.moneda.c_letras + '_' + monedaSeleccionada.extra.c_letras;
 
         traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
           .then(res => {
             if (res.data && res.data.length > 0) {
-              const cotizacion = res.data[0];
-              flete *= parseFloat(cotizacion.n_valor);
-              flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
+              const cotizacion = res.data[0].n_valor;
+              const flete = parseFloat(n_peso) * fleteSeleccionado.n_valor * cotizacion;
               atualizaCamposItem({ dispatch: this.props.dispatch, flete });
             } else {
               swal({
@@ -570,13 +501,162 @@ export class FormPresupuestosContainer extends Component {
             toggleCargando();
           })
           .catch(err => {
-            atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
             toggleCargando();
             mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
           });
       } else {
+        const flete = parseFloat(n_peso) * fleteSeleccionado.n_valor;
         atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+      }
+    }
+  };
+
+  onChangeItems = idItem => {
+    const { monedaSeleccionada, optionsItems } = this.props;
+    const { traeUltimasCotizacionesMoneda, toggleCargando } = this.props.actions;
+    toggleCargando().then(res => {
+      this.props.dispatch(change('formModal', `n_cantidad`, 1));
+      let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
+      itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : null;
+      if (!itemSeleccionado) {
+        atualizaCamposItem({
+          dispatch: this.props.dispatch,
+          unitario: 1,
+          exentas: 1,
+          gravadas_5: 0,
+          gravadas_10: 0,
+          peso: 0,
+          tipo: 'M',
+          obs: 'Nueva Obs',
+          c_monedaOrigemDestino:
+            monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras,
+          n_cotizacion: 1,
+        });
+        const props_ratio = {
+          n_cantidad: 1,
+          n_unitario: 1,
+          n_exentas: 1,
+          n_gravadas_5: 0,
+          n_gravadas_10: 0,
+        };
+        recalcula_ratio(props_ratio);
         toggleCargando();
+      } else {
+        const tipo = itemSeleccionado.c_tipo;
+        const obs = itemSeleccionado.t_observacion;
+        const idFlete = itemSeleccionado.n_id_flete;
+        let unitario = parseFloat(itemSeleccionado.n_unitario);
+        let exentas = parseFloat(itemSeleccionado.n_exentas);
+        let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
+        let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
+        let peso = parseFloat(itemSeleccionado.n_peso);
+        let flete = peso * parseFloat(itemSeleccionado.n_flete);
+        const props_ratio = {
+          n_cantidad: 1,
+          n_unitario: unitario,
+          n_exentas: exentas,
+          n_gravadas_5: gravadas_5,
+          n_gravadas_10: gravadas_10,
+        };
+        recalcula_ratio(props_ratio);
+        let c_monedaOrigemDestino =
+          monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
+        let n_cotizacion = 1;
+        if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
+          c_monedaOrigemDestino =
+            itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
+
+          traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+            .then(res => {
+              if (res.data && res.data.length > 0) {
+                n_cotizacion = parseFloat(res.data[0].n_valor);
+                unitario *= n_cotizacion;
+                unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
+
+                exentas *= n_cotizacion;
+                exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
+
+                gravadas_5 *= n_cotizacion;
+                gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
+
+                gravadas_10 *= n_cotizacion;
+                gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
+
+                atualizaCamposItem({
+                  dispatch: this.props.dispatch,
+                  unitario,
+                  exentas,
+                  gravadas_5,
+                  gravadas_10,
+                  peso,
+                  tipo,
+                  obs,
+                  c_monedaOrigemDestino,
+                  n_cotizacion,
+                  idFlete,
+                });
+              } else {
+                swal({
+                  title: 'Ops',
+                  text: 'No fue posible obtener las ultimas cotizaciones.',
+                  icon: 'warning',
+                  button: 'OK!',
+                });
+              }
+            })
+            .catch(err => {
+              toggleCargando();
+              mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+            });
+        } else {
+          atualizaCamposItem({
+            dispatch: this.props.dispatch,
+            unitario,
+            exentas,
+            gravadas_5,
+            gravadas_10,
+            peso,
+            tipo,
+            obs,
+            n_cotizacion,
+            c_monedaOrigemDestino,
+            idFlete,
+          });
+        }
+        //SI ES MERCADORIA Y LA MONEDA DEL FLETE ES DISTINCTA A LA DEL ITEM
+        if (
+          itemSeleccionado.c_tipo === 'M' &&
+          itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
+        ) {
+          const c_monedaOrigemDestino =
+            itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
+
+          traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+            .then(res => {
+              if (res.data && res.data.length > 0) {
+                const cotizacion = res.data[0];
+                flete *= parseFloat(cotizacion.n_valor);
+                flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
+                atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+              } else {
+                swal({
+                  title: 'Ops',
+                  text: 'No fue posible obtener las ultimas cotizaciones para el flete',
+                  icon: 'warning',
+                  button: 'OK!',
+                });
+              }
+              toggleCargando();
+            })
+            .catch(err => {
+              atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
+              toggleCargando();
+              mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+            });
+        } else {
+          atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+          toggleCargando();
+        }
       }
     });
   };
@@ -605,14 +685,21 @@ export class FormPresupuestosContainer extends Component {
       const valor = arrayDatos[1];
       return this.props.dispatch(change('formModal', campo, valor));
     });
-    const props_ratio =
-      {
-        n_cantidad: datos.n_cantidad
-        , n_unitario: datos.n_unitario
-        , n_exentas: datos.n_exentas
-        , n_gravadas_5: datos.n_gravadas_5
-        , n_gravadas_10: datos.n_gravadas_10
-      }
+    let itemSeleccionado = datos.c_descripcion
+      ? this.props.optionsItems.find(item => item.value === datos.c_descripcion)
+      : null;
+    itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : null;
+    if (itemSeleccionado && itemSeleccionado.n_id_flete) {
+      this.props.dispatch(change('formModal', 'n_id_flete', itemSeleccionado.n_id_flete));
+    }
+
+    const props_ratio = {
+      n_cantidad: datos.n_cantidad,
+      n_unitario: datos.n_unitario,
+      n_exentas: datos.n_exentas,
+      n_gravadas_5: datos.n_gravadas_5,
+      n_gravadas_10: datos.n_gravadas_10,
+    };
     recalcula_ratio(props_ratio);
     modalToggle();
   };
@@ -677,6 +764,11 @@ export class FormPresupuestosContainer extends Component {
       data: values,
       method: values.id && values.id !== '' ? 'put' : 'post',
     };
+    if (!validaValoresItem(values)) {
+      toggleCargando();
+
+      return;
+    }
     return api_axio({
       api_funcion: 'presupuestos/item',
       params,
@@ -765,7 +857,7 @@ export class FormPresupuestosContainer extends Component {
       traeFrecuencias,
       traeItems,
       traeMercaderiasServicios,
-      traeUltimasCotizacionesMoneda
+      traeUltimasCotizacionesMoneda,
     } = this.props.actions;
     const { path } = this.props.match;
     toggleCargando();
@@ -785,11 +877,15 @@ export class FormPresupuestosContainer extends Component {
       };
       traerPresupuesto(params).then(res => {
         const datos = res.data;
-        const monedaSeleccionada =
-          {
-            extra: datos.moneda
-          }
-        setaValorGs({ monedaSeleccionada, totalGeneral: datos.n_total_general, dispatch: this.props.dispatch, traeUltimasCotizacionesMoneda });
+        const monedaSeleccionada = {
+          extra: datos.moneda,
+        };
+        setaValorGs({
+          monedaSeleccionada,
+          totalGeneral: datos.n_total_general,
+          dispatch: this.props.dispatch,
+          traeUltimasCotizacionesMoneda,
+        });
       });
       traeItems(params);
     }
@@ -822,6 +918,8 @@ export class FormPresupuestosContainer extends Component {
           onChangeCamposValores={this.onChangeCamposValores}
           onChangeImpuesto={this.onChangeImpuesto}
           onChangeRatio={this.onChangeRatio}
+          validationConstraintsItems={validationConstraintsItems}
+          onChangeFlete={this.onChangeFlete}
         />
       </div>
     );
@@ -844,14 +942,14 @@ function mapStateToProps(state) {
   const modoNuevo = state.router.location.pathname.indexOf('nuevo') !== -1;
   let initialValues = modoNuevo
     ? {
-      n_id_usuario: state.acceder.usuario.id,
-    }
+        n_id_usuario: state.acceder.usuario.id,
+      }
     : typeof state.esqueleto.selected[0] !== 'undefined'
-      ? {
+    ? {
         ...state.esqueleto.selected[0],
         items: state.presupuestos.items,
       }
-      : state.presupuestos.presupuesto || {};
+    : state.presupuestos.presupuesto || {};
   let initialValuesModal = { n_id_presupuesto: selector(state, 'id') };
   const optionsMonedas = [];
   const optionsStatus = [];
@@ -933,6 +1031,7 @@ function mapStateToProps(state) {
         fleteObj = {
           label: flete.moneda.c_simbolo + flete.n_valor + '/' + flete.c_tipo,
           value: flete.id,
+          extra: flete,
         };
         optionsFletes.push(fleteObj);
       }
@@ -999,15 +1098,15 @@ function mapStateToProps(state) {
     ? optionsMonedas.find(moneda => moneda.value === selector(state, 'n_id_moneda'))
     : null;
 
-
-  let itemSeleccionado = selectorItem(state, 'c_descripcion') ? optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion')) : null;
+  let itemSeleccionado = selectorItem(state, 'c_descripcion')
+    ? optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion'))
+    : null;
   itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : {};
 
   let descMonedaItem = itemSeleccionado.n_id_moneda
     ? optionsMonedas.find(moneda => moneda.value === itemSeleccionado.n_id_moneda)
     : null;
   descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
-
 
   return {
     items: state.presupuestos.items,
@@ -1042,16 +1141,18 @@ function mapStateToProps(state) {
     n_valor_seguro: selector(state, 'n_valor_seguro') || 0,
     id: selector(state, 'id'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
+    c_desc_item: selectorItem(state, 'c_descripcion'),
     tipoItem: selectorItem(state, 'c_tipo'),
     n_cantidad: selectorItem(state, 'n_cantidad'),
     n_unitario: selectorItem(state, 'n_unitario'),
     n_exentas: selectorItem(state, 'n_exentas'),
     n_gravadas_5: selectorItem(state, 'n_gravadas_5'),
     n_gravadas_10: selectorItem(state, 'n_gravadas_10'),
+    n_peso: selectorItem(state, 'n_peso'),
     itemSeleccionado,
     descMonedaItem,
     n_valor_porcentaje_comision:
-    state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
+      state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
   };
 }
 

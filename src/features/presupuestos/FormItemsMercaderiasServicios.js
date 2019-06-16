@@ -12,6 +12,7 @@ export default class FormItemsMercaderiasServicios extends Component {
   render() {
     const {
       optionsItems,
+      optionsFletes,
       onChangeItems,
       descMoneda,
       decimales,
@@ -19,6 +20,8 @@ export default class FormItemsMercaderiasServicios extends Component {
       descMonedaItem,
       onChangeImpuesto,
       onChangeRatio,
+      onChangeFlete,
+      c_desc_item,
     } = this.props;
 
     return (
@@ -35,40 +38,40 @@ export default class FormItemsMercaderiasServicios extends Component {
               onChange={onChangeItems}
               component={SuperSelect}
               placeholder="Elija"
+              permiteCrear={true}
             />
           </Col>
         </Row>
-        {descMonedaItem && (
-          <Row>
-            <Col sm="12" md="4" lg="4" xl="4">
-              <label>Item en</label>
-              <input
-                type="text"
-                value={descMonedaItem}
-                disabled
-                className="field form-control-lg form-control"
-              />
-            </Col>
-            <Col sm="12" md="4" lg="4" xl="4">
-              <label>Valores en</label>
-              <input
-                type="text"
-                value={descMoneda}
-                disabled
-                className="field form-control-lg form-control"
-              />
-            </Col>
-            <Col sm="12" md="4" lg="4" xl="4">
-              <Field
-                name="n_cotizacion"
-                label="Cotizacion"
-                component={InputNumber}
-                decimalScale={6}
-                className="field form-control-lg form-control"
-              />
-            </Col>
-          </Row>
-        )}
+        {c_desc_item && <Row>
+          <Col sm="12" md="4" lg="4" xl="4">
+            <label>Item en</label>
+            <input
+              type="text"
+              value={descMonedaItem ? descMonedaItem : descMoneda}
+              disabled
+              className="field form-control-lg form-control"
+            />
+          </Col>
+          <Col sm="12" md="4" lg="4" xl="4">
+            <label>Valores en</label>
+            <input
+              type="text"
+              value={descMoneda}
+              disabled
+              className="field form-control-lg form-control"
+            />
+          </Col>
+          <Col sm="12" md="4" lg="4" xl="4">
+            <Field
+              name="n_cotizacion"
+              label="Cotizacion"
+              component={InputNumber}
+              decimalScale={10}
+              disabled
+              className="field form-control-lg form-control"
+            />
+          </Col>
+        </Row>}
         {tipoItem && (
           <Row>
             <Col sm="12" md="6" lg="2">
@@ -123,8 +126,6 @@ export default class FormItemsMercaderiasServicios extends Component {
                     n_gravadas_10: this.props.n_gravadas_10,
                   });
                 }}
-
-
               />
             </Col>
             <Col sm="12" md="6" lg="2">
@@ -167,7 +168,7 @@ export default class FormItemsMercaderiasServicios extends Component {
         )}
         {tipoItem === 'M' && (
           <Row>
-            <Col sm="12" md="4" lg="4">
+            <Col sm="12" md="3" lg="3">
               <Field
                 name="n_peso"
                 label="Peso"
@@ -176,7 +177,17 @@ export default class FormItemsMercaderiasServicios extends Component {
                 className="field form-control-lg form-control"
               />
             </Col>
-            <Col sm="12" md="4" lg="4">
+            <Col sm="12" md="3" lg="3">
+              <Field
+                name="n_id_flete"
+                label="Flete"
+                options={optionsFletes}
+                onChange={onChangeFlete}
+                component={SuperSelect}
+                placeholder="Elija"
+              />
+            </Col>
+            <Col sm="12" md="3" lg="3">
               <Field
                 name="n_flete"
                 label="Flete"
@@ -185,7 +196,7 @@ export default class FormItemsMercaderiasServicios extends Component {
                 className="field form-control-lg form-control"
               />
             </Col>
-            <Col sm="3" md="4" lg="4" xl="4">
+            <Col sm="3" md="3" lg="3" xl="3">
               <Field name="b_seguro" label="Seguro" component={InputCheckBox} />
             </Col>
           </Row>

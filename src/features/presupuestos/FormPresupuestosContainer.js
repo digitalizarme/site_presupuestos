@@ -1108,6 +1108,22 @@ function mapStateToProps(state) {
     : null;
   descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
 
+  if (
+    selectorItem(state, 'c_descripcion') &&
+    optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion')) == null
+  ) {
+    const itemObj = {
+      label:
+        selectorItem(state, 'c_descripcion') +
+        ' | ' +
+        formatarNumero(selectorItem(state, 'n_unitario'),monedaSeleccionada.extra.n_decimales,true) +
+        ' ' +
+        descMoneda,
+      value: selectorItem(state, 'c_descripcion'),
+    };
+    optionsItems.push(itemObj);
+  }
+
   return {
     items: state.presupuestos.items,
     presupuestos: state.presupuestos,

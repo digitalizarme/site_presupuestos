@@ -3,11 +3,49 @@ import { Button, Form, Row, Col, Container, Collapse, Table } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { InputText, InputNumber, SuperSelect, ModalForm } from '../esqueleto';
-import { Field } from 'redux-form';
+import { Field, FieldArray } from 'redux-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { FormItemsMercaderiasServicios } from './';
 import formatarNumero from '../../common/formatarNumero';
+
+const renderCuotas = ({
+  type,
+  fields,
+  meta: { touched, error, submitFailed },
+  decimales,
+  onChangeValorCuota,
+}) => (
+  <div>
+    {fields.map((item, indice) => (
+      <Row key={indice}>
+        <Col sm={2}>Cuota {indice + 1})</Col>
+        <Col sm={5}>
+          <Field
+            name={`${item}.n_valor`}
+            className="field form-control-lg form-control"
+            component={InputNumber}
+            decimalScale={decimales}
+            onChange={valor => {
+              onChangeValorCuota({
+                actual: { valor, indice },
+                fields: fields.getAll(),
+              });
+            }}
+          />
+        </Col>
+        <Col sm={5}>
+          <Field
+            name={`${item}.d_fecha_vcto`}
+            type="date"
+            className="field form-control-lg form-control"
+            component="input"
+          />
+        </Col>
+      </Row>
+    ))}
+  </div>
+);
 
 class FormPresupuestos extends Component {
   static propTypes = {
@@ -97,9 +135,14 @@ class FormPresupuestos extends Component {
       n_cantidad,
       n_gravadas_5,
       n_gravadas_10,
+      n_id_flete,
       validationConstraintsItems,
-      onChangeFlete,
+      onChangePesoFlete,
       c_desc_item,
+      onChangePeso,
+      onChangePagos,
+      onChangeValorCuota,
+      n_dif_cuotas,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -114,7 +157,7 @@ class FormPresupuestos extends Component {
             moneda={moneda}
             optionsItems={optionsItems}
             optionsFletes={optionsFletes}
-            onChangeFlete={onChangeFlete}
+            onChangePesoFlete={onChangePesoFlete}
             enviarFormulario={enviarItems}
             cuerpoModal={FormItemsMercaderiasServicios}
             atualizouForm={atualizouFormModal}
@@ -122,12 +165,14 @@ class FormPresupuestos extends Component {
             tipoItem={tipoItem}
             descMonedaItem={descMonedaItem}
             onChangeImpuesto={onChangeImpuesto}
+            onChangePeso={onChangePeso}
             onChangeRatio={onChangeRatio}
             n_exentas={n_exentas}
             n_unitario={n_unitario}
             n_cantidad={n_cantidad}
             n_gravadas_5={n_gravadas_5}
             n_gravadas_10={n_gravadas_10}
+            n_id_flete={n_id_flete}
             validationConstraints={validationConstraintsItems}
             c_desc_item={c_desc_item}
             sizeModal="xl"
@@ -221,13 +266,13 @@ class FormPresupuestos extends Component {
                               }}
                             >
                               <td>{objItem.c_descripcion}</td>
-                              <td>{formatarNumero(objItem.n_cantidad,0)}</td>
-                              <td>{formatarNumero(objItem.n_unitario,decimales)}</td>
-                              <td>{formatarNumero(objItem.n_exentas,decimales)}</td>
-                              <td>{formatarNumero(objItem.n_gravadas_5,decimales)}</td>
-                              <td>{formatarNumero(objItem.n_gravadas_10,decimales)}</td>
-                              <td>{formatarNumero(objItem.n_peso,2)}</td>
-                              <td>{formatarNumero(objItem.n_flete,decimales)}</td>
+                              <td>{formatarNumero(objItem.n_cantidad, 0)}</td>
+                              <td>{formatarNumero(objItem.n_unitario, decimales)}</td>
+                              <td>{formatarNumero(objItem.n_exentas, decimales)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_5, decimales)}</td>
+                              <td>{formatarNumero(objItem.n_gravadas_10, decimales)}</td>
+                              <td>{formatarNumero(objItem.n_peso, 2)}</td>
+                              <td>{formatarNumero(objItem.n_flete, decimales)}</td>
                               <td>
                                 <Button
                                   type="button"
@@ -253,12 +298,12 @@ class FormPresupuestos extends Component {
                             </tr>
                           ))
                         ) : (
-                            <tr>
-                              <td colSpan="9" className="text-center">
-                                No hay items
+                          <tr>
+                            <td colSpan="9" className="text-center">
+                              No hay items
                             </td>
-                            </tr>
-                          )}
+                          </tr>
+                        )}
                       </tbody>
                     </Table>
                   </div>
@@ -543,6 +588,12 @@ class FormPresupuestos extends Component {
                         component={InputNumber}
                         decimalScale={0}
                         className="field form-control-lg form-control"
+                        onBlur={valor => {
+                          onChangePagos({
+                            n_cuotas_pago: this.props.n_cuotas_pago,
+                            n_dias_Frecuencia_pago: this.props.n_dias_Frecuencia_pago,
+                          });
+                        }}
                       />
                     </Col>
                     <Col sm="4">
@@ -552,13 +603,38 @@ class FormPresupuestos extends Component {
                         options={optionsFrecuencias}
                         component={SuperSelect}
                         placeholder="Elija"
+                        onChange={valor => {
+                          onChangePagos({
+                            n_cuotas_pago: this.props.n_cuotas_pago,
+                            n_dias_Frecuencia_pago: valor,
+                          });
+                        }}
                       />
                     </Col>
                   </Row>
+                  <FieldArray
+                    name="cuotas"
+                    component={renderCuotas}
+                    decimales={decimales}
+                    onChangeValorCuota={onChangeValorCuota}
+                  />
+                  {n_dif_cuotas && n_dif_cuotas > 0 && (
+                    <Row>
+                      <Col>
+                        <Field
+                          name="n_dif_cuotas"
+                          label="Diferencia entre total y las cuotas"
+                          className="field form-control-lg form-control"
+                          component={InputNumber}
+                          decimalScale={decimales}
+                          disabled
+                        />
+                      </Col>
+                    </Row>
+                  )}
                 </Collapse>
               </Col>
             </Row>
-
             <Row>
               <Col sm="12">
                 <Field

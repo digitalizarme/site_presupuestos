@@ -20,7 +20,7 @@ export default class FormItemsMercaderiasServicios extends Component {
       descMonedaItem,
       onChangeImpuesto,
       onChangeRatio,
-      onChangeFlete,
+      onChangePesoFlete,
       c_desc_item,
     } = this.props;
 
@@ -175,6 +175,9 @@ export default class FormItemsMercaderiasServicios extends Component {
                 component={InputNumber}
                 decimalScale={2}
                 className="field form-control-lg form-control"
+                onBlur={valor => {
+                  onChangePesoFlete(this.props.n_id_flete);
+                }}
               />
             </Col>
             <Col sm="12" md="3" lg="3">
@@ -182,7 +185,7 @@ export default class FormItemsMercaderiasServicios extends Component {
                 name="n_id_flete"
                 label="Flete"
                 options={optionsFletes}
-                onChange={onChangeFlete}
+                onChange={onChangePesoFlete}
                 component={SuperSelect}
                 placeholder="Elija"
               />

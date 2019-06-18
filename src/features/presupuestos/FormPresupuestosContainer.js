@@ -21,6 +21,8 @@ import {
   traeFrecuencias,
   traeItems,
   traeMercaderiasServicios,
+  generaCuotas,
+  traeCuotas,
 } from './redux/actions';
 import { Principal } from '../esqueleto';
 
@@ -400,6 +402,52 @@ export class FormPresupuestosContainer extends Component {
     esqueleto: PropTypes.object.isRequired,
   };
 
+  onChangeValorCuota = ({ fields, actual }) => {
+    const { n_total_general, decimales } = this.props;
+    let total = 0;
+    fields.map((campo, indice) => {
+      if (indice === actual.indice) {
+        total += parseFloat(actual.valor);
+      } else {
+        total += campo.n_valor;
+      }
+      return true;
+    });
+    total = total.toFixed(decimales);
+    let diff = n_total_general - total;
+    diff = Math.abs(diff.toFixed(decimales));
+    this.props.dispatch(change('formPresupuestos', `n_dif_cuotas`, diff));
+  };
+
+  onChangePagos = campos => {
+    console.log(campos);
+    const { id, monedaSeleccionada, n_total_general } = this.props;
+    const { generaCuotas } = this.props.actions;
+    const params = {
+      data: {
+        ...campos,
+        id,
+        n_id_moneda: monedaSeleccionada.value,
+        n_decimales: monedaSeleccionada.extra.n_decimales,
+        n_total_general,
+      },
+      method: 'post',
+    };
+    toggleCargando();
+    generaCuotas(params)
+      .then(res => {
+        this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+        if (this.props.status === 1) {
+          this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
+        }
+        toggleCargando();
+      })
+      .catch(err => {
+        mostraMensajeError({ err, msgPadron: 'Error al intentar generar cuotas' });
+        toggleCargando();
+      });
+  };
+
   onChangeImpuesto = campos => {
     const props = {
       ...campos,
@@ -473,7 +521,7 @@ export class FormPresupuestosContainer extends Component {
     }
   };
 
-  onChangeFlete = idFlete => {
+  onChangePesoFlete = idFlete => {
     if (idFlete) {
       const { optionsFletes, monedaSeleccionada, n_peso } = this.props;
       const { traeUltimasCotizacionesMoneda } = this.props.actions;
@@ -778,9 +826,6 @@ export class FormPresupuestosContainer extends Component {
           id: values.n_id_presupuesto,
         };
         traeItems(params).then(res => {
-          // if (this.props.status === 1) {
-          //   this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
-          // }
           totalizaItems({ items: res.data, props });
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
           toggleCargando();
@@ -858,6 +903,8 @@ export class FormPresupuestosContainer extends Component {
       traeItems,
       traeMercaderiasServicios,
       traeUltimasCotizacionesMoneda,
+      traeCuotas,
+      traerPresupuesto,
     } = this.props.actions;
     const { path } = this.props.match;
     toggleCargando();
@@ -871,7 +918,6 @@ export class FormPresupuestosContainer extends Component {
 
     //MODO EDICION
     if (path.indexOf('editar') !== -1) {
-      const { traerPresupuesto } = this.props.actions;
       const params = {
         id: this.props.match.params.id,
       };
@@ -888,6 +934,10 @@ export class FormPresupuestosContainer extends Component {
         });
       });
       traeItems(params);
+      traeCuotas(params).then(res => {
+                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+
+      });
     }
   };
 
@@ -917,9 +967,12 @@ export class FormPresupuestosContainer extends Component {
           onChangeSeguro={this.onChangeSeguro}
           onChangeCamposValores={this.onChangeCamposValores}
           onChangeImpuesto={this.onChangeImpuesto}
+          onChangePeso={this.onChangePeso}
           onChangeRatio={this.onChangeRatio}
           validationConstraintsItems={validationConstraintsItems}
-          onChangeFlete={this.onChangeFlete}
+          onChangePesoFlete={this.onChangePesoFlete}
+          onChangePagos={this.onChangePagos}
+          onChangeValorCuota={this.onChangeValorCuota}
         />
       </div>
     );
@@ -947,9 +1000,10 @@ function mapStateToProps(state) {
     : typeof state.esqueleto.selected[0] !== 'undefined'
     ? {
         ...state.esqueleto.selected[0],
-        items: state.presupuestos.items,
       }
-    : state.presupuestos.presupuesto || {};
+    : {
+        ...state.presupuestos.presupuesto,
+      } || {};
   let initialValuesModal = { n_id_presupuesto: selector(state, 'id') };
   const optionsMonedas = [];
   const optionsStatus = [];
@@ -1060,7 +1114,7 @@ function mapStateToProps(state) {
       ) {
         frecuenciaObj = {
           label: frecuencia.c_descripcion,
-          value: frecuencia.id,
+          value: frecuencia.n_cantidad_dias,
         };
         optionsFrecuencias.push(frecuenciaObj);
       }
@@ -1116,7 +1170,11 @@ function mapStateToProps(state) {
       label:
         selectorItem(state, 'c_descripcion') +
         ' | ' +
-        formatarNumero(selectorItem(state, 'n_unitario'),monedaSeleccionada.extra.n_decimales,true) +
+        formatarNumero(
+          selectorItem(state, 'n_unitario'),
+          monedaSeleccionada.extra.n_decimales,
+          true,
+        ) +
         ' ' +
         descMoneda,
       value: selectorItem(state, 'c_descripcion'),
@@ -1155,7 +1213,10 @@ function mapStateToProps(state) {
     n_total_items: selector(state, 'n_total_items') || 0,
     n_valor_comision: selector(state, 'n_valor_comision') || 0,
     n_valor_seguro: selector(state, 'n_valor_seguro') || 0,
+    n_cuotas_pago: selector(state, 'n_cuotas_pago'),
+    n_dias_Frecuencia_pago: selector(state, 'n_dias_Frecuencia_pago'),
     id: selector(state, 'id'),
+    n_dif_cuotas: selector(state, 'n_dif_cuotas'),
     modoEdicionItem: selectorItem(state, 'id') ? true : false,
     c_desc_item: selectorItem(state, 'c_descripcion'),
     tipoItem: selectorItem(state, 'c_tipo'),
@@ -1165,6 +1226,7 @@ function mapStateToProps(state) {
     n_gravadas_5: selectorItem(state, 'n_gravadas_5'),
     n_gravadas_10: selectorItem(state, 'n_gravadas_10'),
     n_peso: selectorItem(state, 'n_peso'),
+    n_id_flete: selectorItem(state, 'n_id_flete'),
     itemSeleccionado,
     descMonedaItem,
     n_valor_porcentaje_comision:
@@ -1191,6 +1253,8 @@ function mapDispatchToProps(dispatch) {
         traeItems,
         traeMercaderiasServicios,
         modalToggle,
+        generaCuotas,
+        traeCuotas,
       },
       dispatch,
     ),

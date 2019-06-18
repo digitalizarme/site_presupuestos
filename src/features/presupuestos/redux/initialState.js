@@ -18,9 +18,12 @@ const initialState = {
   traeItemsPending: false,
   traeItemsError: null,
   items:[],
+  cuotas:[],
   traeMercaderiasServiciosPending: false,
   traeMercaderiasServiciosError: null,
-  mercaderiasServicios:[]
+  mercaderiasServicios:[],
+  traeCuotasPending: false,
+  traeCuotasError: null
 };
 
 export default initialState;

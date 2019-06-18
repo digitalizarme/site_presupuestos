@@ -52,6 +52,13 @@ const validationConstraints = {
       message: 'Persona es obligatorio',
     },
   },
+  n_dif_cuotas: {
+    numericality: {
+      onlyInteger: false,
+      equalTo: 0,
+      notEqualTo: 'El valor debe ser igual que zero',
+    },
+  },
 };
 
 const validationConstraintsItems = {
@@ -406,11 +413,14 @@ export class FormPresupuestosContainer extends Component {
     const { n_total_general, decimales } = this.props;
     let total = 0;
     fields.map((campo, indice) => {
+      console.log(total);
+
       if (indice === actual.indice) {
         total += parseFloat(actual.valor);
       } else {
-        total += campo.n_valor;
+        total += parseFloat(campo.n_valor);
       }
+
       return true;
     });
     total = total.toFixed(decimales);
@@ -420,7 +430,6 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangePagos = campos => {
-    console.log(campos);
     const { id, monedaSeleccionada, n_total_general } = this.props;
     const { generaCuotas } = this.props.actions;
     const params = {
@@ -935,8 +944,7 @@ export class FormPresupuestosContainer extends Component {
       });
       traeItems(params);
       traeCuotas(params).then(res => {
-                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-
+        this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
       });
     }
   };

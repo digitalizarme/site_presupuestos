@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
 import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
+import { Button } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
 
 const columns = [
   {
@@ -21,14 +24,14 @@ const columns = [
     text: 'Nombre',
     sort: true,
     editable: false,
-    attrs: { width: '30%' },
+    attrs: { width: '25%' },
   },
   {
     dataField: 'persona.c_identificacion',
     text: 'Identificacíon',
     sort: true,
     editable: false,
-    attrs: { width: '15%' },
+    attrs: { width: '10%' },
   },
   {
     dataField: 'status.c_descripcion',
@@ -68,7 +71,17 @@ const columns = [
     sort: true,
     editable: false,
     formatter: formatarFecha,
-    attrs: { width: '10%' },
+    attrs: { width: '15%' },
+  },
+  {
+    dataField: 'acciones',
+    text: 'Acciones',
+    sort: false,
+    editable: false,
+    formatter: (cell, row, rowIndex) => {
+      return <Button type="button" color="primary" size="md" ><FontAwesomeIcon icon={faPrint} /></Button>
+    },
+    attrs: { width: '5%' },
   },
 ];
 

@@ -23,7 +23,9 @@ const initialState = {
   traeMercaderiasServiciosError: null,
   mercaderiasServicios:[],
   traeCuotasPending: false,
-  traeCuotasError: null
+  traeCuotasError: null,
+  eliminaCuotasPending: false,
+  eliminaCuotasError: null
 };
 
 export default initialState;

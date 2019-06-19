@@ -23,6 +23,7 @@ import {
   traeMercaderiasServicios,
   generaCuotas,
   traeCuotas,
+  eliminaCuotas,
 } from './redux/actions';
 import { Principal } from '../esqueleto';
 
@@ -773,7 +774,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   eliminarItem = item => {
-    const { api_axio, toggleCargando, traeItems } = this.props.actions;
+    const { api_axio, toggleCargando, traeItems, eliminaCuotas } = this.props.actions;
     const props = this.props;
     swal({
       title: 'Estás seguro?',
@@ -807,12 +808,22 @@ export class FormPresupuestosContainer extends Component {
           params,
         })
           .then(res => {
-            const params = {
+            let params = {
               id: item.n_id_presupuesto,
             };
             traeItems(params).then(res => {
               totalizaItems({ items: res.data, props });
               this.props.dispatch(this.props.handleSubmit(this.preSubmit));
+              this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+              this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+              this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+              params = {
+                id: item.n_id_presupuesto,
+                method: 'delete',
+              };
+              eliminaCuotas(params).then(res => {
+                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+              });
               toggleCargando();
             });
           })
@@ -825,7 +836,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   submitItem = values => {
-    const { modalToggle, api_axio, toggleCargando, traeItems } = this.props.actions;
+    const { modalToggle, api_axio, toggleCargando, traeItems, eliminaCuotas } = this.props.actions;
     const props = this.props;
     toggleCargando();
     const params = {
@@ -842,12 +853,24 @@ export class FormPresupuestosContainer extends Component {
       params,
     })
       .then(res => {
-        const params = {
+        let params = {
           id: values.n_id_presupuesto,
         };
         traeItems(params).then(res => {
           totalizaItems({ items: res.data, props });
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
+          this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+          this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+          this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+
+          params = {
+            id: values.n_id_presupuesto,
+            method: 'delete',
+          };
+
+          eliminaCuotas(params).then(res => {
+            this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+          });
           toggleCargando();
           modalToggle();
         });
@@ -1274,6 +1297,7 @@ function mapDispatchToProps(dispatch) {
         modalToggle,
         generaCuotas,
         traeCuotas,
+        eliminaCuotas,
       },
       dispatch,
     ),

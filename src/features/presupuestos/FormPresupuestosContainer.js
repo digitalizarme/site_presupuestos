@@ -442,6 +442,17 @@ export class FormPresupuestosContainer extends Component {
       },
       method: 'post',
     };
+    if (!campos.n_cuotas_pago || !campos.n_dias_Frecuencia_pago) {
+      return;
+    } else if (campos.n_cuotas_pago > 1 && campos.n_dias_Frecuencia_pago === 1) {
+      swal({
+        title: 'Ops',
+        text: 'No se puede tener mas de una cuota con vencimiento al contado',
+        icon: 'warning',
+        button: 'OK!',
+      });
+      return;
+    }
     toggleCargando();
     generaCuotas(params)
       .then(res => {

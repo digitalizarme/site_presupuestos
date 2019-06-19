@@ -60,8 +60,8 @@ const columns = [
     sort: true,
     editable: false,
     searchable: false,
-    formatter: (cell,row) => {
-      return formatarNumero(cell,row.moneda?row.moneda.n_decimales:2);
+    formatter: (cell, row) => {
+      return formatarNumero(cell, row.moneda ? row.moneda.n_decimales : 2);
     },
     attrs: { width: '10%' },
   },
@@ -78,8 +78,13 @@ const columns = [
     text: 'Acciones',
     sort: false,
     editable: false,
+    searchable: false,
     formatter: (cell, row, rowIndex) => {
-      return <Button type="button" color="primary" size="md" ><FontAwesomeIcon icon={faPrint} /></Button>
+      return (
+        <Button type="button" color="primary" size="md">
+          <FontAwesomeIcon icon={faPrint} />
+        </Button>
+      );
     },
     attrs: { width: '5%' },
   },

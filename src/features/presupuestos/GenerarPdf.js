@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Page, Text, View, Image, Document, StyleSheet, PDFViewer } from '@react-pdf/renderer';
+import { Page, Image, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
@@ -51,12 +51,6 @@ const styles = StyleSheet.create({
 const Linea50 = styled.View`
   width: 95%;
   height: 50px;
-  flex-direction: row;
-`;
-
-const Linea30 = styled.View`
-  width: 95%;
-  height: 30px;
   flex-direction: row;
 `;
 
@@ -221,118 +215,102 @@ const Valor = styled.Text`
 const MyDocument = props => {
   //console.log(props.configuracion.t_logo);
   return (
-    <PDFViewer height={window.innerHeight} width="100%">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <Linea50>
-            <SeccionLogo>
-              {props.blob ? <Image src={props.blob} style={styles.logo} /> : null}
-            </SeccionLogo>
-            <Seccion1>
-              <Campo>Empresa:</Campo>
-              <Campo style={styles.espacioArriba}>Dirección:</Campo>
-            </Seccion1>
-            <Seccion2>
-              <Valor>{props.configuracion.c_razon_social}</Valor>
-              <Valor style={styles.espacioArriba}>{props.configuracion.c_direccion}</Valor>
-            </Seccion2>
-            <Seccion3>
-              <Campo>Fecha:</Campo>
-              <Campo style={styles.espacioArriba}>Presupuesto N.:</Campo>
-            </Seccion3>
-            <Seccion4>
-              <Valor>01/01/2000</Valor>
-              <Valor style={styles.espacioArriba}>000001</Valor>
-            </Seccion4>
-          </Linea50>
-          <Linea>
-            <SeccionSlogan>
-              <Campo8 style={styles.negrito}>{props.configuracion.c_slogan}</Campo8>
-            </SeccionSlogan>
-          </Linea>
-          <Linea35>
-            <Cliente>
-              <Campo8Derecha>Cliente:</Campo8Derecha>
-              <Campo8Derecha style={styles.espacioArriba}>Dirección:</Campo8Derecha>
-            </Cliente>
-            <ClienteValor>
-              <Valor8Izquierda>Cliente xxxx</Valor8Izquierda>
-              <Valor8Izquierda style={styles.espacioArriba}>
-                {props.configuracion.c_direccion}
-              </Valor8Izquierda>
-            </ClienteValor>
-          </Linea35>
-          <Linea>
-            <SeccionItems>
-              <Campo8>ITEMS - MONEDA: DOLAR</Campo8>
-            </SeccionItems>
-          </Linea>
-          <Linea>
-            <SeccionDesc>
-              <Campo8>DESCRIPCIÓN</Campo8>
-            </SeccionDesc>
-            <SeccionCant>
-              <Campo8>CANT.</Campo8>
-            </SeccionCant>
-            <Seccion10>
-              <Campo8>UNITARIO</Campo8>
-            </Seccion10>
-            <Seccion10>
-              <Campo8>FLETE</Campo8>
-            </Seccion10>
-            <Seccion10>
-              <Campo8>EXENTAS</Campo8>
-            </Seccion10>
-            <Seccion10>
-              <Campo8>GRAV. 5%</Campo8>
-            </Seccion10>
-            <Seccion10>
-              <Campo8>GRAV. 10%</Campo8>
-            </Seccion10>
-          </Linea>
-          <Linea>
-            <SeccionDescValor>
-              <Campo8>
-                Alienware M15 Gaming Laptop Intel i7-8750H, 15.6" 300 Nits FHD 144hz Refresh Rate
-                -16GB, 2x8GB, 512GB PCIe M.2 SSD, RTX 2060 6GB, 17.9mm Thick & 4.78lbs
-              </Campo8>
-            </SeccionDescValor>
-            <SeccionCant>
-              <Campo8>999</Campo8>
-            </SeccionCant>
-            <Seccion10>
-              <Valor8>100.000.0000</Valor8>
-            </Seccion10>
-            <Seccion10>
-              <Valor8>100.000.0000</Valor8>
-            </Seccion10>
-            <Seccion10>
-              <Valor8>100.000.000</Valor8>
-            </Seccion10>
-            <Seccion10>
-              <Valor8>100.000.000</Valor8>
-            </Seccion10>
-            <Seccion10>
-              <Valor8>100.000.000</Valor8>
-            </Seccion10>
-          </Linea>
-        </Page>
-      </Document>
-    </PDFViewer>
-  );
-};
-
-const MyDocument3 = props => {
-  //console.log(props.configuracion.t_logo);
-  return (
-    <div size="A4" style={styles.page}>
-      <div style={styles.section_logo}>
-        {props.blob ? <img alt="logo" src={props.blob} style={styles.logo} /> : null}
-      </div>
-      <div style={styles.section}>
-        <div>Empresa: {props.configuracion.c_razon_social}</div>
-      </div>
-    </div>
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Linea50>
+          <SeccionLogo>
+            {props.blob ? <Image src={props.blob} style={styles.logo} /> : null}
+          </SeccionLogo>
+          <Seccion1>
+            <Campo>Empresa:</Campo>
+            <Campo style={styles.espacioArriba}>Dirección:</Campo>
+          </Seccion1>
+          <Seccion2>
+            <Valor>{props.configuracion.c_razon_social}</Valor>
+            <Valor style={styles.espacioArriba}>{props.configuracion.c_direccion}</Valor>
+          </Seccion2>
+          <Seccion3>
+            <Campo>Fecha:</Campo>
+            <Campo style={styles.espacioArriba}>Presupuesto N.:</Campo>
+          </Seccion3>
+          <Seccion4>
+            <Valor>01/01/2000</Valor>
+            <Valor style={styles.espacioArriba}>000001</Valor>
+          </Seccion4>
+        </Linea50>
+        <Linea>
+          <SeccionSlogan>
+            <Campo8 style={styles.negrito}>{props.configuracion.c_slogan}</Campo8>
+          </SeccionSlogan>
+        </Linea>
+        <Linea35>
+          <Cliente>
+            <Campo8Derecha>Cliente:</Campo8Derecha>
+            <Campo8Derecha style={styles.espacioArriba}>Dirección:</Campo8Derecha>
+          </Cliente>
+          <ClienteValor>
+            <Valor8Izquierda>Cliente xxxx</Valor8Izquierda>
+            <Valor8Izquierda style={styles.espacioArriba}>
+              {props.configuracion.c_direccion}
+            </Valor8Izquierda>
+          </ClienteValor>
+        </Linea35>
+        <Linea>
+          <SeccionItems>
+            <Campo8>ITEMS - MONEDA: DOLAR</Campo8>
+          </SeccionItems>
+        </Linea>
+        <Linea>
+          <SeccionDesc>
+            <Campo8>DESCRIPCIÓN</Campo8>
+          </SeccionDesc>
+          <SeccionCant>
+            <Campo8>CANT.</Campo8>
+          </SeccionCant>
+          <Seccion10>
+            <Campo8>UNITARIO</Campo8>
+          </Seccion10>
+          <Seccion10>
+            <Campo8>FLETE</Campo8>
+          </Seccion10>
+          <Seccion10>
+            <Campo8>EXENTAS</Campo8>
+          </Seccion10>
+          <Seccion10>
+            <Campo8>GRAV. 5%</Campo8>
+          </Seccion10>
+          <Seccion10>
+            <Campo8>GRAV. 10%</Campo8>
+          </Seccion10>
+        </Linea>
+        <Linea>
+          <SeccionDescValor>
+            <Campo8>
+              Alienware M15 Gaming Laptop Intel i7-8750H, 15.6" 300 Nits FHD 144hz Refresh Rate
+              -16GB, 2x8GB, 512GB PCIe M.2 SSD, RTX 2060 6GB, 17.9mm Thick & 4.78lbs
+            </Campo8>
+          </SeccionDescValor>
+          <SeccionCant>
+            <Campo8>999</Campo8>
+          </SeccionCant>
+          <Seccion10>
+            <Valor8>100.000.0000</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>100.000.0000</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>100.000.000</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>100.000.000</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>100.000.000</Valor8>
+          </Seccion10>
+        </Linea>
+      </Page>
+    </Document>
   );
 };
 
@@ -375,7 +353,16 @@ export class GenerarPdf extends Component {
     const { img } = this.state;
     return (
       <div className="presupuestos-generar-pdf">
-        {img ? <MyDocument {...this.props} blob={img} /> : 'Carregando...'}
+        {img ? (
+          <PDFDownloadLink
+            fileName="presupuesto_1_teste.pdf"
+            document={<MyDocument {...this.props} blob={img} />}
+          >
+           {({ blob, url, loading, error }) => (loading ? 'Carregando...' : 'Clique aqui para descargar!')}
+           </PDFDownloadLink>
+        ) : (
+          'Carregando...'
+        )}
       </div>
     );
   }

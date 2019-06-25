@@ -4,6 +4,7 @@
 import {
   ListaPresupuestos,
   FormPresupuestosContainer,
+  GenerarPdf,
 } from './';
 
 export default {
@@ -15,5 +16,6 @@ export default {
     { path: 'aprobados', name: 'Presupuestos aprobados', component: ListaPresupuestos, protegido:true },
     { path: 'nuevo', name: 'Nuevo presupuesto', component: FormPresupuestosContainer, protegido:true },
     { path: 'editar/:id', name: 'Editar presupuesto', component: FormPresupuestosContainer, protegido:true },
+    { path: 'generar_pdf/:id', name: 'Generar pdf', component: GenerarPdf },
   ],
 };

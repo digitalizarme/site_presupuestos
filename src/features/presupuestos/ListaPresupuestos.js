@@ -81,9 +81,9 @@ const columns = [
     searchable: false,
     formatter: (cell, row, rowIndex) => {
       return (
-        <Button type="button" color="primary" size="md">
+        <a  className="btn-primary btn btn-md" target="_blank" size="md" href="/presupuestos/generar_pdf/1">
           <FontAwesomeIcon icon={faPrint} />
-        </Button>
+        </a>
       );
     },
     attrs: { width: '5%' },

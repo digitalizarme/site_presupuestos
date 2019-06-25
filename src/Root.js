@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import history from './common/history';
 import swal from 'sweetalert';
@@ -107,7 +107,7 @@ function renderRouteConfigV3(routes, contextPath, store) {
 
   routes.forEach(item => renderRoute(item, contextPath));
   // Use Switch so that only the first matched route is rendered.
-  return <Switch>{children}</Switch>;
+  return <BrowserRouter><Switch>{children}</Switch></BrowserRouter>;
 }
 
 export default class Root extends React.Component {

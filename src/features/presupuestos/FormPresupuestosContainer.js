@@ -29,7 +29,6 @@ import { Principal } from '../esqueleto';
 
 import { FormPresupuestos } from './';
 import swal from 'sweetalert';
-import history from '../../common/history';
 import { formValueSelector, reduxForm, change, reset } from 'redux-form';
 import validate from 'validate.js';
 
@@ -882,6 +881,8 @@ export class FormPresupuestosContainer extends Component {
   };
 
   submit = values => {
+    const { history } = this.props;
+
     this.preSubmit(values).then(res => {
       swal({
         icon: 'success',

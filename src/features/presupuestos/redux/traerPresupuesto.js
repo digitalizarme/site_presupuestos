@@ -33,7 +33,7 @@ export function reducer(state, action) {
         ...state,
         traerPresupuestoPending: true,
         traerPresupuestoError: null,
-        presupuesto: [],
+        presupuesto: {},
         items: [],
       };
 

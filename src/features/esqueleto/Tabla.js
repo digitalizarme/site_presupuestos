@@ -23,7 +23,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Button, Row, Col } from 'reactstrap';
 import { ModalForm } from './';
-import history from '../../common/history';
 import api_axio from '../../common/api_axios';
 import mostraMensajeError from '../../common/mostraMensajeError';
 
@@ -64,6 +63,7 @@ const RemoteAll = ({
   sinModal,
   btnsExtra,
   usuario,
+  history,
   props,
 }) => {
   const options = {
@@ -397,6 +397,7 @@ export class Tabla extends Component {
           sinModal={sinModal}
           btnsExtra={btnsExtra}
           usuario={usuario}
+          history={this.props.history}
           props={this.props}
         />
       </div>

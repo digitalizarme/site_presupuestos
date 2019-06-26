@@ -33,6 +33,7 @@ export function reducer(state, action) {
         ...state,
         traeCuotasPending: true,
         traeCuotasError: null,
+        cuotas:[]
       };
 
     case PRESUPUESTOS_TRAE_CUOTAS_SUCCESS:

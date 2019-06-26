@@ -21,9 +21,8 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import history from '../../common/history';
 
-const deslogar = limpiarUsuario => {
+const deslogar = (limpiarUsuario, history) => {
   limpiarUsuario();
   dropToken();
   history.push('/');
@@ -41,7 +40,7 @@ const MenuDeslogado = ({ isOpen }) => (
   </Collapse>
 );
 
-const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
+const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
   <Collapse isOpen={isOpen} navbar>
     <Nav className="mr-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
@@ -132,7 +131,7 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario }) => (
         <DropdownMenu right>
           <DropdownItem>
             <NavItem>
-              <Link className="nav-link" to="#deslogar" onClick={() => deslogar(limpiarUsuario)}>
+              <Link className="nav-link" to="#deslogar" onClick={() => deslogar(limpiarUsuario,history)}>
                 Salir
               </Link>
             </NavItem>
@@ -156,7 +155,7 @@ export class Menu extends Component {
 
   render() {
     const { isOpen } = this.props.esqueleto;
-    const { usuario, configuracion } = this.props;
+    const { usuario, configuracion, history } = this.props;
     const { menuToggle, limpiarUsuario } = this.props.actions;
 
     return (
@@ -167,7 +166,7 @@ export class Menu extends Component {
           </NavbarBrand>
           <NavbarToggler color="success" onClick={menuToggle} />
           {usuario.persona ? (
-            <MenuLogado usuario={usuario} isOpen={isOpen} limpiarUsuario={limpiarUsuario} />
+            <MenuLogado usuario={usuario} isOpen={isOpen} limpiarUsuario={limpiarUsuario} history={history} />
           ) : (
             <MenuDeslogado isOpen={isOpen} />
           )}

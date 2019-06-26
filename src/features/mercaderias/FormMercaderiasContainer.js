@@ -15,7 +15,6 @@ import { Principal } from '../esqueleto';
 
 import { FormMercaderias } from './';
 import swal from 'sweetalert';
-import history from '../../common/history';
 import { formValueSelector, reduxForm } from 'redux-form';
 import validate from 'validate.js';
 
@@ -117,6 +116,7 @@ export class FormMercaderiasContainer extends Component {
 
   submit = values => {
     const { api_axio, toggleCargando } = this.props.actions;
+    const { history } = this.props;
     toggleCargando();
     const params = {
       data: values,

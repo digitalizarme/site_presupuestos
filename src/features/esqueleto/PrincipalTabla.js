@@ -21,7 +21,7 @@ export class PrincipalTabla extends Component {
         <Cargando />
         <ReactTitle title={`${titulo ? titulo : 'Principal'} | Presupuesto`} />
         <div className="margin_pie">
-          <Menu />
+          <Menu {...this.props} />
           <div className="margin_component">
             <Tabla {...this.props} toggleCargando={toggleCargando} />
           </div>

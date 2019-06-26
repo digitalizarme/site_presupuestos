@@ -11,7 +11,6 @@ import { setaUsuarioPersona } from '../acceder/redux/actions';
 
 import { FormPersonas } from './';
 import swal from 'sweetalert';
-import history from '../../common/history';
 import { formValueSelector, reduxForm } from 'redux-form';
 import validate from 'validate.js';
 
@@ -91,7 +90,7 @@ export class FormPersonasContainer extends Component {
 
   submit = values => {
     const { api_axio, setaUsuarioPersona, toggleCargando } = this.props.actions;
-    const { persona } = this.props;
+    const { persona, history } = this.props;
     toggleCargando();
     if (!values.b_comisionista) {
       values = {

@@ -19,7 +19,7 @@ export class Principal extends Component {
         <Cargando />
         <ReactTitle title={`${titulo ? titulo : 'Principal'} | Presupuesto`} />
         <div className="margin_pie">
-          <Menu />
+          <Menu {...this.props} />
           <div className="margin_component">
             {Component ? <Component {...this.props}  /> : 'Sin componente'}
           </div>

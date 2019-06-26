@@ -219,7 +219,6 @@ const Valor = styled.Text`
 
 // Create Document Component
 const MyDocument = props => {
-  //console.log(props.configuracion.t_logo);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -412,7 +411,6 @@ export class GenerarPdf extends Component {
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
-  console.log(state)
   return {
     presupuesto: state.presupuestos.presupuesto,
     items: state.presupuestos.items,

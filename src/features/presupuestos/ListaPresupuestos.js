@@ -5,8 +5,6 @@ import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
 import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import GenerarPdf from './GenerarPdf';
 import { traerPresupuesto, traeItems, traeCuotas } from './redux/actions';
 
@@ -81,7 +79,7 @@ const columns = [
     searchable: false,
     editable: false,
     formatter: (cell, row) => {
-      return <Pdf idPresupuesto={row.id} />;
+      return <GenerarPdf idPresupuesto={row.id} />;
     },
     attrs: { width: '5%' },
   },
@@ -94,42 +92,6 @@ const defaultSorted = [
   },
 ];
 
-class Pdf extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showComponent: false,
-    };
-    this._onButtonClick = this._onButtonClick.bind(this);
-  }
-
-  _onButtonClick(idPresupuesto) {
-    this.setState({
-      showComponent: true,
-    });
-  }
-
-  render() {
-    const { idPresupuesto } = this.props;
-    const { showComponent } = this.state;
-    return (
-      <div>
-        {showComponent ? (
-          <GenerarPdf idPresupuesto={idPresupuesto} />
-        ) : (
-          <button
-            className="btn-primary btn btn-md"
-            onClick={() => {
-              return this._onButtonClick(idPresupuesto);
-            }}
-          >
-            <FontAwesomeIcon icon={faPrint} />
-          </button>
-        )}
-      </div>
-    );
-  }
-}
 
 export class ListaPresupuestos extends Component {
   static propTypes = {

@@ -10,7 +10,7 @@ import moment from 'moment';
 import api_axio from '../../common/api_axios';
 import formatarNumero from '../../common/formatarNumero';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faDownload, faSpinner, faPrint } from '@fortawesome/free-solid-svg-icons';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -340,18 +340,43 @@ export class GenerarPdf extends Component {
       items: [],
       presupuesto: {},
       cuotas: [],
+      showComponent: false,
     };
+    this._onButtonClick = this._onButtonClick.bind(this);
   }
 
-  abrirPDF = (url, download) => {
-    var tag_a = document.createElement('a');
-    document.body.appendChild(tag_a);
-    tag_a.style = 'display: none';
-    tag_a.href = url;
-    tag_a.download = download;
-    tag_a.target = '_blank';
-    tag_a.click();
-  };
+  _onButtonClick(idPresupuesto) {
+    const { api_axio } = this.props.actions;
+    this.setState({
+      showComponent: true,
+    });
+    api_axio({
+      api_funcion: `presupuestos/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ presupuesto: res.data }));
+    });
+    api_axio({
+      api_funcion: `presupuestos/cuotas/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ cuotas: res.data }));
+    });
+    api_axio({
+      api_funcion: `presupuestos/itemsMercaderiasServicios/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ items: res.data }));
+    });
+    this.blob();
+  }
+
+  // abrirPDF = (url, download) => {
+  //   var tag_a = document.createElement('a');
+  //   document.body.appendChild(tag_a);
+  //   tag_a.style = 'display: none';
+  //   tag_a.href = url;
+  //   tag_a.download = download;
+  //   tag_a.target = '_blank';
+  //   tag_a.click();
+  // };
 
   blob() {
     if (this.props.configuracion.t_logo) {
@@ -369,33 +394,14 @@ export class GenerarPdf extends Component {
     }
   }
 
-  componentDidMount = () => {
-    const { idPresupuesto } = this.props;
-    const { api_axio } = this.props.actions;
-
-    this.blob();
-    api_axio({
-      api_funcion: `presupuestos/${idPresupuesto}`,
-    }).then(res => {
-      this.setState(state => ({ presupuesto: res.data }));
-    });
-    api_axio({
-      api_funcion: `presupuestos/cuotas/${idPresupuesto}`,
-    }).then(res => {
-      this.setState(state => ({ cuotas: res.data }));
-    });
-    api_axio({
-      api_funcion: `presupuestos/itemsMercaderiasServicios/${idPresupuesto}`,
-    }).then(res => {
-      this.setState(state => ({ items: res.data }));
-    });
-  };
-
   render() {
     const { img, items, presupuesto, cuotas } = this.state;
+    const { idPresupuesto } = this.props;
+    const { showComponent } = this.state;
     const props = {
       ...this.state,
       ...this.props,
+      blob: img,
     };
 
     const cargado =
@@ -407,25 +413,38 @@ export class GenerarPdf extends Component {
       ? `presupuesto_${presupuesto.id}_${presupuesto.persona.c_nombre
           .replace(/[^a-z0-9]/gi, '_')
           .toLowerCase()}.pdf`
-      : 'sin_nimbre.pdf';
+      : 'sin_nombre.pdf';
     return (
       <div className="presupuestos-generar-pdf">
-        {cargado ? (
-          <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} blob={img} />}>
-            {({ blob, url, loading, error }) =>{
-              return loading ? (
-                <span className="btn-danger btn btn-md"><FontAwesomeIcon icon={faSpinner} /></span>
-              ) : (
-                <span className="btn-success btn btn-md" >
-                  <FontAwesomeIcon icon={faDownload} />
-                </span>
-              )
-
-            }
-            }
-          </PDFDownloadLink>
+        {showComponent ? (
+          cargado ? (
+            <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
+              {({ blob, url, loading, error }) => {
+                return loading ? (
+                  <span className="btn-danger btn btn-md">
+                    <FontAwesomeIcon icon={faSpinner} />
+                  </span>
+                ) : (
+                  <span className="btn-success btn btn-md">
+                    <FontAwesomeIcon icon={faDownload} />
+                  </span>
+                );
+              }}
+            </PDFDownloadLink>
+          ) : (
+            <span className="btn-danger btn btn-md">
+              <FontAwesomeIcon icon={faSpinner} />
+            </span>
+          )
         ) : (
-          <span className="btn-danger btn btn-md"><FontAwesomeIcon icon={faSpinner} /></span>
+          <button
+            className="btn-primary btn btn-md"
+            onClick={() => {
+              return this._onButtonClick(idPresupuesto);
+            }}
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </button>
         )}
       </div>
     );

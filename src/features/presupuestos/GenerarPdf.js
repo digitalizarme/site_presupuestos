@@ -7,12 +7,10 @@ import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
 import moment from 'moment';
-import {
-  traerPresupuesto,
-  traeItems,
-  traeCuotas,
-} from './redux/actions';
+import api_axio from '../../common/api_axios';
 import formatarNumero from '../../common/formatarNumero';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -218,7 +216,7 @@ const Valor = styled.Text`
 `;
 
 // Create Document Component
-const MyDocument = props => {
+const MyDocument = ({ props }) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -289,32 +287,39 @@ const MyDocument = props => {
           </Seccion10>
         </Linea>
         {props.items.map((item, indice) => (
-        <Linea key={indice}>
-          <SeccionDescValor>
-            <Campo8>
-              {item.c_descripcion}
-            </Campo8>
-          </SeccionDescValor>
-          <SeccionCant>
-            <Campo8>{item.n_cantidad}</Campo8>
-          </SeccionCant>
-          <Seccion10>
-            <Valor8>{formatarNumero(item.n_unitario,props.presupuesto.moneda.n_decimales,true)}</Valor8>
-          </Seccion10>
-          <Seccion10>
-            <Valor8>{formatarNumero(item.n_flete,props.presupuesto.moneda.n_decimales,true)}</Valor8>
-          </Seccion10>
-          <Seccion10>
-            <Valor8>{formatarNumero(item.n_exentas,props.presupuesto.moneda.n_decimales,true)}</Valor8>
-          </Seccion10>
-          <Seccion10>
-            <Valor8>{formatarNumero(item.n_gravadas_5,props.presupuesto.moneda.n_decimales,true)}</Valor8>
-          </Seccion10>
-          <Seccion10>
-            <Valor8>{formatarNumero(item.n_gravadas_10,props.presupuesto.moneda.n_decimales,true)}</Valor8>
-          </Seccion10>
-        </Linea>
-
+          <Linea key={indice}>
+            <SeccionDescValor>
+              <Campo8>{item.c_descripcion}</Campo8>
+            </SeccionDescValor>
+            <SeccionCant>
+              <Campo8>{item.n_cantidad}</Campo8>
+            </SeccionCant>
+            <Seccion10>
+              <Valor8>
+                {formatarNumero(item.n_unitario, props.presupuesto.moneda.n_decimales, true)}
+              </Valor8>
+            </Seccion10>
+            <Seccion10>
+              <Valor8>
+                {formatarNumero(item.n_flete, props.presupuesto.moneda.n_decimales, true)}
+              </Valor8>
+            </Seccion10>
+            <Seccion10>
+              <Valor8>
+                {formatarNumero(item.n_exentas, props.presupuesto.moneda.n_decimales, true)}
+              </Valor8>
+            </Seccion10>
+            <Seccion10>
+              <Valor8>
+                {formatarNumero(item.n_gravadas_5, props.presupuesto.moneda.n_decimales, true)}
+              </Valor8>
+            </Seccion10>
+            <Seccion10>
+              <Valor8>
+                {formatarNumero(item.n_gravadas_10, props.presupuesto.moneda.n_decimales, true)}
+              </Valor8>
+            </Seccion10>
+          </Linea>
         ))}
       </Page>
     </Document>
@@ -323,7 +328,6 @@ const MyDocument = props => {
 
 export class GenerarPdf extends Component {
   static propTypes = {
-    presupuesto: PropTypes.object.isRequired,
     idPresupuesto: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired,
   };
@@ -333,17 +337,20 @@ export class GenerarPdf extends Component {
     this.blob = this.blob.bind(this);
     this.state = {
       img: null,
+      items: [],
+      presupuesto: {},
+      cuotas: [],
     };
   }
 
   abrirPDF = (url, download) => {
-      var tag_a = document.createElement('a');
-      document.body.appendChild(tag_a);
-      tag_a.style = 'display: none';
-      tag_a.href = url;
-      tag_a.download = download;
-      tag_a.target = '_blank';
-      tag_a.click();
+    var tag_a = document.createElement('a');
+    document.body.appendChild(tag_a);
+    tag_a.style = 'display: none';
+    tag_a.href = url;
+    tag_a.download = download;
+    tag_a.target = '_blank';
+    tag_a.click();
   };
 
   blob() {
@@ -364,45 +371,61 @@ export class GenerarPdf extends Component {
 
   componentDidMount = () => {
     const { idPresupuesto } = this.props;
+    const { api_axio } = this.props.actions;
 
-    const {
-      traeItems,
-      traeCuotas,
-      traerPresupuesto,
-    } = this.props.actions;
-      const params = {
-        id:idPresupuesto
-      };
-      traerPresupuesto(params);
-      traeItems(params);
-      traeCuotas(params);
-      this.blob();
-
+    this.blob();
+    api_axio({
+      api_funcion: `presupuestos/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ presupuesto: res.data }));
+    });
+    api_axio({
+      api_funcion: `presupuestos/cuotas/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ cuotas: res.data }));
+    });
+    api_axio({
+      api_funcion: `presupuestos/itemsMercaderiasServicios/${idPresupuesto}`,
+    }).then(res => {
+      this.setState(state => ({ items: res.data }));
+    });
   };
 
-
   render() {
-    const { img } = this.state;
-    const { items, presupuesto, cuotas } = this.props;
-    const cargado = Object.keys(items).length > 0 && Object.keys(presupuesto).length > 0 && Object.keys(cuotas).length > 0 && img;
+    const { img, items, presupuesto, cuotas } = this.state;
+    const props = {
+      ...this.state,
+      ...this.props,
+    };
 
+    const cargado =
+      Object.keys(items).length > 0 &&
+      Object.keys(presupuesto).length > 0 &&
+      Object.keys(cuotas).length > 0 &&
+      img;
+    const archivo = cargado
+      ? `presupuesto_${presupuesto.id}_${presupuesto.persona.c_nombre
+          .replace(/[^a-z0-9]/gi, '_')
+          .toLowerCase()}.pdf`
+      : 'sin_nimbre.pdf';
     return (
       <div className="presupuestos-generar-pdf">
         {cargado ? (
-            <PDFDownloadLink
-              fileName="presupuesto_1_teste.pdf"
-              document={<MyDocument {...this.props} blob={img} />}
-            >
-              {({ blob, url, loading, error }) =>
-                loading ? (
-                  <span>Generando...</span>
-                ) : (
-                  this.abrirPDF(url, 'presupuesto_1_teste.pdf')
-                )
-              }
-            </PDFDownloadLink>
+          <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} blob={img} />}>
+            {({ blob, url, loading, error }) =>{
+              return loading ? (
+                <span className="btn-danger btn btn-md"><FontAwesomeIcon icon={faSpinner} /></span>
+              ) : (
+                <span className="btn-success btn btn-md" >
+                  <FontAwesomeIcon icon={faDownload} />
+                </span>
+              )
+
+            }
+            }
+          </PDFDownloadLink>
         ) : (
-          <span>Generando...</span>
+          <span className="btn-danger btn btn-md"><FontAwesomeIcon icon={faSpinner} /></span>
         )}
       </div>
     );
@@ -412,9 +435,6 @@ export class GenerarPdf extends Component {
 /* istanbul ignore next */
 function mapStateToProps(state) {
   return {
-    presupuesto: state.presupuestos.presupuesto,
-    items: state.presupuestos.items,
-    cuotas: state.presupuestos.cuotas,
     configuracion: state.configuraciones.configuracion,
   };
 }
@@ -422,13 +442,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(
-      {
-        traerPresupuesto,
-        traeItems,
-        traeCuotas,
-      },
-       dispatch),
+    actions: bindActionCreators({ api_axio }, dispatch),
   };
 }
 

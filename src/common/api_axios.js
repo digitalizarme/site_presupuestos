@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API } from './constantesGenerales';
 import swal from 'sweetalert';
-import history from './history';
+// import history from './history';
 
 export default ({ api_funcion, params, type_begin, type_success, type_failure }) => {
   return dispatch => {
@@ -54,7 +54,8 @@ export default ({ api_funcion, params, type_begin, type_success, type_failure })
               button: 'OK!',
             }).then(value => {
               
-              history.push('/acceder');
+              //history.push('/acceder');
+              window.location = '/acceder';
             });
           }
           if (type_failure) {

@@ -8,6 +8,7 @@ import formatarNumero from '../../common/formatarNumero';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import GenerarPdf from './GenerarPdf';
+import { traerPresupuesto, traeItems, traeCuotas } from './redux/actions';
 
 const columns = [
   {
@@ -102,20 +103,29 @@ class Pdf extends React.Component {
     this._onButtonClick = this._onButtonClick.bind(this);
   }
 
-  _onButtonClick() {
+  _onButtonClick(idPresupuesto) {
     this.setState({
       showComponent: true,
     });
   }
 
   render() {
-    
+    const { idPresupuesto } = this.props;
+    const { showComponent } = this.state;
     return (
       <div>
-        <button className="btn-primary btn btn-md" onClick={this._onButtonClick}>
-          <FontAwesomeIcon icon={faPrint} />
-        </button>
-        {this.state.showComponent ? <GenerarPdf {...this.props} /> : null}
+        {showComponent ? (
+          <GenerarPdf idPresupuesto={idPresupuesto} />
+        ) : (
+          <button
+            className="btn-primary btn btn-md"
+            onClick={() => {
+              return this._onButtonClick(idPresupuesto);
+            }}
+          >
+            <FontAwesomeIcon icon={faPrint} />
+          </button>
+        )}
       </div>
     );
   }
@@ -153,7 +163,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({}, dispatch),
+    actions: bindActionCreators({ traerPresupuesto, traeItems, traeCuotas }, dispatch),
   };
 }
 

@@ -94,6 +94,7 @@ export class ListaPersonas extends Component {
           api_funcion={columns[0].table}
           columns={columns}
           sinModal={'personas'}
+          {...this.props}
         />
       </div>
     );

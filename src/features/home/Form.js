@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { Jumbotron, Container, Row, Col } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link } from '../esqueleto';
 
-const FraseDeslogado = () => (
+const FraseDeslogado = ({history}) => (
   <div>
     <p>Deseas empezar ahora? haga click abajo para acceder al sistema.</p>
-    <Link className="btn btn-primary btn-lg" to="/acceder">
+    <Link className="btn btn-primary btn-lg" to="/acceder" history={history}>
       Acceder ahora
     </Link>
   </div>
 );
 
-const FraseLogado = () => (
+const FraseLogado = ({history}) => (
   <div>
     <p>Deseas empezar ahora? haga click abajo para crear un nuevo presupuesto.</p>
-    <Link className="btn btn-primary btn-lg" to="/presupuestos/nuevo">
+    <Link className="btn btn-primary btn-lg" to="/presupuestos/nuevo" history={history}>
       Nuevo Presupuesto
     </Link>
   </div>
@@ -42,7 +42,7 @@ export default class Form extends Component {
                   El sistema Presupuesto tiene como finalidad ayudarle a organizar sus presupuestos
                   y poder enviarlos rapidamente a sus clientes
                 </p>
-                {persona ? <FraseLogado /> : <FraseDeslogado />}
+                {persona ? <FraseLogado history={this.props.history} /> : <FraseDeslogado history={this.props.history} />}
                 <hr className="my-4" />
               </Jumbotron>
             </Col>

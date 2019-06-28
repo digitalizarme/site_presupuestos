@@ -11,7 +11,6 @@ import swal from 'sweetalert';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { dropToken } from '../../common/tokenManager';
 import { limpiarUsuario } from '../acceder/redux/actions';
-import { Redirect } from 'react-router-dom';
 // Decorate with connect to read form values
 const selector = formValueSelector('formAcceder'); // <-- same as form name
 
@@ -27,8 +26,9 @@ export class PageAcceder extends Component {
     acceder(values)
       .then(res => {
         toggleCargando();
-        const { acceder } = this.props;
+        const { acceder,history } = this.props;
         setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
+        history.push('/');
       })
       .catch(res => {
         toggleCargando();
@@ -89,10 +89,9 @@ export class PageAcceder extends Component {
   };
 
   render() {
-    const { handleSubmit, acceder } = this.props;
-    const estoyLogado = acceder.usuario.token ? true : false;
+    const { handleSubmit } = this.props;
     return (
-      estoyLogado ? <Redirect to="/" /> : <div className="acceder-page-acceder">
+      <div className="acceder-page-acceder">
         <Principal
           titulo="Acceder"
           component={FormAcceder}

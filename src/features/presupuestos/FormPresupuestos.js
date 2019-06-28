@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from '../esqueleto';
 import PropTypes from 'prop-types';
 import { InputText, InputNumber, SuperSelect, ModalForm } from '../esqueleto';
 import { Field, FieldArray } from 'redux-form';
@@ -649,7 +649,7 @@ class FormPresupuestos extends Component {
             </Row>
             <Row className="text-right">
               <Col sm="12">
-                <Link to="/presupuestos" className="btn btn-primary">
+                <Link to="/presupuestos" className="btn btn-primary"  history={this.props.history}>
                   Cancelar
                 </Link>{' '}
                 <Button type="submit" color="success" disabled={pristine || submitting}>

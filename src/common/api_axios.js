@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { API } from './constantesGenerales';
 import swal from 'sweetalert';
-// import history from './history';
-
+import { push } from 'connected-react-router'
 export default ({ api_funcion, params, type_begin, type_success, type_failure }) => {
   return dispatch => {
     // optionally you can have getState as the second argument
@@ -55,7 +54,9 @@ export default ({ api_funcion, params, type_begin, type_success, type_failure })
             }).then(value => {
               
               //history.push('/acceder');
-              window.location = '/acceder';
+              dispatch(push('/acceder'));
+              //window.location = '/acceder';
+              //done()
             });
           }
           if (type_failure) {

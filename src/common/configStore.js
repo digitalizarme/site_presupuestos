@@ -1,10 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import { routerMiddleware } from 'react-router-redux';
-import history from './history';
+import { routerMiddleware } from 'connected-react-router'
+import historico from './history';
 import rootReducer from './rootReducer';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web and AsyncStorage for react-native
+
+export const history = historico;
 
 const router = routerMiddleware(history);
 
@@ -32,7 +34,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default function configureStore(initialState) {
-  const persistedReducer = persistReducer(persistConfig, rootReducer);
+  const persistedReducer = persistReducer(persistConfig, rootReducer(history));
 
   const store = createStore(
     persistedReducer,
@@ -48,7 +50,7 @@ export default function configureStore(initialState) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('./rootReducer', () => {
       const nextRootReducer = require('./rootReducer').default; // eslint-disable-line
-      store.replaceReducer(nextRootReducer);
+      store.replaceReducer(nextRootReducer(history));
     });
   }
   let persistor = persistStore(store);

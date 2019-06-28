@@ -10,3 +10,4 @@ export { default as SuperSelect } from './SuperSelect';
 export { default as InputNumber } from './InputNumber';
 export { default as DragDrop } from './DragDrop';
 export { default as Cargando } from './Cargando';
+export { default as Link } from './Link';

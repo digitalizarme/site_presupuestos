@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router'
 import homeReducer from '../features/home/redux/reducer';
 import commonReducer from '../features/common/redux/reducer';
 import esqueletoReducer from '../features/esqueleto/redux/reducer';
@@ -25,7 +25,7 @@ import presupuestosReducer from '../features/presupuestos/redux/reducer';
 // So that it's easy for others to understand it and Rekit could manage them.
 
 const reducerMap = {
-  router: routerReducer,
+  router: connectRouter,
   home: homeReducer,
   common: commonReducer,
   esqueleto: esqueletoReducer,
@@ -46,4 +46,7 @@ const reducerMap = {
   presupuestos: presupuestosReducer,
 };
 
-export default combineReducers(reducerMap);
+export default (history) => {
+  reducerMap.router = connectRouter(history);
+  return combineReducers(reducerMap)
+  };

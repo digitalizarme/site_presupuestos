@@ -101,14 +101,11 @@ export class ListaPresupuestos extends Component {
   render() {
     const { path } = this.props.match;
 
-    let tipoPresupuesto = '';
-    let tipoTitPresupuesto = '';
+    let tipoPresupuesto = 'pendientes';
+    let tipoTitPresupuesto = 'Pendientes';
     if (path.indexOf('aprobados') !== -1) {
       tipoPresupuesto = 'aprobados';
       tipoTitPresupuesto = 'Aprobados';
-    } else if (path.indexOf('pendientes') !== -1) {
-      tipoPresupuesto = 'pendientes';
-      tipoTitPresupuesto = 'Pendientes';
     } else if (path.indexOf('concluidos') !== -1) {
       tipoPresupuesto = 'concluidos';
       tipoTitPresupuesto = 'Concluidos';

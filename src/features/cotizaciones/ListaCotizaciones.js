@@ -252,7 +252,7 @@ function mapStateToProps(state) {
     optionsMonedas.push(monedaObj);
   }
   let initialValues = state.esqueleto.selected[0];
-  if (initialValues) {
+  if (initialValues && initialValues.c_monedaOrigemDestino) {
     const { c_monedaOrigemDestino } = initialValues;
     if (c_monedaOrigemDestino.length === 7) {
       const c_monedaOrigem = c_monedaOrigemDestino.slice(0, 3);

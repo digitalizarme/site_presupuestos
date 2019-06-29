@@ -92,7 +92,6 @@ const defaultSorted = [
   },
 ];
 
-
 export class ListaPresupuestos extends Component {
   static propTypes = {
     presupuestos: PropTypes.object.isRequired,
@@ -100,12 +99,26 @@ export class ListaPresupuestos extends Component {
   };
 
   render() {
+    const { path } = this.props.match;
+
+    let tipoPresupuesto = '';
+    let tipoTitPresupuesto = '';
+    if (path.indexOf('aprobados') !== -1) {
+      tipoPresupuesto = 'aprobados';
+      tipoTitPresupuesto = 'Aprobados';
+    } else if (path.indexOf('pendientes') !== -1) {
+      tipoPresupuesto = 'pendientes';
+      tipoTitPresupuesto = 'Pendientes';
+    } else if (path.indexOf('concluidos') !== -1) {
+      tipoPresupuesto = 'concluidos';
+      tipoTitPresupuesto = 'Concluidos';
+    }
     return (
       <div className="presupuestos-lista-presupuestos">
         <PrincipalTabla
-          titulo={'Lista de Presupuestos'}
+          titulo={`Lista de Presupuestos ${tipoTitPresupuesto}`}
           defaultSorted={defaultSorted}
-          api_funcion={columns[0].table}
+          api_funcion={`${columns[0].table}/${tipoPresupuesto}`}
           columns={columns}
           sinModal={'/presupuestos'}
           {...this.props}

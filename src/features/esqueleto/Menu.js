@@ -58,11 +58,14 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
                 Pendientes
               </Link>
             </NavItem>
-          </DropdownItem>
-          <DropdownItem>
             <NavItem>
               <Link className="nav-link" to="/presupuestos/aprobados">
                 Aprobados
+              </Link>
+            </NavItem>
+            <NavItem>
+              <Link className="nav-link" to="/presupuestos/concluidos">
+                Concluidos
               </Link>
             </NavItem>
           </DropdownItem>

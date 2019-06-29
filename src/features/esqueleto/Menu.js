@@ -12,7 +12,6 @@ import {
   Collapse,
   Navbar,
   NavbarToggler,
-  NavbarBrand,
   Nav,
   NavItem,
   UncontrolledDropdown,
@@ -204,7 +203,6 @@ export class Menu extends Component {
       <div className="esqueleto-menu">
         <Router history={this.props.history}>
           <Navbar color="dark" dark expand="md">
-            <NavbarBrand>
               <Link to="/">
                 <img
                   src={configuracion.t_logo ? configuracion.t_logo : logo}
@@ -213,7 +211,6 @@ export class Menu extends Component {
                   style={{ maxWidth: '50px' }}
                 />
               </Link>
-            </NavbarBrand>
             <NavbarToggler color="success" onClick={menuToggle} />
             {usuario.persona ? (
               <MenuLogado

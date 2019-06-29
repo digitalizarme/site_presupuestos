@@ -72,6 +72,7 @@ export function reducer(state, action) {
         sortOrder: action.data.sortOrder,
         defaultSorted: action.data.defaultSorted,
         selected: [],
+        data: { items: [], total: 0 },
       };
 
     case ESQUELETO_PROCESAR_TABLA_SUCCESS:

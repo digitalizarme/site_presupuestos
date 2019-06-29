@@ -400,7 +400,7 @@ export class GenerarPdf extends Component {
   }
 
   render() {
-    const { img, items, presupuesto, cuotas } = this.state;
+    const { img, items, presupuesto } = this.state;
     const { idPresupuesto } = this.props;
     const { showComponent } = this.state;
     const props = {

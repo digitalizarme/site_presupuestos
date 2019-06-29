@@ -1204,9 +1204,8 @@ function mapStateToProps(state) {
     ? optionsMonedas.find(moneda => moneda.value === itemSeleccionado.n_id_moneda)
     : null;
   descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
-
   if (
-    selectorItem(state, 'c_descripcion') &&
+    monedaSeleccionada && selectorItem(state, 'c_descripcion') &&
     optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion')) == null
   ) {
     const itemObj = {

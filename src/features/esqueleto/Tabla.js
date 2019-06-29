@@ -19,10 +19,7 @@ import mostraMensajeError from '../../common/mostraMensajeError';
 
 const CustomTotal = (from, to, size) => (
     <span className="react-bootstrap-table-pagination-total">
-        {from}
-        - {from + to - 1}
-        / {size}
-        Registros
+        {`${from}-${from + to - 1} / ${size} Registros`}
     </span>
 );
 
@@ -233,15 +230,15 @@ const RemoteAll = ({
                             <Col xs="12" lg="6" className="espacio_abajo">
                                 <Button type="button" color="success" size="md" onClick={agregar}>
                                     <FontAwesomeIcon icon={faPlus}/>
-                                    Agregar
+                                    {' '}Agregar
                                 </Button>{' '}
                                 <Button type="button" color="info" size="md" onClick={editar}>
                                     <FontAwesomeIcon icon={faEdit}/>
-                                    Editar
+                                    {' '}Editar
                                 </Button>{' '}
                                 <Button type="button" color="danger" size="md" onClick={eliminar}>
                                     <FontAwesomeIcon icon={faTrashAlt}/>
-                                    Eliminar
+                                    {' '}Eliminar
                                 </Button>{' '} {btnsExtra
                                     ? btnsExtra
                                     : null}

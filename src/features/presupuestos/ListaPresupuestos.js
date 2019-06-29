@@ -7,6 +7,9 @@ import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
 import GenerarPdf from './GenerarPdf';
 import { traerPresupuesto, traeItems, traeCuotas } from './redux/actions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {   faPrint } from '@fortawesome/free-solid-svg-icons';
+import swal from 'sweetalert';
 
 const columns = [
   {
@@ -79,11 +82,30 @@ const columns = [
     searchable: false,
     editable: false,
     formatter: (cell, row) => {
-      return <GenerarPdf idPresupuesto={row.id} />;
+      return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0?<GenerarPdf idPresupuesto={row.id} />:<Incompletos />;
     },
     attrs: { width: '5%' },
   },
 ];
+
+
+
+const Incompletos = () => {
+  return (
+    <button className="btn-danger btn btn-md" onClick={clickIncompleto}>
+      <FontAwesomeIcon icon={faPrint} />
+    </button>
+  );
+};
+
+const clickIncompleto = () =>(
+    swal({
+      title: 'Ops',
+      text: 'Este presupuesto no esta completo. Genere los pagos primero.',
+      icon: 'warning',
+      button: 'OK!',
+    })
+);
 
 const defaultSorted = [
   {

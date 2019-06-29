@@ -10,7 +10,12 @@ import moment from 'moment';
 import api_axio from '../../common/api_axios';
 import formatarNumero from '../../common/formatarNumero';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload, faSpinner, faPrint, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faDownload,
+  faSpinner,
+  faPrint,
+  faExclamationCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -359,11 +364,11 @@ export class GenerarPdf extends Component {
       api_funcion: `presupuestos/cuotas/${idPresupuesto}`,
     }).then(res => {
       this.setState(state => ({ cuotas: res.data }));
-    });
-    api_axio({
-      api_funcion: `presupuestos/itemsMercaderiasServicios/${idPresupuesto}`,
-    }).then(res => {
-      this.setState(state => ({ items: res.data }));
+      api_axio({
+        api_funcion: `presupuestos/itemsMercaderiasServicios/${idPresupuesto}`,
+      }).then(res => {
+        this.setState(state => ({ items: res.data }));
+      });
     });
     this.blob();
   }
@@ -407,7 +412,6 @@ export class GenerarPdf extends Component {
     const cargado =
       Object.keys(items).length > 0 &&
       Object.keys(presupuesto).length > 0 &&
-      Object.keys(cuotas).length > 0 &&
       img;
     const archivo = cargado
       ? `presupuesto_${presupuesto.id}_${presupuesto.persona.c_nombre
@@ -424,15 +428,15 @@ export class GenerarPdf extends Component {
                   <span className="btn-danger btn btn-md">
                     <FontAwesomeIcon icon={faSpinner} />
                   </span>
-                ) : !error?(
+                ) : !error ? (
                   <span className="btn-success btn btn-md">
                     <FontAwesomeIcon icon={faDownload} />
                   </span>
-                ):(
+                ) : (
                   <span className="btn-danger btn btn-md">
                     <FontAwesomeIcon icon={faExclamationCircle} />
                     {console.log(error)}
-                  </span> 
+                  </span>
                 );
               }}
             </PDFDownloadLink>

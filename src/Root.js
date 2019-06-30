@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router';
 import swal from 'sweetalert';
@@ -28,7 +27,7 @@ function soyAdmin() {
   return res;
 }
 
-function redireciona(props) {
+function redireciona(props,history) {
   swal({
     title: 'Ops',
     text: !estoyLogado()
@@ -37,12 +36,7 @@ function redireciona(props) {
     icon: 'error',
     button: 'OK!',
   });
-  return <Redirect
-    to={{
-      pathname: !estoyLogado() ? '/acceder' : '/',
-      state: { from: props.location ? props.location : props },
-    }}
-  />
+  return history.push(!estoyLogado() ? '/acceder' : '/');
 }
 
 function renderRouteConfigV3(routes, contextPath, store, history) {
@@ -79,7 +73,7 @@ function renderRouteConfigV3(routes, contextPath, store, history) {
             estoyLogado() || !protegido || !soloAdmin || (soloAdmin && soyAdmin()) ? (
               <Component {...props}>{childRoutes}</Component>
             ) : (
-              redireciona(props)
+              redireciona(props,history)
             )
           }
           path={newContextPath}
@@ -94,7 +88,7 @@ function renderRouteConfigV3(routes, contextPath, store, history) {
             (estoyLogado() || !protegido) && ((soloAdmin && soyAdmin()) || !soloAdmin) ? (
               <Component {...props} />
             ) : (
-              redireciona(props)
+              redireciona(props,history)
             )
           }
           path={newContextPath}

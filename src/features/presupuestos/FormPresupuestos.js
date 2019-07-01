@@ -143,6 +143,7 @@ class FormPresupuestos extends Component {
       onChangePagos,
       onChangeValorCuota,
       n_dif_cuotas,
+      onChageStatus
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -209,6 +210,7 @@ class FormPresupuestos extends Component {
                   options={optionsStatus}
                   component={SuperSelect}
                   placeholder="Elija"
+                  onChange={onChageStatus}
                 />
               </Col>
             </Row>

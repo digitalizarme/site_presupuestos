@@ -541,6 +541,20 @@ export class FormPresupuestosContainer extends Component {
     }
   };
 
+  onChageStatus = (event, newValue, previousValue, name) => {
+    if (newValue && newValue === 4) {
+      swal({
+        title: 'Ops',
+        text: 'Esse status só é permitido quando todas as parcelas estão pagas',
+        icon: 'warning',
+        button: 'OK!',
+      });
+      setTimeout(() => {
+        this.props.dispatch(change('formPresupuestos', 'n_id_status', previousValue));
+      }, 100);
+    }
+  };
+
   onChangePesoFlete = idFlete => {
     if (idFlete) {
       const { optionsFletes, monedaSeleccionada, n_peso } = this.props;
@@ -1016,6 +1030,7 @@ export class FormPresupuestosContainer extends Component {
           onChangePesoFlete={this.onChangePesoFlete}
           onChangePagos={this.onChangePagos}
           onChangeValorCuota={this.onChangeValorCuota}
+          onChageStatus={this.onChageStatus}
         />
       </div>
     );
@@ -1205,7 +1220,8 @@ function mapStateToProps(state) {
     : null;
   descMonedaItem = descMonedaItem ? descMonedaItem.label : '';
   if (
-    monedaSeleccionada && selectorItem(state, 'c_descripcion') &&
+    monedaSeleccionada &&
+    selectorItem(state, 'c_descripcion') &&
     optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion')) == null
   ) {
     const itemObj = {

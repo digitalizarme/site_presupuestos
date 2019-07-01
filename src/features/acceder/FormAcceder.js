@@ -46,7 +46,7 @@ export default class FormAcceder extends Component {
                     className="form-control"
                     onBlur={onBlurEmail}
                     onChange={onChangeEmail}
-                    autocomplete="on"
+                    autoComplete="on"
                   />
                 </InputGroup>
                 <span className="text-danger">{acceder.verificadoEmail ? errorEmail : null}</span>
@@ -65,7 +65,7 @@ export default class FormAcceder extends Component {
                     type="password"
                     className="form-control"
                     disabled={!acceder.existeEmail}
-                    autocomplete="on"
+                    autoComplete="on"
                   />
                 </InputGroup>
                 <br />

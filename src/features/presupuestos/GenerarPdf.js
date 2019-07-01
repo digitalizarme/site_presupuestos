@@ -16,6 +16,7 @@ import {
   faPrint,
   faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
+import is from 'is_js';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
   const byteCharacters = atob(b64Data);
@@ -333,7 +334,6 @@ const MyDocument = ({ props }) => {
 
 export class GenerarPdf extends Component {
   static propTypes = {
-    idPresupuesto: PropTypes.number.isRequired,
     actions: PropTypes.object.isRequired,
   };
 
@@ -351,10 +351,20 @@ export class GenerarPdf extends Component {
   }
 
   _onButtonClick(idPresupuesto) {
+    if (is.ios()) {
+      window.open(`/presupuestos/generar_pdf/${idPresupuesto}`);
+    } else {
+      this.setState({
+        showComponent: true,
+      });
+
+      this.descargaInfos(idPresupuesto);
+    }
+  }
+
+  descargaInfos = idPresupuesto => {
     const { api_axio } = this.props.actions;
-    this.setState({
-      showComponent: true,
-    });
+
     api_axio({
       api_funcion: `presupuestos/${idPresupuesto}`,
     }).then(res => {
@@ -371,17 +381,16 @@ export class GenerarPdf extends Component {
       });
     });
     this.blob();
-  }
+  };
 
-  // abrirPDF = (url, download) => {
-  //   var tag_a = document.createElement('a');
-  //   document.body.appendChild(tag_a);
-  //   tag_a.style = 'display: none';
-  //   tag_a.href = url;
-  //   tag_a.download = download;
-  //   tag_a.target = '_blank';
-  //   tag_a.click();
-  // };
+  altura = document.body.style.marginBottom;
+
+  componentDidMount = () => {
+    if (this.props.match && this.props.match.params && this.props.match.params.id) {
+      const idPresupuesto = this.props.match.params.id;
+      this.descargaInfos(idPresupuesto);
+    }
+  };
 
   blob() {
     if (this.props.configuracion.t_logo) {
@@ -401,18 +410,21 @@ export class GenerarPdf extends Component {
 
   render() {
     const { img, items, presupuesto } = this.state;
-    const { idPresupuesto } = this.props;
+    let { idPresupuesto } = this.props;
     const { showComponent } = this.state;
     const props = {
       ...this.state,
       ...this.props,
       blob: img,
     };
+    let modoDescarga = true;
 
-    const cargado =
-      Object.keys(items).length > 0 &&
-      Object.keys(presupuesto).length > 0 &&
-      img;
+    if (!idPresupuesto) {
+      idPresupuesto = this.props.match.params.id;
+      modoDescarga = false;
+    }
+
+    const cargado = Object.keys(items).length > 0 && Object.keys(presupuesto).length > 0 && img;
     const archivo = cargado
       ? `presupuesto_${presupuesto.id}_${presupuesto.persona.c_nombre
           .replace(/[^a-z0-9]/gi, '_')
@@ -420,7 +432,7 @@ export class GenerarPdf extends Component {
       : 'sin_nombre.pdf';
     return (
       <div className="presupuestos-generar-pdf">
-        {showComponent ? (
+        {showComponent && modoDescarga && !is.ios() ? (
           cargado ? (
             <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
               {({ blob, url, loading, error }) => {
@@ -435,7 +447,6 @@ export class GenerarPdf extends Component {
                 ) : (
                   <span className="btn-danger btn btn-md">
                     <FontAwesomeIcon icon={faExclamationCircle} />
-                    {console.log(error)}
                   </span>
                 );
               }}
@@ -445,7 +456,7 @@ export class GenerarPdf extends Component {
               <FontAwesomeIcon icon={faSpinner} />
             </span>
           )
-        ) : (
+        ) : modoDescarga ? (
           <button
             className="btn-primary btn btn-md"
             onClick={() => {
@@ -454,6 +465,20 @@ export class GenerarPdf extends Component {
           >
             <FontAwesomeIcon icon={faPrint} />
           </button>
+        ) : cargado ? (
+            <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
+              {({ blob, url, loading, error }) => {
+                return loading ? (
+                  'Cargando...'
+                ) : !error ? (
+                  'Clique aqui'
+                ) : (
+                  'Error al tratar de generar PDF'
+                );
+              }}
+            </PDFDownloadLink>
+        ) : (
+          'Cargando...'
         )}
       </div>
     );

@@ -33,7 +33,6 @@ export function reducer(state, action) {
         ...state,
         traerConfiguracionPending: true,
         traerConfiguracionError: null,
-        configuracion: {},
       };
 
     case CONFIGURACIONES_TRAER_CONFIGURACION_SUCCESS:
@@ -50,7 +49,9 @@ export function reducer(state, action) {
       return {
         ...state,
         traerConfiguracionPending: false,
-        traerConfiguracionError: action.data.error,
+        traerConfiguracionError: null,
+        configuracion: {},
+
       };
 
     case CONFIGURACIONES_TRAER_CONFIGURACION_DISMISS_ERROR:

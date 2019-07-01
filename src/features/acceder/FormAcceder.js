@@ -7,12 +7,17 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 export default class FormAcceder extends Component {
   static propTypes = {};
 
-
-
   render() {
-    const { enviarFormulario, submitting, pristine, acceder, onBlurEmail, email, errorEmail, onChangeEmail } = this.props;
-
-
+    const {
+      enviarFormulario,
+      submitting,
+      pristine,
+      acceder,
+      onBlurEmail,
+      email,
+      errorEmail,
+      onChangeEmail,
+    } = this.props;
 
     return (
       <div className="servicios-grupo-form">
@@ -41,9 +46,10 @@ export default class FormAcceder extends Component {
                     className="form-control"
                     onBlur={onBlurEmail}
                     onChange={onChangeEmail}
+                    autocomplete="on"
                   />
                 </InputGroup>
-                <span className="text-danger">{acceder.verificadoEmail?errorEmail:null}</span>
+                <span className="text-danger">{acceder.verificadoEmail ? errorEmail : null}</span>
 
                 <br />
                 <InputGroup>
@@ -59,6 +65,7 @@ export default class FormAcceder extends Component {
                     type="password"
                     className="form-control"
                     disabled={!acceder.existeEmail}
+                    autocomplete="on"
                   />
                 </InputGroup>
                 <br />

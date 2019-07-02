@@ -325,27 +325,31 @@ const MyDocument = ({ props }) => {
   );
 };
 
-const PdfVisualizar = ({ props, cargado }) => {
-  if (cargado) {
-    const body = document.body,
-      html = document.documentElement;
-
-    const height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight,
-    );
-    document.body.style.marginBottom = 0;
-
-    return (
-      <PDFViewer width="100%" height={height}>
-        <MyDocument props={props} />
-      </PDFViewer>
-    );
+const PdfVisualizar = ({ props, cargado, archivo }) => {
+  if (is.ios()) {
+    return <PdfDescargar props={props} cargado={cargado} archivo={archivo} />;
   } else {
-    return 'Cargando...';
+    if (cargado) {
+      const body = document.body,
+        html = document.documentElement;
+
+      const height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight,
+      );
+      document.body.style.marginBottom = 0;
+
+      return (
+        <PDFViewer width="100%" height={height}>
+          <MyDocument props={props} />
+        </PDFViewer>
+      );
+    } else {
+      return 'Cargando...';
+    }
   }
 };
 
@@ -354,24 +358,36 @@ const PdfDescargar = ({ cargado, props, archivo }) => {
     <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
       {({ blob, url, loading, error }) => {
         return loading ? (
-          <span className="btn-danger btn btn-md">
-            <FontAwesomeIcon icon={faSpinner} />
-          </span>
+          !is.ios() ? (
+            <span className="btn-danger btn btn-md">
+              <FontAwesomeIcon icon={faSpinner} />
+            </span>
+          ) : (
+            'Cargando...'
+          )
         ) : !error ? (
-          <span className="btn-success btn btn-md">
-            <FontAwesomeIcon icon={faDownload} />
-          </span>
-        ) : (
+          !is.ios() ? (
+            <span className="btn-success btn btn-md">
+              <FontAwesomeIcon icon={faDownload} />
+            </span>
+          ) : (
+            'Abrir PDF'
+          )
+        ) : !is.ios() ? (
           <span className="btn-danger btn btn-md">
             <FontAwesomeIcon icon={faExclamationCircle} />
           </span>
+        ) : (
+          'Error al tratar de generar el PDF'
         );
       }}
     </PDFDownloadLink>
-  ) : (
+  ) : !is.ios() ? (
     <span className="btn-danger btn btn-md">
       <FontAwesomeIcon icon={faSpinner} />
     </span>
+  ) : (
+    'Cargando...'
   );
 };
 

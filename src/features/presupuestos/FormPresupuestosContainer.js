@@ -413,7 +413,6 @@ export class FormPresupuestosContainer extends Component {
     const { n_total_general, decimales } = this.props;
     let total = 0;
     fields.map((campo, indice) => {
-      console.log(total);
 
       if (indice === actual.indice) {
         total += parseFloat(actual.valor);
@@ -653,16 +652,16 @@ export class FormPresupuestosContainer extends Component {
               if (res.data && res.data.length > 0) {
                 n_cotizacion = parseFloat(res.data[0].n_valor);
                 unitario *= n_cotizacion;
-                unitario = unitario.toFixed(itemSeleccionado.n_decimales_moneda);
+                unitario = unitario.toFixed(monedaSeleccionada.extra.n_decimales);
 
                 exentas *= n_cotizacion;
-                exentas = exentas.toFixed(itemSeleccionado.n_decimales_moneda);
+                exentas = exentas.toFixed(monedaSeleccionada.extra.n_decimales);
 
                 gravadas_5 *= n_cotizacion;
-                gravadas_5 = gravadas_5.toFixed(itemSeleccionado.n_decimales_moneda);
+                gravadas_5 = gravadas_5.toFixed(monedaSeleccionada.extra.n_decimales);
 
                 gravadas_10 *= n_cotizacion;
-                gravadas_10 = gravadas_10.toFixed(itemSeleccionado.n_decimales_moneda);
+                gravadas_10 = gravadas_10.toFixed(monedaSeleccionada.extra.n_decimales);
 
                 atualizaCamposItem({
                   dispatch: this.props.dispatch,
@@ -718,7 +717,7 @@ export class FormPresupuestosContainer extends Component {
               if (res.data && res.data.length > 0) {
                 const cotizacion = res.data[0];
                 flete *= parseFloat(cotizacion.n_valor);
-                flete = flete.toFixed(itemSeleccionado.n_decimales_flete_moneda);
+                flete = flete.toFixed(monedaSeleccionada.extra.n_decimales);
                 atualizaCamposItem({ dispatch: this.props.dispatch, flete });
               } else {
                 swal({

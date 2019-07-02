@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Page, Image, Document, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
+import { Page, Image, Document, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
@@ -223,6 +223,9 @@ const Valor = styled.Text`
 
 // Create Document Component
 const MyDocument = ({ props }) => {
+  const decimales = parseInt(props.presupuesto.moneda.n_decimales);
+  console.log(props);
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -301,34 +304,110 @@ const MyDocument = ({ props }) => {
               <Campo8>{item.n_cantidad}</Campo8>
             </SeccionCant>
             <Seccion10>
-              <Valor8>
-                {formatarNumero(item.n_unitario, props.presupuesto.moneda.n_decimales, true)}
-              </Valor8>
+              <Valor8>{formatarNumero(item.n_unitario, decimales, true)}</Valor8>
             </Seccion10>
             <Seccion10>
-              <Valor8>
-                {formatarNumero(item.n_flete, props.presupuesto.moneda.n_decimales, true)}
-              </Valor8>
+              <Valor8>{formatarNumero(item.n_flete, decimales, true)}</Valor8>
             </Seccion10>
             <Seccion10>
-              <Valor8>
-                {formatarNumero(item.n_exentas, props.presupuesto.moneda.n_decimales, true)}
-              </Valor8>
+              <Valor8>{formatarNumero(item.n_exentas, decimales, true)}</Valor8>
             </Seccion10>
             <Seccion10>
-              <Valor8>
-                {formatarNumero(item.n_gravadas_5, props.presupuesto.moneda.n_decimales, true)}
-              </Valor8>
+              <Valor8>{formatarNumero(item.n_gravadas_5, decimales, true)}</Valor8>
             </Seccion10>
             <Seccion10>
-              <Valor8>
-                {formatarNumero(item.n_gravadas_10, props.presupuesto.moneda.n_decimales, true)}
-              </Valor8>
+              <Valor8>{formatarNumero(item.n_gravadas_10, decimales, true)}</Valor8>
             </Seccion10>
           </Linea>
         ))}
       </Page>
     </Document>
+  );
+};
+
+const PdfVisualizarOld = ({ props, cargado }) => {
+  if (cargado) {
+    const body = document.body,
+      html = document.documentElement;
+
+    const height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+    );
+    document.body.style.marginBottom = 0;
+
+    return (
+      <PDFViewer width="100%" height={height}>
+        <MyDocument props={props} />
+      </PDFViewer>
+    );
+  } else {
+    return 'Cargando...';
+  }
+};
+
+const PdfVisualizar = ({ props, cargado, archivo }) => {
+  if (cargado) {
+    const body = document.body,
+      html = document.documentElement;
+
+    const height = Math.max(
+      body.scrollHeight,
+      body.offsetHeight,
+      html.clientHeight,
+      html.scrollHeight,
+      html.offsetHeight,
+    );
+    document.body.style.marginBottom = 0;
+
+    return (
+      <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
+        {({ blob, url, loading, error }) => {
+          return !loading ? (
+            <embed
+              height={height}
+              width='100%'
+              id="idIframe"
+              src={url}
+              type="application/pdf"
+            />
+          ) : (
+            'Cargando...'
+          );
+        }}
+      </PDFDownloadLink>
+    );
+  } else {
+    return 'Cargando...';
+  }
+};
+
+const PdfDescargar = ({ cargado, props, archivo }) => {
+  return cargado ? (
+    <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
+      {({ blob, url, loading, error }) => {
+        return loading ? (
+          <span className="btn-danger btn btn-md">
+            <FontAwesomeIcon icon={faSpinner} />
+          </span>
+        ) : !error ? (
+          <span className="btn-success btn btn-md">
+            <FontAwesomeIcon icon={faDownload} />
+          </span>
+        ) : (
+          <span className="btn-danger btn btn-md">
+            <FontAwesomeIcon icon={faExclamationCircle} />
+          </span>
+        );
+      }}
+    </PDFDownloadLink>
+  ) : (
+    <span className="btn-danger btn btn-md">
+      <FontAwesomeIcon icon={faSpinner} />
+    </span>
   );
 };
 
@@ -432,30 +511,8 @@ export class GenerarPdf extends Component {
       : 'sin_nombre.pdf';
     return (
       <div className="presupuestos-generar-pdf">
-        {showComponent && modoDescarga && !is.ios() ? (
-          cargado ? (
-            <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
-              {({ blob, url, loading, error }) => {
-                return loading ? (
-                  <span className="btn-danger btn btn-md">
-                    <FontAwesomeIcon icon={faSpinner} />
-                  </span>
-                ) : !error ? (
-                  <span className="btn-success btn btn-md">
-                    <FontAwesomeIcon icon={faDownload} />
-                  </span>
-                ) : (
-                  <span className="btn-danger btn btn-md">
-                    <FontAwesomeIcon icon={faExclamationCircle} />
-                  </span>
-                );
-              }}
-            </PDFDownloadLink>
-          ) : (
-            <span className="btn-danger btn btn-md">
-              <FontAwesomeIcon icon={faSpinner} />
-            </span>
-          )
+        {showComponent && modoDescarga ? (
+          <PdfDescargar cargado={cargado} archivo={archivo} props={props} />
         ) : modoDescarga ? (
           <button
             className="btn-primary btn btn-md"
@@ -465,20 +522,8 @@ export class GenerarPdf extends Component {
           >
             <FontAwesomeIcon icon={faPrint} />
           </button>
-        ) : cargado ? (
-            <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
-              {({ blob, url, loading, error }) => {
-                return loading ? (
-                  'Cargando...'
-                ) : !error ? (
-                  'Clique aqui'
-                ) : (
-                  'Error al tratar de generar PDF'
-                );
-              }}
-            </PDFDownloadLink>
         ) : (
-          'Cargando...'
+          <PdfVisualizar cargado={cargado} props={props} archivo={archivo} />
         )}
       </div>
     );

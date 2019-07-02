@@ -325,7 +325,7 @@ const MyDocument = ({ props }) => {
   );
 };
 
-const PdfVisualizarOld = ({ props, cargado }) => {
+const PdfVisualizar = ({ props, cargado }) => {
   if (cargado) {
     const body = document.body,
       html = document.documentElement;
@@ -343,42 +343,6 @@ const PdfVisualizarOld = ({ props, cargado }) => {
       <PDFViewer width="100%" height={height}>
         <MyDocument props={props} />
       </PDFViewer>
-    );
-  } else {
-    return 'Cargando...';
-  }
-};
-
-const PdfVisualizar = ({ props, cargado, archivo }) => {
-  if (cargado) {
-    const body = document.body,
-      html = document.documentElement;
-
-    const height = Math.max(
-      body.scrollHeight,
-      body.offsetHeight,
-      html.clientHeight,
-      html.scrollHeight,
-      html.offsetHeight,
-    );
-    document.body.style.marginBottom = 0;
-
-    return (
-      <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
-        {({ blob, url, loading, error }) => {
-          return !loading ? (
-            <embed
-              height={height}
-              width='100%'
-              id="idIframe"
-              src={url}
-              type="application/pdf"
-            />
-          ) : (
-            'Cargando...'
-          );
-        }}
-      </PDFDownloadLink>
     );
   } else {
     return 'Cargando...';

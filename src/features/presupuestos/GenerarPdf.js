@@ -2,7 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Page, Image, Document, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import {
+  Page,
+  Image,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  PDFViewer,
+  View,
+  Text,
+} from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
@@ -49,9 +58,6 @@ const styles = StyleSheet.create({
   },
   espacioArriba: {
     marginTop: 8,
-  },
-  negrito: {
-    fontWeight: 'bold',
   },
   margin10: {
     margin: 10,
@@ -149,13 +155,54 @@ const SeccionSlogan = styled.View`
   border-bottom: 0;
 `;
 
-const SeccionItems = styled.View`
+const Seccion100 = styled.View`
   text-align: center;
   height: 20px;
   width: 100%;
   border: 1px solid #000;
   padding-top: 5px;
   margin-top: 5px;
+`;
+
+const Seccion100SinBordes = styled.View`
+  text-align: center;
+  width: 100%;
+  padding-top: 5px;
+  margin-top: 5px;
+`;
+
+const Seccion50Firma = styled.View`
+  text-align: center;
+  height: 40px;
+  width: 50%;
+  border: 1px solid #000;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  padding-top: 5px;
+  margin-top: 40px;
+`;
+const Seccion25Firma = styled.View`
+  height: 40px;
+  width: 25%;
+  padding-top: 5px;
+  margin-top: 40px;
+`;
+
+const Seccion50Izquierda = styled.View`
+  height: 17px;
+  width: 50%;
+  border: 1px solid #000;
+  padding-left: 2px;
+  padding-top: 2px;
+`;
+const Seccion50 = styled.View`
+  height: 17px;
+  width: 50%;
+  border: 1px solid #000;
+  border-left: 0;
+  padding-left: 2px;
+  padding-top: 2px;
 `;
 
 const SeccionDesc = styled.View`
@@ -170,9 +217,17 @@ const SeccionDescValor = styled.View`
   width: 45%;
   border: 1px solid #000;
   border-top: 0;
-  height: 30px;
+  max-height: 30px;
   padding-left: 2px;
   padding-right: 2px;
+`;
+const Seccion70 = styled.View`
+  width: 70%;
+  border: 1px solid #000;
+  border-top: 0;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 5px;
 `;
 
 const SeccionCant = styled.View`
@@ -190,6 +245,13 @@ const Seccion10 = styled.View`
   border-top: 0;
   border-left: 0;
 `;
+const Seccion30 = styled.View`
+  width: 30%;
+  border: 1px solid #000;
+  padding-top: 5px;
+  border-top: 0;
+  border-left: 0;
+`;
 
 const Campo = styled.Text`
   font-size: 10px;
@@ -201,6 +263,11 @@ const Campo8 = styled.Text`
   font-weight: 900;
   text-align: center;
 `;
+const Campo8Izquierda = styled.Text`
+  font-size: 8px;
+  font-weight: 900;
+  text-align: left;
+`;
 
 const Campo8Derecha = styled.Text`
   font-size: 8px;
@@ -208,6 +275,17 @@ const Campo8Derecha = styled.Text`
   text-align: right;
 `;
 
+const Campo12Derecha = styled.Text`
+  font-size: 12px;
+  font-weight: 900;
+  text-align: right;
+`;
+
+const Valor12 = styled.Text`
+  font-size: 12px;
+  text-align: right;
+  padding-right: 2px;
+`;
 const Valor8 = styled.Text`
   font-size: 8px;
   text-align: right;
@@ -222,12 +300,11 @@ const Valor = styled.Text`
 `;
 
 // Create Document Component
-const MyDocument = ({ props }) => {
+const MyDocument = ({ props, archivo }) => {
   const decimales = parseInt(props.presupuesto.moneda.n_decimales);
-  console.log(props);
-
+  let indices = [];
   return (
-    <Document>
+    <Document title={archivo} author={props.configuracion.c_razon_social}>
       <Page size="A4" style={styles.page}>
         <Linea50>
           <SeccionLogo>
@@ -238,8 +315,8 @@ const MyDocument = ({ props }) => {
             <Campo style={styles.espacioArriba}>Dirección:</Campo>
           </Seccion1>
           <Seccion2>
-            <Valor>{props.configuracion.c_razon_social}</Valor>
-            <Valor style={styles.espacioArriba}>{props.configuracion.c_direccion}</Valor>
+            <Valor>{props.configuracion.c_razon_social.toUpperCase()}</Valor>
+            <Valor style={styles.espacioArriba}>{props.configuracion.c_direccion.toUpperCase()}</Valor>
           </Seccion2>
           <Seccion3>
             <Campo>Fecha:</Campo>
@@ -247,12 +324,12 @@ const MyDocument = ({ props }) => {
           </Seccion3>
           <Seccion4>
             <Valor>{moment(props.presupuesto.updatedAt).format('DD/MM/YYYY')}</Valor>
-            <Valor style={styles.espacioArriba}>{props.presupuesto.id}</Valor>
+            <Valor style={styles.espacioArriba}>{props.presupuesto.id.toString().padStart(9, '0')}</Valor>
           </Seccion4>
         </Linea50>
         <Linea>
           <SeccionSlogan>
-            <Campo8 style={styles.negrito}>{props.configuracion.c_slogan}</Campo8>
+            <Campo8 style={styles.negrito}>{props.configuracion.c_slogan.toUpperCase()}</Campo8>
           </SeccionSlogan>
         </Linea>
         <Linea35>
@@ -261,16 +338,16 @@ const MyDocument = ({ props }) => {
             <Campo8Derecha style={styles.espacioArriba}>Dirección:</Campo8Derecha>
           </Cliente>
           <ClienteValor>
-            <Valor8Izquierda>{props.presupuesto.persona.c_nombre}</Valor8Izquierda>
+            <Valor8Izquierda>{props.presupuesto.persona.c_nombre.toUpperCase()}</Valor8Izquierda>
             <Valor8Izquierda style={styles.espacioArriba}>
-              {props.presupuesto.persona.c_direccion}
+              {props.presupuesto.persona.c_direccion.toUpperCase()}
             </Valor8Izquierda>
           </ClienteValor>
         </Linea35>
         <Linea>
-          <SeccionItems>
+          <Seccion100>
             <Campo8>ITEMS - MONEDA: {props.presupuesto.moneda.c_descripcion}</Campo8>
-          </SeccionItems>
+          </Seccion100>
         </Linea>
         <Linea>
           <SeccionDesc>
@@ -298,7 +375,7 @@ const MyDocument = ({ props }) => {
         {props.items.map((item, indice) => (
           <Linea key={indice}>
             <SeccionDescValor>
-              <Campo8>{item.c_descripcion}</Campo8>
+              <Campo8>{item.c_descripcion.toUpperCase()}</Campo8>
             </SeccionDescValor>
             <SeccionCant>
               <Campo8>{item.n_cantidad}</Campo8>
@@ -320,6 +397,115 @@ const MyDocument = ({ props }) => {
             </Seccion10>
           </Linea>
         ))}
+        <Linea>
+          <Seccion70>
+            <Campo8Derecha>Subtotal</Campo8Derecha>
+          </Seccion70>
+          <Seccion10>
+            <Valor8>{formatarNumero(props.presupuesto.n_total_exentas, decimales, true)}</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>{formatarNumero(props.presupuesto.n_total_5, decimales, true)}</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>{formatarNumero(props.presupuesto.n_total_10, decimales, true)}</Valor8>
+          </Seccion10>
+        </Linea>
+        <Linea>
+          <Seccion70>
+            <Campo8Derecha>IVA items</Campo8Derecha>
+          </Seccion70>
+          <Seccion10>
+            <Valor8>0</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>{formatarNumero(props.presupuesto.n_total_iva_5, decimales, true)}</Valor8>
+          </Seccion10>
+          <Seccion10>
+            <Valor8>{formatarNumero(props.presupuesto.n_total_iva_10, decimales, true)}</Valor8>
+          </Seccion10>
+        </Linea>
+        <Linea>
+          <Seccion70>
+            <Campo8Derecha>Comisión</Campo8Derecha>
+          </Seccion70>
+          <Seccion30>
+            <Valor8>{formatarNumero(props.presupuesto.n_valor_comision, decimales, true)}</Valor8>
+          </Seccion30>
+        </Linea>
+        <Linea>
+          <Seccion70>
+            <Campo8Derecha>Seguro</Campo8Derecha>
+          </Seccion70>
+          <Seccion30>
+            <Valor8>{formatarNumero(props.presupuesto.n_valor_seguro, decimales, true)}</Valor8>
+          </Seccion30>
+        </Linea>
+        <Linea>
+          <Seccion70>
+            <Campo8Derecha>Descuento/Redondeo</Campo8Derecha>
+          </Seccion70>
+          <Seccion30>
+            <Valor8>{formatarNumero(props.presupuesto.n_desc_redondeo, decimales, true)}</Valor8>
+          </Seccion30>
+        </Linea>
+        <Linea>
+          <Seccion70>
+            <Campo12Derecha>Total General</Campo12Derecha>
+          </Seccion70>
+          <Seccion30>
+            <Valor12>{formatarNumero(props.presupuesto.n_total_general, decimales, true)}</Valor12>
+          </Seccion30>
+        </Linea>
+        <Linea>
+          <Seccion100>
+            <Campo8>
+              Entrega(aproximada) de {props.presupuesto.n_dias_entrega} días. Pagos (Cuotas):
+            </Campo8>
+          </Seccion100>
+        </Linea>
+        {props.cuotas.map((item, indice, cuotas) => {
+          let retorno;
+          if (!indices.includes(indice)) {
+            retorno = (
+              <Linea key={`key1${indice}`}>
+                <Seccion50Izquierda key={`coluna1key${indice}`}>
+                  <Campo8Izquierda>
+                    {item.n_nr_cuota}) Valor: {formatarNumero(item.n_valor, decimales, true)}{' '}
+                    Vencimiento: {moment(item.d_fecha_vcto).format('DD/MM/YYYY')}
+                  </Campo8Izquierda>
+                </Seccion50Izquierda>
+                {typeof cuotas[indice + 1] !== 'undefined' && (
+                  <Seccion50 key={`coluna2key${indice}`}>
+                    <Campo8Izquierda>
+                      {cuotas[indice + 1].n_nr_cuota}) Valor:{' '}
+                      {formatarNumero(cuotas[indice + 1].n_valor, decimales, true)} Vencimiento:{' '}
+                      {moment(cuotas[indice + 1].d_fecha_vcto).format('DD/MM/YYYY')}
+                    </Campo8Izquierda>
+                  </Seccion50>
+                )}
+              </Linea>
+            );
+            indices.push(indice, indice + 1);
+          }
+          return retorno;
+        })}
+        <Linea>
+          <Seccion100SinBordes>
+            <Campo8>{props.configuracion.t_obs_presup_1}</Campo8>
+          </Seccion100SinBordes>
+        </Linea>
+        <Linea>
+          <Seccion100SinBordes>
+            <Campo8>{props.configuracion.t_obs_presup_2}</Campo8>
+          </Seccion100SinBordes>
+        </Linea>
+        <Linea>
+          <Seccion25Firma />
+          <Seccion50Firma>
+            <Campo8>{props.presupuesto.persona.c_nombre.toUpperCase()} - {props.presupuesto.persona.c_identificacion}</Campo8>
+          </Seccion50Firma>
+        </Linea>
       </Page>
     </Document>
   );
@@ -344,7 +530,7 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
 
       return (
         <PDFViewer width="100%" height={height}>
-          <MyDocument props={props} />
+          <MyDocument props={props} archivo={archivo} />
         </PDFViewer>
       );
     } else {
@@ -355,7 +541,7 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
 
 const PdfDescargar = ({ cargado, props, archivo }) => {
   return cargado ? (
-    <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} />}>
+    <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} archivo={archivo} />}>
       {({ blob, url, loading, error }) => {
         return loading ? (
           !is.ios() ? (
@@ -441,8 +627,6 @@ export class GenerarPdf extends Component {
     });
     this.blob();
   };
-
-  altura = document.body.style.marginBottom;
 
   componentDidMount = () => {
     if (this.props.match && this.props.match.params && this.props.match.params.id) {

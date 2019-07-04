@@ -12,7 +12,7 @@ const formatarNumero = (cell, digitos, soloValor) => {
       decimalScale={typeof digitos === "number" ? digitos : 2}
 
     /> :
-      cell?cell.toLocaleString(navigator.language, { maximumFractionDigits: typeof digitos === "number" ? digitos : 2 }):0
+      cell?parseFloat(cell).toLocaleString("es-ES", { maximumFractionDigits: typeof digitos === "number" ? digitos : 2 }):0
   );
 };
 

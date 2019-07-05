@@ -3,7 +3,7 @@ import { Field } from 'redux-form';
 import { Button, Row, Col, Container, Form } from 'reactstrap';
 import { Link } from '../esqueleto';
 import PropTypes from 'prop-types';
-import { InputCheckBox, InputNumber,InputText } from '../esqueleto';
+import { InputCheckBox, InputNumber, InputText } from '../esqueleto';
 
 class FormPersonas extends Component {
   static propTypes = {
@@ -13,6 +13,7 @@ class FormPersonas extends Component {
 
   render() {
     const { enviarFormulario, submitting, pristine, edicion, b_comisionista } = this.props;
+
     return (
       <div>
         <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Persona</div>
@@ -38,6 +39,7 @@ class FormPersonas extends Component {
                   type="text"
                   className="field"
                   bsSize="lg"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="2" md="2" lg="1" xl="1">
@@ -95,6 +97,7 @@ class FormPersonas extends Component {
                   className="field"
                   label="Contacto"
                   bsSize="lg"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="6" md="6" xl="4">
@@ -105,6 +108,7 @@ class FormPersonas extends Component {
                   type="email"
                   className="field"
                   bsSize="lg"
+                  normalize={value => value && value.toLowerCase()}
                 />
               </Col>
               <Col md="12" xl="6">
@@ -115,6 +119,7 @@ class FormPersonas extends Component {
                   type="text"
                   className="field"
                   bsSize="lg"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>
@@ -134,7 +139,7 @@ class FormPersonas extends Component {
                 </Col>
               ) : null}
               <Col sm="2" md="2" lg="2" xl="2">
-                <Field name="b_cliente"  label="Cliente" component={InputCheckBox} />
+                <Field name="b_cliente" label="Cliente" component={InputCheckBox} />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
                 <Field name="b_funcionario" label="Funcionario" component={InputCheckBox} />
@@ -145,21 +150,21 @@ class FormPersonas extends Component {
             </Row>
             <Row>
               <Col sm="12">
-              <Field
-                name="t_observacion"
-                styleDiv={{ width: '100%' }}
-                label="Observación"
-                component={InputText}
-                type="textarea"
-                className="field"
-              />
+                <Field
+                  name="t_observacion"
+                  styleDiv={{ width: '100%' }}
+                  label="Observación"
+                  component={InputText}
+                  type="textarea"
+                  className="field"
+                  normalize={value => value && value.toUpperCase()}
+                />
               </Col>
-
             </Row>
             <Button type="submit" color="success" disabled={pristine || submitting}>
               {submitting ? 'Guardando' : 'Guardar'}
             </Button>{' '}
-            <Link to="/personas" className="btn btn-primary"  history={this.props.history}>
+            <Link to="/personas" className="btn btn-primary" history={this.props.history}>
               Cancelar
             </Link>
           </Form>

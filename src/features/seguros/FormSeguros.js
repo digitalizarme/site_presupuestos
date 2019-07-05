@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { InputText, InputCheckBox, SuperSelect, InputNumber } from '../esqueleto';
 import { Field } from 'redux-form';
@@ -38,6 +38,7 @@ class FormSeguros extends Component {
               label="Valor a exhibir"
               component={InputText}
               type="text"
+              normalize={value => value && value.toUpperCase()}
             />
           </Col>
           <Col sm="4">
@@ -48,6 +49,7 @@ class FormSeguros extends Component {
               label="Tipo a exhibir"
               component={InputText}
               type="text"
+              normalize={value => value && value.toUpperCase()}
             />
           </Col>
 
@@ -68,9 +70,9 @@ class FormSeguros extends Component {
               label="Tipo campo valor"
               component={InputText}
               type="text"
+              normalize={value => value && value.toUpperCase()}
             />
           </Col>
-
         </Row>
       </div>
     );

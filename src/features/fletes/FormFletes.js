@@ -29,6 +29,7 @@ class FormFletes extends Component {
               label="Tipo"
               component={InputText}
               type="text"
+                  normalize={value => value && value.toUpperCase()}
             />
           </Col>
           <Col sm="4">

@@ -183,7 +183,7 @@ FormPersonasContainer = reduxForm({
 function mapStateToProps(state) {
   const initialValues =
     state.router.location.pathname.indexOf('nuevo') !== -1
-      ? { b_cliente: true, b_activo:true }
+      ? { b_cliente: true, b_activo: true }
       : typeof state.esqueleto.selected[0] !== 'undefined'
       ? state.esqueleto.selected[0]
       : state.personas.persona;

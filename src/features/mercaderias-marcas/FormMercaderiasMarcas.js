@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import {  Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import { InputText, InputCheckBox } from '../esqueleto';
 import { Field } from 'redux-form';
 
 class FormMercaderiasMarcas extends Component {
-
   render() {
-
     return (
       <div className="mercaderias-marcas-form-mercaderias-marcas">
         <Row>
@@ -19,12 +17,13 @@ class FormMercaderiasMarcas extends Component {
               label="Descripción"
               component={InputText}
               type="text"
+              normalize={value => value && value.toUpperCase()}
             />
           </Col>
         </Row>
         <Row>
           <Col sm="12">
-            <Field name="b_activo" label="Activo"  component={InputCheckBox} />
+            <Field name="b_activo" label="Activo" component={InputCheckBox} />
           </Col>
         </Row>
       </div>

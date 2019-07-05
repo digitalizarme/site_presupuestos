@@ -19,10 +19,11 @@ export default class InputText extends Component {
       min,
       max,
       readOnly,
-      styleDiv
+      styleDiv,
     } = this.props;
+
     return (
-      <div className="esqueleto-input-text" style={styleDiv?styleDiv:null}>
+      <div className="esqueleto-input-text" style={styleDiv ? styleDiv : null}>
         <FormGroup>
           {label ? <Label>{label}</Label> : null}
           <Input

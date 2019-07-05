@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { InputText, InputCheckBox, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
@@ -24,6 +24,7 @@ class FormMercaderiasGrupos extends Component {
               label="Descripción"
               component={InputText}
               type="text"
+              normalize={value => value && value.toUpperCase()}
             />
           </Col>
         </Row>
@@ -38,7 +39,7 @@ class FormMercaderiasGrupos extends Component {
             />
           </Col>
           <Col sm="6">
-            <Field name="b_activo" label="Activo"  component={InputCheckBox} />
+            <Field name="b_activo" label="Activo" component={InputCheckBox} />
           </Col>
         </Row>
       </div>

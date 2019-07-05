@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { InputText,InputCheckBox } from '../esqueleto';
+import { InputText, InputCheckBox } from '../esqueleto';
 import { Field } from 'redux-form';
 
 class FormServGrupo extends Component {
-
   render() {
-
     return (
       <div className="servicios-grupos-form-serv-grupo">
         <Field name="id" component="input" type="hidden" />
@@ -16,6 +14,7 @@ class FormServGrupo extends Component {
           label="Descripción"
           component={InputText}
           type="text"
+          normalize={value => value && value.toUpperCase()}
         />
         <Field name="b_activo" label="Activo" component={InputCheckBox} />
       </div>

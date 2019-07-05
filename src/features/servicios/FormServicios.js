@@ -11,7 +11,17 @@ class FormServicios extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine, edicion, optionsMonedas,optionsIVA,optionsUnidad,optionsGrupos, decimales } = this.props;
+    const {
+      enviarFormulario,
+      submitting,
+      pristine,
+      edicion,
+      optionsMonedas,
+      optionsIVA,
+      optionsUnidad,
+      optionsGrupos,
+      decimales,
+    } = this.props;
     return (
       <div>
         <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Servicio</div>
@@ -27,6 +37,7 @@ class FormServicios extends Component {
                   label="Descripción"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
@@ -94,21 +105,21 @@ class FormServicios extends Component {
             </Row>
             <Row>
               <Col sm="12">
-              <Field
-                name="t_observacion"
-                styleDiv={{ width: '100%' }}
-                label="Observación"
-                component={InputText}
-                type="textarea"
-                className="field"
-              />
+                <Field
+                  name="t_observacion"
+                  styleDiv={{ width: '100%' }}
+                  label="Observación"
+                  component={InputText}
+                  type="textarea"
+                  className="field"
+                  normalize={value => value && value.toUpperCase()}
+                />
               </Col>
-
             </Row>
             <Button type="submit" color="success" disabled={pristine || submitting}>
               {submitting ? 'Guardando' : 'Guardar'}
             </Button>{' '}
-            <Link to="/servicios" className="btn btn-primary"  history={this.props.history}>
+            <Link to="/servicios" className="btn btn-primary" history={this.props.history}>
               Cancelar
             </Link>
           </Form>

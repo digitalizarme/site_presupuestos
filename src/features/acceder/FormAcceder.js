@@ -47,6 +47,7 @@ export default class FormAcceder extends Component {
                     onBlur={onBlurEmail}
                     onChange={onChangeEmail}
                     autoComplete="on"
+                    normalize={value => value && value.toLowerCase()}
                   />
                 </InputGroup>
                 <span className="text-danger">{acceder.verificadoEmail ? errorEmail : null}</span>

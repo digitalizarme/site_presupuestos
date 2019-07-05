@@ -143,7 +143,7 @@ class FormPresupuestos extends Component {
       onChangePagos,
       onChangeValorCuota,
       n_dif_cuotas,
-      onChageStatus
+      onChageStatus,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -646,12 +646,13 @@ class FormPresupuestos extends Component {
                   component={InputText}
                   type="textarea"
                   className="field"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>
             <Row className="text-right">
               <Col sm="12">
-                <Link to="/presupuestos" className="btn btn-primary"  history={this.props.history}>
+                <Link to="/presupuestos" className="btn btn-primary" history={this.props.history}>
                   Cancelar
                 </Link>{' '}
                 <Button type="submit" color="success" disabled={pristine || submitting}>

@@ -39,6 +39,7 @@ class FormMercaderias extends Component {
                   label="Descripción"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="3" md="2" lg="3" xl="3">
@@ -54,6 +55,7 @@ class FormMercaderias extends Component {
                   bsSize="lg"
                   className="field"
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="2" md="3" lg="3" xl="3">
@@ -153,6 +155,7 @@ class FormMercaderias extends Component {
                   component={InputText}
                   type="textarea"
                   className="field"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>

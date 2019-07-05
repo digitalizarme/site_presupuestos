@@ -47,6 +47,7 @@ export default class FormConfiguraciones extends Component {
                   label="Razón Social"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="5">
@@ -57,6 +58,7 @@ export default class FormConfiguraciones extends Component {
                   label="Nombre Fantasia"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>
@@ -69,6 +71,7 @@ export default class FormConfiguraciones extends Component {
                   label="E-mail"
                   component={InputText}
                   type="email"
+                  normalize={value => value && value.toLowerCase()}
                 />
               </Col>
               <Col sm="3">
@@ -89,6 +92,7 @@ export default class FormConfiguraciones extends Component {
                   label="Slogan"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>
@@ -101,6 +105,7 @@ export default class FormConfiguraciones extends Component {
                   label="Dirección"
                   component={InputText}
                   type="text"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
               <Col sm="2" md="2" lg="1" xl="1">
@@ -135,6 +140,7 @@ export default class FormConfiguraciones extends Component {
                   component={InputText}
                   type="textarea"
                   className="field"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>
@@ -147,6 +153,7 @@ export default class FormConfiguraciones extends Component {
                   component={InputText}
                   type="textarea"
                   className="field"
+                  normalize={value => value && value.toUpperCase()}
                 />
               </Col>
             </Row>

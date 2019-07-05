@@ -9,8 +9,6 @@ import {
   StyleSheet,
   PDFDownloadLink,
   PDFViewer,
-  View,
-  Text,
 } from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';

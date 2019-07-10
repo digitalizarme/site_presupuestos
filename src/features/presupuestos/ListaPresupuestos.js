@@ -6,9 +6,10 @@ import { PrincipalTabla } from '../esqueleto';
 import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
 import GenerarPdf from './GenerarPdf';
+import ModalCuotas from './ModalCuotas';
 import { traerPresupuesto, traeItems, traeCuotas } from './redux/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {   faPrint } from '@fortawesome/free-solid-svg-icons';
+import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import swal from 'sweetalert';
 
 const columns = [
@@ -26,7 +27,7 @@ const columns = [
     text: 'Nombre',
     sort: true,
     editable: false,
-    attrs: { width: '25%' },
+    attrs: { width: '20%' },
   },
   {
     dataField: 'persona.c_identificacion',
@@ -82,13 +83,15 @@ const columns = [
     searchable: false,
     editable: false,
     formatter: (cell, row) => {
-      return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0?<GenerarPdf idPresupuesto={row.id} />:<Incompletos />;
+      return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0 ? (
+        <div><GenerarPdf key={`pdf${row.id}`} idPresupuesto={row.id} /> <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} /></div>
+      ) : (
+        <Incompletos />
+      );
     },
-    attrs: { width: '5%' },
+    attrs: { width: '10%' },
   },
 ];
-
-
 
 const Incompletos = () => {
   return (
@@ -98,14 +101,13 @@ const Incompletos = () => {
   );
 };
 
-const clickIncompleto = () =>(
-    swal({
-      title: 'Ops',
-      text: 'Este presupuesto no esta completo. Genere los pagos primero.',
-      icon: 'warning',
-      button: 'OK!',
-    })
-);
+const clickIncompleto = () =>
+  swal({
+    title: 'Ops',
+    text: 'Este presupuesto no esta completo. Genere los pagos primero.',
+    icon: 'warning',
+    button: 'OK!',
+  });
 
 const defaultSorted = [
   {
@@ -139,7 +141,7 @@ export class ListaPresupuestos extends Component {
           defaultSorted={defaultSorted}
           api_funcion={`${columns[0].table}/${tipoPresupuesto}`}
           columns={columns}
-          sinModal={'/presupuestos'}
+          sinModal={`/presupuestos/${tipoPresupuesto}`}
           {...this.props}
         />
       </div>

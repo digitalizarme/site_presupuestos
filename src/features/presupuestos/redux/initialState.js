@@ -25,7 +25,7 @@ const initialState = {
   traeCuotasPending: false,
   traeCuotasError: null,
   eliminaCuotasPending: false,
-  eliminaCuotasError: null
+  eliminaCuotasError: null,
 };
 
 export default initialState;

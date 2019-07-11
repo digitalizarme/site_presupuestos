@@ -55,34 +55,40 @@ export class ModalCuotas extends Component {
     };
   }
 
-  componentDidMount = () => {
-    const { actions } = this.props;
-    actions.traeCobradores();
-    actions.traeMediosPago();
-  };
-
   onChangeCuotas = id => {
     const { optionsCuotas, dispatch } = this.props;
     const cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === id);
     Object.entries(cuotaSeleccionada.extra).map((arrayDatos, indice) => {
       const campo = arrayDatos[0];
+      if(campo === "d_fecha_pago")
+      {
+        arrayDatos[1] = moment(arrayDatos[1]).format("YYYY-MM-DD");
+      }
       const valor = arrayDatos[1];
       return dispatch(change('formCuotas', campo, valor));
     });
+    const recebido = cuotaSeleccionada.extra.n_valor - cuotaSeleccionada.extra.n_desc_redondeo;
+    dispatch(change('formCuotas', 'n_tot_recibido', recebido));
+    
   };
 
   setaDatos() {
-    const { datos, actions, dispatch } = this.props;
+    const { datos, actions, dispatch, optionsCobradores, optionsMediosPago } = this.props;
     actions.toggleCargando();
     const params = {
       id: datos.id,
     };
+    if (optionsCobradores.length === 0) {
+      actions.traeCobradores();
+    }
+    if (optionsMediosPago.length === 0) {
+      actions.traeMediosPago();
+    }
+    dispatch(change('formCuotas', 'persona.c_nombre', datos.persona.c_nombre));
+    dispatch(change('formCuotas', 'moneda.c_descripcion', datos.moneda.c_descripcion));
+    dispatch(change('formCuotas', 'n_total_general', datos.n_total_general));
+
     actions.traeCuotas(params).then(res => {
-      Object.entries(datos).map((arrayDatos, indice) => {
-        const campo = arrayDatos[0];
-        const valor = arrayDatos[1];
-        return dispatch(change('formCuotas', campo, valor));
-      });
       actions.toggleCargando();
     });
   }
@@ -140,8 +146,8 @@ ModalCuotas = reduxForm({
 /* istanbul ignore next */
 function mapStateToProps(state) {
   let optionsCuotas = [];
-  let optionsPersonas = [];
-  let optionsMedioPago = [];
+  let optionsCobradores = [];
+  let optionsMediosPago = [];
 
   let itemObj = {};
   let decimales = 0;
@@ -168,10 +174,30 @@ function mapStateToProps(state) {
     cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === selector(state, 'cuotas'));
   }
 
+  for (let item of state.presupuestos.cobradores) {
+    itemObj = {
+      label: item.c_nombre,
+      value: item.id,
+      extra: item,
+    };
+    optionsCobradores.push(itemObj);
+  }
+
+  for (let item of state.presupuestos.mediosPago) {
+    itemObj = {
+      label: item.c_descripcion,
+      value: item.id,
+      extra: item,
+    };
+    optionsMediosPago.push(itemObj);
+  }
+
   return {
     optionsCuotas,
     decimales,
     cuotaSeleccionada,
+    optionsCobradores,
+    optionsMediosPago,
   };
 }
 

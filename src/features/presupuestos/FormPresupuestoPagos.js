@@ -13,8 +13,8 @@ export default class FormPresupuestoPagos extends Component {
       onChangeCuotas,
       decimales,
       cuotaSeleccionada,
-      optionsPersonas,
-      optionsMedioPago,
+      optionsCobradores,
+      optionsMediosPago,
     } = this.props;
     // console.log(cuotaSeleccionada);
     return (
@@ -122,7 +122,8 @@ export default class FormPresupuestoPagos extends Component {
               <Col sm="12" md="6">
                 <label>Recibido por :</label>
                 <Field
-                  options={optionsPersonas}
+                  name="n_id_persona_baja"
+                  options={optionsCobradores}
                   component={SuperSelect}
                   placeholder="Elija"
                   className="field form-control-lg form-control"
@@ -131,7 +132,8 @@ export default class FormPresupuestoPagos extends Component {
               <Col sm="12" md="6">
                 <label>Medio de pago :</label>
                 <Field
-                  options={optionsMedioPago}
+                  name="n_id_medio_pago"
+                  options={optionsMediosPago}
                   component={SuperSelect}
                   placeholder="Elija"
                   className="field form-control-lg form-control"

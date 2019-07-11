@@ -8,7 +8,7 @@ import validate from 'validate.js';
 import FormPresupuestoPagos from './FormPresupuestoPagos';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins } from '@fortawesome/free-solid-svg-icons';
-import { reduxForm, change, formValueSelector } from 'redux-form';
+import { reduxForm, change, formValueSelector, reset } from 'redux-form';
 import formatarNumero from '../../common/formatarNumero';
 import moment from 'moment';
 import { toggleCargando } from '../esqueleto/redux/actions';
@@ -55,6 +55,12 @@ export class ModalCuotas extends Component {
     };
   }
 
+  componentDidMount = () => {
+    const { actions } = this.props;
+    actions.traeCobradores();
+    actions.traeMediosPago();
+  };
+
   onChangeCuotas = id => {
     const { optionsCuotas, dispatch } = this.props;
     const cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === id);
@@ -83,6 +89,8 @@ export class ModalCuotas extends Component {
 
   toggleModal() {
     if (!this.state.isOpen) {
+      const { dispatch } = this.props;
+      dispatch(reset('formCuotas'));
       this.setaDatos();
     }
     this.setState(state => ({ isOpen: !state.isOpen }));
@@ -132,6 +140,9 @@ ModalCuotas = reduxForm({
 /* istanbul ignore next */
 function mapStateToProps(state) {
   let optionsCuotas = [];
+  let optionsPersonas = [];
+  let optionsMedioPago = [];
+
   let itemObj = {};
   let decimales = 0;
   let cuotaSeleccionada = false;

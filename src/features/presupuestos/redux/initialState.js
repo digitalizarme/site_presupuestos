@@ -18,14 +18,20 @@ const initialState = {
   traeItemsPending: false,
   traeItemsError: null,
   items:[],
-  cuotas:[],
   traeMercaderiasServiciosPending: false,
   traeMercaderiasServiciosError: null,
   mercaderiasServicios:[],
   traeCuotasPending: false,
   traeCuotasError: null,
+  cuotas:[],
   eliminaCuotasPending: false,
   eliminaCuotasError: null,
+  traeCobradoresPending: false,
+  traeCobradoresError: null,
+  cobradores:[],
+  traeMediosPagoPending: false,
+  traeMediosPagoError: null,
+  mediosPago:[],
 };
 
 export default initialState;

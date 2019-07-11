@@ -8,7 +8,14 @@ export default class FormPresupuestoPagos extends Component {
   static propTypes = {};
 
   render() {
-    const { optionsCuotas, onChangeCuotas, decimales, cuotaSeleccionada } = this.props;
+    const {
+      optionsCuotas,
+      onChangeCuotas,
+      decimales,
+      cuotaSeleccionada,
+      optionsPersonas,
+      optionsMedioPago,
+    } = this.props;
     // console.log(cuotaSeleccionada);
     return (
       <div className="presupuestos-form-presupuesto-pagos">
@@ -81,8 +88,8 @@ export default class FormPresupuestoPagos extends Component {
               </Col>
               <Col sm="12" md="4">
                 <Field
-                  name="n_dif"
-                  label="Diferencia :"
+                  name="n_tot_recibido"
+                  label="Recibido :"
                   component={InputNumber}
                   decimalScale={decimales}
                   className="field form-control-lg form-control"
@@ -108,6 +115,26 @@ export default class FormPresupuestoPagos extends Component {
                   type="date"
                   className="field form-control-lg form-control"
                   component="input"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="12" md="6">
+                <label>Recibido por :</label>
+                <Field
+                  options={optionsPersonas}
+                  component={SuperSelect}
+                  placeholder="Elija"
+                  className="field form-control-lg form-control"
+                />
+              </Col>
+              <Col sm="12" md="6">
+                <label>Medio de pago :</label>
+                <Field
+                  options={optionsMedioPago}
+                  component={SuperSelect}
+                  placeholder="Elija"
+                  className="field form-control-lg form-control"
                 />
               </Col>
             </Row>

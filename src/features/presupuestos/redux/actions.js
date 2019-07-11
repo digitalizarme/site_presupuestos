@@ -6,3 +6,5 @@ export { traeMercaderiasServicios, dismissTraeMercaderiasServiciosError } from '
 export { generaCuotas, dismissGeneraCuotasError } from './generaCuotas';
 export { traeCuotas, dismissTraeCuotasError } from './traeCuotas';
 export { eliminaCuotas, dismissEliminaCuotasError } from './eliminaCuotas';
+export { traeCobradores, dismissTraeCobradoresError } from './traeCobradores';
+export { traeMediosPago, dismissTraeMediosPagoError } from './traeMediosPago';

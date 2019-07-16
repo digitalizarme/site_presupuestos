@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputText, InputNumber, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
-import { Row, Col } from 'reactstrap';
+import { Row, Col, FormGroup } from 'reactstrap';
 
 export default class FormPresupuestoPagos extends Component {
   static propTypes = {};
@@ -16,7 +16,7 @@ export default class FormPresupuestoPagos extends Component {
       optionsCobradores,
       optionsMediosPago,
     } = this.props;
-    // console.log(cuotaSeleccionada);
+    console.log(cuotaSeleccionada);
     return (
       <div className="presupuestos-form-presupuesto-pagos">
         <Row>
@@ -67,6 +67,13 @@ export default class FormPresupuestoPagos extends Component {
         {cuotaSeleccionada && (
           <div>
             <Row>
+              <Col sm="12">
+                <div className="titulo_formulario">
+                  Cuota N. {cuotaSeleccionada.extra.n_nr_cuota}
+                </div>
+              </Col>
+            </Row>
+            <Row>
               <Col sm="12" md="4">
                 <Field
                   name="n_valor"
@@ -99,29 +106,33 @@ export default class FormPresupuestoPagos extends Component {
             </Row>
             <Row>
               <Col sm="12" md="6">
-                <label>Vencimiento :</label>
-                <Field
-                  name="d_fecha_vcto"
-                  type="date"
-                  className="field form-control-lg form-control"
-                  component="input"
-                  disabled
-                />
+                <FormGroup>
+                  <label>Vencimiento :</label>
+                  <Field
+                    name="d_fecha_vcto"
+                    type="date"
+                    className="field form-control-lg form-control"
+                    component="input"
+                    disabled
+                  />
+                </FormGroup>
               </Col>
               <Col sm="12" md="6">
-                <label>Pagado :</label>
-                <Field
-                  name="d_fecha_pago"
-                  type="date"
-                  className="field form-control-lg form-control"
-                  component="input"
-                />
+                <FormGroup>
+                  <label>Pagado :</label>
+                  <Field
+                    name="d_fecha_pago"
+                    type="date"
+                    className="field form-control-lg form-control"
+                    component="input"
+                  />
+                </FormGroup>
               </Col>
             </Row>
             <Row>
               <Col sm="12" md="6">
-                <label>Recibido por :</label>
                 <Field
+                  label="Recibido por :"
                   name="n_id_persona_baja"
                   options={optionsCobradores}
                   component={SuperSelect}
@@ -130,8 +141,8 @@ export default class FormPresupuestoPagos extends Component {
                 />
               </Col>
               <Col sm="12" md="6">
-                <label>Medio de pago :</label>
                 <Field
+                  label="Medio de pago :"
                   name="n_id_medio_pago"
                   options={optionsMediosPago}
                   component={SuperSelect}

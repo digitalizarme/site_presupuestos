@@ -32,6 +32,8 @@ const initialState = {
   traeMediosPagoPending: false,
   traeMediosPagoError: null,
   mediosPago:[],
+  actualizaCuotaPending: false,
+  actualizaCuotaError: null,
 };
 
 export default initialState;

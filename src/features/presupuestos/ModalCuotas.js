@@ -12,6 +12,8 @@ import { reduxForm, change, formValueSelector, reset } from 'redux-form';
 import formatarNumero from '../../common/formatarNumero';
 import moment from 'moment';
 import { toggleCargando } from '../esqueleto/redux/actions';
+import mostraMensajeError from '../../common/mostraMensajeError';
+import swal from 'sweetalert';
 
 const selector = formValueSelector('formCuotas'); // <-- same as form name
 
@@ -60,16 +62,14 @@ export class ModalCuotas extends Component {
     const cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === id);
     Object.entries(cuotaSeleccionada.extra).map((arrayDatos, indice) => {
       const campo = arrayDatos[0];
-      if(campo === "d_fecha_pago")
-      {
-        arrayDatos[1] = moment(arrayDatos[1]).format("YYYY-MM-DD");
+      if (campo === 'd_fecha_pago') {
+        arrayDatos[1] = moment(arrayDatos[1]).format('YYYY-MM-DD');
       }
       const valor = arrayDatos[1];
       return dispatch(change('formCuotas', campo, valor));
     });
-    const recebido = cuotaSeleccionada.extra.n_valor - cuotaSeleccionada.extra.n_desc_redondeo;
+    const recebido = cuotaSeleccionada.extra.n_valor + cuotaSeleccionada.extra.n_desc_redondeo;
     dispatch(change('formCuotas', 'n_tot_recibido', recebido));
-    
   };
 
   setaDatos() {
@@ -103,7 +103,27 @@ export class ModalCuotas extends Component {
   }
 
   submit = values => {
-    console.log(values, 'values');
+    const valores = {
+      id: values.id,
+      d_fecha_pago: values.d_fecha_pago,
+      n_desc_redondeo: values.n_desc_redondeo,
+      n_id_medio_pago: values.n_id_medio_pago,
+      n_id_persona_baja: values.n_id_persona_baja,
+    };
+    const params = {
+      data: valores,
+      method: values.id && values.id !== '' ? 'put' : 'post',
+    };
+    const { actions } = this.props;
+    actions
+      .actualizaCuota(params)
+      .then(res => {
+        swal({ icon: 'success', timer: 1000 });
+      })
+      .catch(err => {
+        mostraMensajeError({ err, msgPadron: 'Error al intentar actualizar esta cuota' });
+      });
+    console.log(valores, 'values');
   };
 
   render() {

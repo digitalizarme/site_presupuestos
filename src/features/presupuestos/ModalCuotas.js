@@ -18,26 +18,26 @@ import swal from 'sweetalert';
 const selector = formValueSelector('formCuotas'); // <-- same as form name
 
 const validationConstraints = {
-  n_id_moneda: {
-    presence: {
-      message: 'Moneda es obligatorio',
+  d_fecha_vcto: {
+    datetime: {
+      dateOnly: true,
+      message: 'Vencimiento es obligatorio',
     },
   },
-  n_id_status: {
-    presence: {
-      message: 'Status es obligatorio',
+  d_fecha_pago: {
+    datetime: {
+      dateOnly: true,
+      message: 'Fecha de pago es obligatorio',
     },
   },
-  n_id_persona: {
+  n_id_persona_baja: {
     presence: {
-      message: 'Persona es obligatorio',
+      message: 'Persona que recibio es obligatorio',
     },
   },
-  n_dif_cuotas: {
-    numericality: {
-      onlyInteger: false,
-      equalTo: 0,
-      notEqualTo: 'El valor debe ser igual que zero',
+  n_id_medio_pago: {
+    presence: {
+      message: 'Medio de pago es obligatorio',
     },
   },
 };
@@ -57,24 +57,43 @@ export class ModalCuotas extends Component {
     };
   }
 
-  onChangeCuotas = id => {
-    const { optionsCuotas, dispatch } = this.props;
-    const cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === id);
-    Object.entries(cuotaSeleccionada.extra).map((arrayDatos, indice) => {
-      const campo = arrayDatos[0];
-      if (campo === 'd_fecha_pago') {
-        arrayDatos[1] = moment(arrayDatos[1]).format('YYYY-MM-DD');
-      }
-      const valor = arrayDatos[1];
-      return dispatch(change('formCuotas', campo, valor));
-    });
-    const recebido = cuotaSeleccionada.extra.n_valor + cuotaSeleccionada.extra.n_desc_redondeo;
+  onChangeDescRedondeo = valor => {
+    const { dispatch, cuotaSeleccionada } = this.props;
+    const recebido = cuotaSeleccionada.extra.n_valor + parseFloat(valor);
     dispatch(change('formCuotas', 'n_tot_recibido', recebido));
   };
 
-  setaDatos() {
-    const { datos, actions, dispatch, optionsCobradores, optionsMediosPago } = this.props;
+  onChangeCuotas = id => {
+    const { dispatch, actions, optionsCuotas, datos } = this.props;
     actions.toggleCargando();
+
+    const cuotaSeleccionada = optionsCuotas.find(cuota => cuota.value === id);
+    dispatch(reset('formCuotas'));
+    dispatch(change('formCuotas', 'persona.c_nombre', datos.persona.c_nombre));
+    dispatch(change('formCuotas', 'moneda.c_descripcion', datos.moneda.c_descripcion));
+    dispatch(change('formCuotas', 'n_total_general', datos.n_total_general));
+
+    setTimeout(() => {
+      Object.entries(cuotaSeleccionada.extra).map((arrayDatos, indice) => {
+        const campo = arrayDatos[0];
+        if (campo === 'd_fecha_pago') {
+          arrayDatos[1] = moment(arrayDatos[1]).format('YYYY-MM-DD');
+        }
+        const valor = arrayDatos[1];
+        return dispatch(change('formCuotas', campo, valor));
+      });
+      const recebido = cuotaSeleccionada.extra.n_valor + cuotaSeleccionada.extra.n_desc_redondeo;
+      dispatch(change('formCuotas', 'n_tot_recibido', recebido));
+      actions.toggleCargando();
+    }, 100);
+  };
+
+  setaDatos() {
+    const { dispatch, datos, actions, optionsCobradores, optionsMediosPago } = this.props;
+    actions.toggleCargando();
+    dispatch(change('formCuotas', 'persona.c_nombre', datos.persona.c_nombre));
+    dispatch(change('formCuotas', 'moneda.c_descripcion', datos.moneda.c_descripcion));
+    dispatch(change('formCuotas', 'n_total_general', datos.n_total_general));
     const params = {
       id: datos.id,
     };
@@ -84,10 +103,6 @@ export class ModalCuotas extends Component {
     if (optionsMediosPago.length === 0) {
       actions.traeMediosPago();
     }
-    dispatch(change('formCuotas', 'persona.c_nombre', datos.persona.c_nombre));
-    dispatch(change('formCuotas', 'moneda.c_descripcion', datos.moneda.c_descripcion));
-    dispatch(change('formCuotas', 'n_total_general', datos.n_total_general));
-
     actions.traeCuotas(params).then(res => {
       actions.toggleCargando();
     });
@@ -105,10 +120,11 @@ export class ModalCuotas extends Component {
   submit = values => {
     const valores = {
       id: values.id,
-      d_fecha_pago: values.d_fecha_pago,
-      n_desc_redondeo: values.n_desc_redondeo,
-      n_id_medio_pago: values.n_id_medio_pago,
-      n_id_persona_baja: values.n_id_persona_baja,
+      d_fecha_pago:
+        values.d_fecha_pago && values.d_fecha_pago !== 'Invalid date' ? values.d_fecha_pago : null,
+      n_desc_redondeo: values.n_desc_redondeo ? values.n_desc_redondeo : 0,
+      n_id_medio_pago: values.n_id_medio_pago ? values.n_id_medio_pago : null,
+      n_id_persona_baja: values.n_id_persona_baja ? values.n_id_persona_baja : null,
     };
     const params = {
       data: valores,
@@ -118,6 +134,7 @@ export class ModalCuotas extends Component {
     actions
       .actualizaCuota(params)
       .then(res => {
+        this.toggleModal();
         swal({ icon: 'success', timer: 1000 });
       })
       .catch(err => {
@@ -138,7 +155,11 @@ export class ModalCuotas extends Component {
           <Form onSubmit={handleSubmit(this.submit)}>
             <ModalHeader toggle={this.toggleModal}>Pagos del Presupuesto N. {datos.id}</ModalHeader>
             <ModalBody>
-              <FormPresupuestoPagos {...this.props} onChangeCuotas={this.onChangeCuotas} />
+              <FormPresupuestoPagos
+                {...this.props}
+                onChangeCuotas={this.onChangeCuotas}
+                onChangeDescRedondeo={this.onChangeDescRedondeo}
+              />
             </ModalBody>
             <ModalFooter>
               <Button color="secondary" onClick={this.toggleModal}>
@@ -171,7 +192,7 @@ function mapStateToProps(state) {
 
   let itemObj = {};
   let decimales = 0;
-  let cuotaSeleccionada = false;
+  let cuotaSeleccionada = null;
   if (state.presupuestos.cuotas.length > 0) {
     decimales = state.presupuestos.cuotas[0].moneda.n_decimales;
     for (let item of state.presupuestos.cuotas) {

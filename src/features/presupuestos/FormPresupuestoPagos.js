@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputText, InputNumber, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
-import { Row, Col, FormGroup } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 
 export default class FormPresupuestoPagos extends Component {
-  static propTypes = {};
+  static propTypes = {
+    optionsCuotas: PropTypes.array.isRequired,
+    optionsCobradores: PropTypes.array.isRequired,
+    optionsMediosPago: PropTypes.array.isRequired,
+    onChangeCuotas: PropTypes.func.isRequired,
+    onChangeDescRedondeo: PropTypes.func.isRequired,
+    decimales: PropTypes.number.isRequired,
+  };
 
   render() {
     const {
@@ -15,8 +22,8 @@ export default class FormPresupuestoPagos extends Component {
       cuotaSeleccionada,
       optionsCobradores,
       optionsMediosPago,
+      onChangeDescRedondeo,
     } = this.props;
-    console.log(cuotaSeleccionada);
     return (
       <div className="presupuestos-form-presupuesto-pagos">
         <Row>
@@ -90,6 +97,7 @@ export default class FormPresupuestoPagos extends Component {
                   label="Desc./Redondeo :"
                   component={InputNumber}
                   decimalScale={decimales}
+                  onChange={onChangeDescRedondeo}
                   className="field form-control-lg form-control"
                 />
               </Col>
@@ -106,27 +114,22 @@ export default class FormPresupuestoPagos extends Component {
             </Row>
             <Row>
               <Col sm="12" md="6">
-                <FormGroup>
-                  <label>Vencimiento :</label>
-                  <Field
-                    name="d_fecha_vcto"
-                    type="date"
-                    className="field form-control-lg form-control"
-                    component="input"
-                    disabled
-                  />
-                </FormGroup>
+                <Field
+                  name="d_fecha_vcto"
+                  label="Vencimiento :"
+                  type="date"
+                  component={InputText}
+                  className="field form-control-lg form-control"
+                />
               </Col>
               <Col sm="12" md="6">
-                <FormGroup>
-                  <label>Pagado :</label>
-                  <Field
-                    name="d_fecha_pago"
-                    type="date"
-                    className="field form-control-lg form-control"
-                    component="input"
-                  />
-                </FormGroup>
+                <Field
+                  name="d_fecha_pago"
+                  label="Pagado :"
+                  type="date"
+                  component={InputText}
+                  className="field form-control-lg form-control"
+                />
               </Col>
             </Row>
             <Row>

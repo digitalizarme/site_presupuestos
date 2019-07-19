@@ -31,13 +31,13 @@ const columns = [
   },
   {
     dataField: 'persona.c_identificacion',
-    text: 'Identificacíon',
+    text: 'Identificación',
     sort: true,
     editable: false,
     attrs: { width: '10%' },
   },
   {
-    dataField: 'status.c_descripcion',
+    dataField: 'status.c_descripción',
     text: 'Status',
     sort: true,
     editable: false,

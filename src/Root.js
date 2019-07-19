@@ -70,7 +70,7 @@ function renderRouteConfigV3(routes, contextPath, store, history) {
         <Route
           key={newContextPath}
           render={props =>
-            estoyLogado() || !protegido || !soloAdmin || (soloAdmin && soyAdmin()) ? (
+            (estoyLogado() || !protegido) && ((soloAdmin && soyAdmin()) || !soloAdmin) ? (
               <Component {...props}>{childRoutes}</Component>
             ) : (
               redireciona(props,history)

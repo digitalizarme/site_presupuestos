@@ -5,3 +5,4 @@ export { default as FormItemsMercaderiasServicios } from './FormItemsMercaderias
 export { default as GenerarPdf } from './GenerarPdf';
 export { default as FormPresupuestoPagos } from './FormPresupuestoPagos';
 export { default as ModalCuotas } from './ModalCuotas';
+export { default as Redireccionar } from './Redireccionar';

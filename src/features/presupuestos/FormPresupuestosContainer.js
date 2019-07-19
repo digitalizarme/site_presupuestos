@@ -541,16 +541,30 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChageStatus = (event, newValue, previousValue, name) => {
+    const {n_total_general} = this.props;
+
     if (newValue && newValue === 4) {
       swal({
         title: 'Ops',
-        text: 'Esse status só é permitido quando todas as parcelas estão pagas',
+        text: 'Este status solo se permite cuando todas las cuotas esten pagas',
         icon: 'warning',
         button: 'OK!',
       });
       setTimeout(() => {
         this.props.dispatch(change('formPresupuestos', 'n_id_status', previousValue));
       }, 100);
+    }
+    else if (newValue && newValue === 3 && parseFloat(n_total_general) === 0) {
+      swal({
+        title: 'Ops',
+        text: 'Este status solo se permite cuando el presupuesto este completo',
+        icon: 'warning',
+        button: 'OK!',
+      });
+      setTimeout(() => {
+        this.props.dispatch(change('formPresupuestos', 'n_id_status', previousValue));
+      }, 100);
+
     }
   };
 

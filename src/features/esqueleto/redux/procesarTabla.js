@@ -14,14 +14,14 @@ import initialState from './initialState';
 
 export function procesarTabla({
   api_funcion,
-  offset,
-  sizePerPage,
-  page,
-  sortField,
-  sortOrder,
-  columns,
-  searchText,
-  defaultSorted,
+  offset=initialState.offset,
+  sizePerPage=initialState.sizePerPage,
+  page=initialState.page,
+  sortField=initialState.sortField,
+  sortOrder=initialState.sortOrder,
+  columns=initialState.columns,
+  searchText=initialState.searchText,
+  defaultSorted=initialState.defaultSorted,
 }) {
   const params = sizePerPage
     ? {

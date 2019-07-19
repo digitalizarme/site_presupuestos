@@ -11,7 +11,7 @@ import { faCoins } from '@fortawesome/free-solid-svg-icons';
 import { reduxForm, change, formValueSelector, reset } from 'redux-form';
 import formatarNumero from '../../common/formatarNumero';
 import moment from 'moment';
-import { toggleCargando } from '../esqueleto/redux/actions';
+import { toggleCargando, procesarTabla } from '../esqueleto/redux/actions';
 import mostraMensajeError from '../../common/mostraMensajeError';
 import swal from 'sweetalert';
 
@@ -98,14 +98,26 @@ export class ModalCuotas extends Component {
       id: datos.id,
     };
     if (optionsCobradores.length === 0) {
-      actions.traeCobradores();
+      actions.traeCobradores().catch(err => {
+        actions.toggleCargando();
+        mostraMensajeError({ err, msgPadron: 'Error al intentar traer los cobradores' });
+      });
     }
     if (optionsMediosPago.length === 0) {
-      actions.traeMediosPago();
+      actions.traeMediosPago().catch(err => {
+        actions.toggleCargando();
+        mostraMensajeError({ err, msgPadron: 'Error al intentar traer los medios de pagos' });
+      });
     }
-    actions.traeCuotas(params).then(res => {
-      actions.toggleCargando();
-    });
+    actions
+      .traeCuotas(params)
+      .then(res => {
+        actions.toggleCargando();
+      })
+      .catch(err => {
+        actions.toggleCargando();
+        mostraMensajeError({ err, msgPadron: 'Error al intentar traer las cuotas' });
+      });
   }
 
   toggleModal() {
@@ -120,11 +132,11 @@ export class ModalCuotas extends Component {
   submit = values => {
     const valores = {
       id: values.id,
-      d_fecha_pago:
-        values.d_fecha_pago && values.d_fecha_pago !== 'Invalid date' ? values.d_fecha_pago : null,
-      n_desc_redondeo: values.n_desc_redondeo ? values.n_desc_redondeo : 0,
-      n_id_medio_pago: values.n_id_medio_pago ? values.n_id_medio_pago : null,
-      n_id_persona_baja: values.n_id_persona_baja ? values.n_id_persona_baja : null,
+      d_fecha_pago: values.d_fecha_pago,
+      n_desc_redondeo: values.n_desc_redondeo,
+      n_id_medio_pago: values.n_id_medio_pago,
+      n_id_persona_baja: values.n_id_persona_baja,
+      n_id_presupuesto: values.n_id_presupuesto,
     };
     const params = {
       data: valores,
@@ -134,18 +146,32 @@ export class ModalCuotas extends Component {
     actions
       .actualizaCuota(params)
       .then(res => {
-        this.toggleModal();
-        swal({ icon: 'success', timer: 1000 });
+        const { datos } = this.props;
+        if (datos.n_id_status === 3) {
+          actions.toggleCargando();
+          actions
+            .procesarTabla({
+              api_funcion: 'presupuestos/aprobados',
+            })
+            .then(res => {
+              actions.toggleCargando().then(res => {
+                this.toggleModal();
+                swal({ icon: 'success', timer: 1000 });
+              });
+            });
+        } else {
+          this.toggleModal();
+          swal({ icon: 'success', timer: 1000 });
+        }
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar actualizar esta cuota' });
       });
-    console.log(valores, 'values');
   };
 
   render() {
     const { isOpen } = this.state;
-    const { handleSubmit, submitting, pristine, datos } = this.props;
+    const { handleSubmit, submitting, pristine, datos, cuotaSeleccionada } = this.props;
     return (
       <div className="presupuestos-modal-cuotas">
         <button className="btn-danger btn btn-md" onClick={() => this.toggleModal()}>
@@ -153,7 +179,9 @@ export class ModalCuotas extends Component {
         </button>
         <Modal centered isOpen={isOpen} toggle={this.toggleModal} size={'lg'}>
           <Form onSubmit={handleSubmit(this.submit)}>
-            <ModalHeader toggle={this.toggleModal}>Pagos del Presupuesto N. {datos.id}</ModalHeader>
+            <ModalHeader toggle={this.toggleModal}>
+              Pagos del Presupuesto N. {datos.id} - Valores en: {datos.moneda.c_descripcion}
+            </ModalHeader>
             <ModalBody>
               <FormPresupuestoPagos
                 {...this.props}
@@ -162,12 +190,16 @@ export class ModalCuotas extends Component {
               />
             </ModalBody>
             <ModalFooter>
-              <Button color="secondary" onClick={this.toggleModal}>
-                Cancelar
-              </Button>
-              <Button type="submit" color="success" disabled={pristine || submitting}>
-                {submitting ? 'Guardando' : 'Guardar'}
-              </Button>
+              {cuotaSeleccionada && (
+                <div>
+                  <Button color="secondary" onClick={this.toggleModal}>
+                    Cancelar
+                  </Button>{' '}
+                  <Button type="submit" color="success" disabled={pristine || submitting}>
+                    {submitting ? 'Guardando' : 'Guardar'}
+                  </Button>
+                </div>
+              )}
             </ModalFooter>
           </Form>
         </Modal>
@@ -194,7 +226,7 @@ function mapStateToProps(state) {
   let decimales = 0;
   let cuotaSeleccionada = null;
   if (state.presupuestos.cuotas.length > 0) {
-    decimales = state.presupuestos.cuotas[0].moneda.n_decimales;
+    decimales = state.presupuestos.cuotas[0].moneda.n_decimales||0;
     for (let item of state.presupuestos.cuotas) {
       const valorFormatado = formatarNumero(item.n_valor, decimales, true);
       itemObj = {
@@ -206,7 +238,9 @@ function mapStateToProps(state) {
           ' ' +
           valorFormatado +
           ' | Vcto.: ' +
-          moment(item.d_fecha_vcto).format('DD/MM/YYYY'),
+          moment(item.d_fecha_vcto).format('DD/MM/YYYY') +
+          ' | Pagado: ' +
+          (item.d_fecha_pago !== null ? moment(item.d_fecha_pago).format('DD/MM/YYYY') : 'No'),
         value: item.id,
         extra: item,
       };
@@ -245,7 +279,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...actions, toggleCargando }, dispatch),
+    actions: bindActionCreators({ ...actions, toggleCargando, procesarTabla }, dispatch),
   };
 }
 

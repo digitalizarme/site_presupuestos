@@ -84,7 +84,12 @@ const columns = [
     editable: false,
     formatter: (cell, row) => {
       return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0 ? (
-        <div><GenerarPdf key={`pdf${row.id}`} idPresupuesto={row.id} /> <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} /></div>
+        <div>
+          <GenerarPdf key={`pdf${row.id}`} idPresupuesto={row.id} />{' '}
+          {row.n_id_status > 2 ? (
+            <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} />
+          ) : null}
+        </div>
       ) : (
         <Incompletos />
       );

@@ -15,6 +15,7 @@ const renderCuotas = ({
   meta: { touched, error, submitFailed },
   decimales,
   onChangeValorCuota,
+  disabled,
 }) => (
   <div>
     {fields.map((item, indice) => (
@@ -32,6 +33,7 @@ const renderCuotas = ({
                 fields: fields.getAll(),
               });
             }}
+            disabled={disabled}
           />
         </Col>
         <Col sm={5}>
@@ -40,6 +42,7 @@ const renderCuotas = ({
             type="date"
             className="field form-control-lg form-control"
             component="input"
+            disabled={disabled}
           />
         </Col>
       </Row>
@@ -145,9 +148,27 @@ class FormPresupuestos extends Component {
       n_dif_cuotas,
       onChageStatus,
     } = this.props;
+    
+    const { path } = this.props.match;
+
+    let tipoPresupuesto = 'pendientes';
+    let tipoTitPresupuesto = 'Pendiente';
+    let modoConsulta = false;
+    let disabledCampos = false;
+    if (path.indexOf('aprobados') !== -1) {
+      tipoPresupuesto = 'aprobados';
+      tipoTitPresupuesto = 'Aprobado';
+    } else if (path.indexOf('concluidos') !== -1) {
+      tipoPresupuesto = 'concluidos';
+      tipoTitPresupuesto = 'Concluido';
+      modoConsulta = true;
+      disabledCampos = true;
+    }
+
+
     return (
       <div className="presupuestos-form-presupuestos">
-        <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Presupuesto</div>
+        <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Presupuesto {tipoTitPresupuesto}</div>
         <Container>
           <ModalForm
             tituloModal={modoEdicionItem ? 'Editar Item' : 'Nuevo Item'}
@@ -211,6 +232,7 @@ class FormPresupuestos extends Component {
                   component={SuperSelect}
                   placeholder="Elija"
                   onChange={onChageStatus}
+                  disabled={disabledCampos}
                 />
               </Col>
             </Row>
@@ -222,20 +244,23 @@ class FormPresupuestos extends Component {
                   options={optionsClientes}
                   component={SuperSelect}
                   placeholder="Elija"
+                  disabled={disabledCampos}
                   onChange={onChangePersona}
                 />
               </Col>
             </Row>
-            <Row>
+            {!modoConsulta && <Row>
               <Col xs="12" lg="6" className="espacio_abajo">
                 <Button type="button" color="success" size="md" onClick={agregarItem}>
                   <FontAwesomeIcon icon={faPlus} /> Agregar
-                </Button>{' '}
+                </Button>
               </Col>
-            </Row>
+            </Row>}
             <Row>
               <Col>
-                <div className="titulo_sesion mano" onClick={this.toggleItems}>
+                <div className={`titulo_sesion ${!modoConsulta?'mano':'sinmano'}`} onClick={()=>{
+                  return modoConsulta?this.toggleItems:null
+                  }}>
                   Items
                 </div>
               </Col>
@@ -264,7 +289,11 @@ class FormPresupuestos extends Component {
                             <tr
                               key={indice}
                               onDoubleClick={() => {
-                                editarItem(objItem);
+                                if(!modoConsulta)
+                                {
+                                  editarItem(objItem);
+                                }
+                                
                               }}
                             >
                               <td>{objItem.c_descripcion}</td>
@@ -276,7 +305,7 @@ class FormPresupuestos extends Component {
                               <td>{formatarNumero(objItem.n_peso, 2)}</td>
                               <td>{formatarNumero(objItem.n_flete, decimales)}</td>
                               <td>
-                                <Button
+                                {!modoConsulta && <span><Button
                                   type="button"
                                   color="info"
                                   size="sm"
@@ -295,7 +324,7 @@ class FormPresupuestos extends Component {
                                   }}
                                 >
                                   <FontAwesomeIcon icon={faTrashAlt} />
-                                </Button>
+                                </Button></span>}
                               </td>
                             </tr>
                           ))
@@ -427,6 +456,7 @@ class FormPresupuestos extends Component {
                         options={optionsComisionista}
                         component={SuperSelect}
                         placeholder="Elija"
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="4">
@@ -444,6 +474,7 @@ class FormPresupuestos extends Component {
                           });
                         }}
                         className="field form-control-lg form-control"
+                        disabled={disabledCampos}
                       />
                     </Col>
                   </Row>
@@ -476,6 +507,7 @@ class FormPresupuestos extends Component {
                         }}
                         component={SuperSelect}
                         placeholder="Elija"
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="4">
@@ -493,6 +525,7 @@ class FormPresupuestos extends Component {
                           });
                         }}
                         className="field form-control-lg form-control"
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="4">
@@ -535,6 +568,7 @@ class FormPresupuestos extends Component {
                           });
                         }}
                         className="field form-control-lg form-control"
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="12">
@@ -581,6 +615,7 @@ class FormPresupuestos extends Component {
                         component={InputNumber}
                         decimalScale={0}
                         className="field form-control-lg form-control"
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="4">
@@ -596,6 +631,7 @@ class FormPresupuestos extends Component {
                             n_dias_Frecuencia_pago: this.props.n_dias_Frecuencia_pago,
                           });
                         }}
+                        disabled={disabledCampos}
                       />
                     </Col>
                     <Col sm="4">
@@ -611,6 +647,7 @@ class FormPresupuestos extends Component {
                             n_dias_Frecuencia_pago: valor,
                           });
                         }}
+                        disabled={disabledCampos}
                       />
                     </Col>
                   </Row>
@@ -619,6 +656,7 @@ class FormPresupuestos extends Component {
                     component={renderCuotas}
                     decimales={decimales}
                     onChangeValorCuota={onChangeValorCuota}
+                    disabled={disabledCampos}
                   />
                   {n_dif_cuotas && n_dif_cuotas > 0 && (
                     <Row>
@@ -647,17 +685,18 @@ class FormPresupuestos extends Component {
                   type="textarea"
                   className="field"
                   normalize={value => value && value.toUpperCase()}
+                  disabled={disabledCampos}
                 />
               </Col>
             </Row>
             <Row className="text-right">
               <Col sm="12">
-                <Link to="/presupuestos" className="btn btn-primary" history={this.props.history}>
+                <Link to={`/presupuestos/${tipoPresupuesto}`} className="btn btn-primary" history={this.props.history}>
                   Cancelar
                 </Link>{' '}
-                <Button type="submit" color="success" disabled={pristine || submitting}>
+                {!modoConsulta && <Button type="submit" color="success" disabled={pristine || submitting}>
                   {submitting ? 'Guardando' : 'Guardar'}
-                </Button>
+                </Button>}
               </Col>
             </Row>
           </Form>

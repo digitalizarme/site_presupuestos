@@ -27,7 +27,7 @@ export default class FormPresupuestoPagos extends Component {
     return (
       <div className="presupuestos-form-presupuesto-pagos">
         <Row>
-          <Col sm="12">
+          <Col sm="12" md="9">
             <Field
               name="persona.c_nombre"
               label="Cliente :"
@@ -36,19 +36,7 @@ export default class FormPresupuestoPagos extends Component {
               className="field form-control-lg form-control"
             />
           </Col>
-        </Row>
-        <Row>
           <Col sm="12" md="3">
-            <Field
-              name="moneda.c_descripcion"
-              label="Valores en"
-              component={InputText}
-              disabled
-              className="field form-control-lg form-control"
-            />
-          </Col>
-
-          <Col sm="12" md="9">
             <Field
               name="n_total_general"
               label="Total Presupuesto"
@@ -58,6 +46,7 @@ export default class FormPresupuestoPagos extends Component {
               className="field form-control-lg form-control"
             />
           </Col>
+
         </Row>
         <Row>
           <Col sm="12">
@@ -120,6 +109,7 @@ export default class FormPresupuestoPagos extends Component {
                   type="date"
                   component={InputText}
                   className="field form-control-lg form-control"
+                  disabled
                 />
               </Col>
               <Col sm="12" md="6">

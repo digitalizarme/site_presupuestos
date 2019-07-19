@@ -5,6 +5,7 @@ import {
   ListaPresupuestos,
   FormPresupuestosContainer,
   GenerarPdf,
+  Redireccionar,
 } from './';
 
 export default {
@@ -17,6 +18,11 @@ export default {
     { path: 'concluidos', name: 'Presupuestos concluidos', component: ListaPresupuestos, protegido:true },
     { path: 'nuevo', name: 'Nuevo presupuesto', component: FormPresupuestosContainer, protegido:true },
     { path: 'editar/:id', name: 'Editar presupuesto', component: FormPresupuestosContainer, protegido:true },
+    { path: 'pendientes/editar/:id', name: 'Editar presupuesto', component: FormPresupuestosContainer, protegido:true },
+    { path: 'aprobados/editar/:id', name: 'Editar presupuesto', component: FormPresupuestosContainer, protegido:true },
+    { path: 'concluidos/editar/:id', name: 'Editar presupuesto', component: FormPresupuestosContainer, protegido:true },
     { path: 'generar_pdf/:id', name: 'Generar pdf', component: GenerarPdf },
+    { path: '*', name: 'Redireccionar', component: Redireccionar },
+
   ],
 };

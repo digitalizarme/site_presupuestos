@@ -27,7 +27,7 @@ function soyAdmin() {
   return res;
 }
 
-function redireciona(props,history) {
+function redireciona(props, history) {
   swal({
     title: 'Ops',
     text: !estoyLogado()
@@ -36,7 +36,9 @@ function redireciona(props,history) {
     icon: 'error',
     button: 'OK!',
   });
-  return history.push(!estoyLogado() ? '/acceder' : '/');
+  setTimeout(() => {
+    return history.push(!estoyLogado() ? '/acceder' : '/');
+  }, 100);
 }
 
 function renderRouteConfigV3(routes, contextPath, store, history) {
@@ -73,7 +75,7 @@ function renderRouteConfigV3(routes, contextPath, store, history) {
             (estoyLogado() || !protegido) && ((soloAdmin && soyAdmin()) || !soloAdmin) ? (
               <Component {...props}>{childRoutes}</Component>
             ) : (
-              redireciona(props,history)
+              redireciona(props, history)
             )
           }
           path={newContextPath}
@@ -88,7 +90,7 @@ function renderRouteConfigV3(routes, contextPath, store, history) {
             (estoyLogado() || !protegido) && ((soloAdmin && soyAdmin()) || !soloAdmin) ? (
               <Component {...props} />
             ) : (
-              redireciona(props,history)
+              redireciona(props, history)
             )
           }
           path={newContextPath}

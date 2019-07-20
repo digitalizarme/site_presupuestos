@@ -37,7 +37,7 @@ const columns = [
     attrs: { width: '10%' },
   },
   {
-    dataField: 'status.c_descripción',
+    dataField: 'status.c_descripcion',
     text: 'Status',
     sort: true,
     editable: false,

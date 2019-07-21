@@ -44,6 +44,7 @@ export default class SuperSelect extends Component {
               options={options}
               isDisabled={disabled}
               placeholder={placeholder}
+              onInputChange={value => value && value.toUpperCase()}
               classNamePrefix="react-select"
             />
           )}

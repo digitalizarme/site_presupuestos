@@ -413,7 +413,6 @@ export class FormPresupuestosContainer extends Component {
     const { n_total_general, decimales } = this.props;
     let total = 0;
     fields.map((campo, indice) => {
-
       if (indice === actual.indice) {
         total += parseFloat(actual.valor);
       } else {
@@ -431,8 +430,7 @@ export class FormPresupuestosContainer extends Component {
   onChangePagos = campos => {
     const { id, monedaSeleccionada, n_total_general } = this.props;
     const { generaCuotas } = this.props.actions;
-    if(!monedaSeleccionada)
-    {
+    if (!monedaSeleccionada) {
       return;
     }
     const params = {
@@ -545,7 +543,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChageStatus = (event, newValue, previousValue, name) => {
-    const {n_total_general} = this.props;
+    const { n_total_general } = this.props;
 
     if (newValue && newValue === 4) {
       swal({
@@ -557,8 +555,7 @@ export class FormPresupuestosContainer extends Component {
       setTimeout(() => {
         this.props.dispatch(change('formPresupuestos', 'n_id_status', previousValue));
       }, 100);
-    }
-    else if (newValue && newValue === 3 && parseFloat(n_total_general) === 0) {
+    } else if (newValue && newValue === 3 && parseFloat(n_total_general) === 0) {
       swal({
         title: 'Ops',
         text: 'Este status solo se permite cuando el presupuesto este completo',
@@ -568,7 +565,6 @@ export class FormPresupuestosContainer extends Component {
       setTimeout(() => {
         this.props.dispatch(change('formPresupuestos', 'n_id_status', previousValue));
       }, 100);
-
     }
   };
 
@@ -1022,6 +1018,23 @@ export class FormPresupuestosContainer extends Component {
     if (path.indexOf('nuevo') !== -1) {
       edicion = false;
     }
+    let tipoPresupuesto = 'pendientes';
+    let tipoTitPresupuesto = 'Pendiente';
+    let modoConsulta = false;
+    let disabledCampos = false;
+    let cambiaStatus = true;
+    if (path.indexOf('aprobados') !== -1) {
+      tipoPresupuesto = 'aprobados';
+      tipoTitPresupuesto = 'Aprobado';
+      modoConsulta = true;
+      disabledCampos = true;
+    } else if (path.indexOf('concluidos') !== -1) {
+      tipoPresupuesto = 'concluidos';
+      tipoTitPresupuesto = 'Concluido';
+      modoConsulta = true;
+      disabledCampos = true;
+      cambiaStatus = true;
+    }
     return (
       <div className="presupuestos-form-presupuestos-container">
         <Principal
@@ -1048,6 +1061,11 @@ export class FormPresupuestosContainer extends Component {
           onChangePagos={this.onChangePagos}
           onChangeValorCuota={this.onChangeValorCuota}
           onChageStatus={this.onChageStatus}
+          tipoPresupuesto={tipoPresupuesto}
+          tipoTitPresupuesto={tipoTitPresupuesto}
+          modoConsulta={modoConsulta}
+          disabledCampos={disabledCampos}
+          cambiaStatus={cambiaStatus}
         />
       </div>
     );

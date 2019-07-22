@@ -147,23 +147,12 @@ class FormPresupuestos extends Component {
       onChangeValorCuota,
       n_dif_cuotas,
       onChageStatus,
+      tipoPresupuesto,
+      tipoTitPresupuesto,
+      modoConsulta,
+      disabledCampos,
+      cambiaStatus,
     } = this.props;
-
-    const { path } = this.props.match;
-
-    let tipoPresupuesto = 'pendientes';
-    let tipoTitPresupuesto = 'Pendiente';
-    let modoConsulta = false;
-    let disabledCampos = false;
-    if (path.indexOf('aprobados') !== -1) {
-      tipoPresupuesto = 'aprobados';
-      tipoTitPresupuesto = 'Aprobado';
-    } else if (path.indexOf('concluidos') !== -1) {
-      tipoPresupuesto = 'concluidos';
-      tipoTitPresupuesto = 'Concluido';
-      modoConsulta = true;
-      disabledCampos = true;
-    }
 
     return (
       <div className="presupuestos-form-presupuestos">
@@ -233,7 +222,7 @@ class FormPresupuestos extends Component {
                   component={SuperSelect}
                   placeholder="Elija"
                   onChange={onChageStatus}
-                  disabled={disabledCampos}
+                  disabled={!cambiaStatus}
                 />
               </Col>
             </Row>

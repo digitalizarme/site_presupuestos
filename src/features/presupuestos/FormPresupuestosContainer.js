@@ -431,6 +431,10 @@ export class FormPresupuestosContainer extends Component {
   onChangePagos = campos => {
     const { id, monedaSeleccionada, n_total_general } = this.props;
     const { generaCuotas } = this.props.actions;
+    if(!monedaSeleccionada)
+    {
+      return;
+    }
     const params = {
       data: {
         ...campos,

@@ -148,7 +148,7 @@ class FormPresupuestos extends Component {
       n_dif_cuotas,
       onChageStatus,
     } = this.props;
-    
+
     const { path } = this.props.match;
 
     let tipoPresupuesto = 'pendientes';
@@ -165,10 +165,11 @@ class FormPresupuestos extends Component {
       disabledCampos = true;
     }
 
-
     return (
       <div className="presupuestos-form-presupuestos">
-        <div className="titulo_formulario">{edicion ? 'Editar' : 'Cadastrar'} Presupuesto {tipoTitPresupuesto}</div>
+        <div className="titulo_formulario">
+          {edicion ? 'Editar' : 'Cadastrar'} Presupuesto {tipoTitPresupuesto}
+        </div>
         <Container>
           <ModalForm
             tituloModal={modoEdicionItem ? 'Editar Item' : 'Nuevo Item'}
@@ -249,18 +250,23 @@ class FormPresupuestos extends Component {
                 />
               </Col>
             </Row>
-            {!modoConsulta && <Row>
-              <Col xs="12" lg="6" className="espacio_abajo">
-                <Button type="button" color="success" size="md" onClick={agregarItem}>
-                  <FontAwesomeIcon icon={faPlus} /> Agregar
-                </Button>
-              </Col>
-            </Row>}
+            {!modoConsulta && (
+              <Row>
+                <Col xs="12" lg="6" className="espacio_abajo">
+                  <Button type="button" color="success" size="md" onClick={agregarItem}>
+                    <FontAwesomeIcon icon={faPlus} /> Agregar
+                  </Button>
+                </Col>
+              </Row>
+            )}
             <Row>
               <Col>
-                <div className={`titulo_sesion ${!modoConsulta?'mano':'sinmano'}`} onClick={()=>{
-                  return modoConsulta?this.toggleItems:null
-                  }}>
+                <div
+                  className={`titulo_sesion ${!modoConsulta ? 'mano' : 'sinmano'}`}
+                  onClick={() => {
+                    return modoConsulta ? this.toggleItems : null;
+                  }}
+                >
                   Items
                 </div>
               </Col>
@@ -289,11 +295,9 @@ class FormPresupuestos extends Component {
                             <tr
                               key={indice}
                               onDoubleClick={() => {
-                                if(!modoConsulta)
-                                {
+                                if (!modoConsulta) {
                                   editarItem(objItem);
                                 }
-                                
                               }}
                             >
                               <td>{objItem.c_descripcion}</td>
@@ -305,26 +309,30 @@ class FormPresupuestos extends Component {
                               <td>{formatarNumero(objItem.n_peso, 2)}</td>
                               <td>{formatarNumero(objItem.n_flete, decimales)}</td>
                               <td>
-                                {!modoConsulta && <span><Button
-                                  type="button"
-                                  color="info"
-                                  size="sm"
-                                  onClick={() => {
-                                    editarItem(objItem);
-                                  }}
-                                >
-                                  <FontAwesomeIcon icon={faEdit} />
-                                </Button>{' '}
-                                <Button
-                                  type="button"
-                                  color="danger"
-                                  size="sm"
-                                  onClick={() => {
-                                    eliminarItem(objItem);
-                                  }}
-                                >
-                                  <FontAwesomeIcon icon={faTrashAlt} />
-                                </Button></span>}
+                                {!modoConsulta && (
+                                  <span>
+                                    <Button
+                                      type="button"
+                                      color="info"
+                                      size="sm"
+                                      onClick={() => {
+                                        editarItem(objItem);
+                                      }}
+                                    >
+                                      <FontAwesomeIcon icon={faEdit} />
+                                    </Button>{' '}
+                                    <Button
+                                      type="button"
+                                      color="danger"
+                                      size="sm"
+                                      onClick={() => {
+                                        eliminarItem(objItem);
+                                      }}
+                                    >
+                                      <FontAwesomeIcon icon={faTrashAlt} />
+                                    </Button>
+                                  </span>
+                                )}
                               </td>
                             </tr>
                           ))
@@ -658,9 +666,9 @@ class FormPresupuestos extends Component {
                     onChangeValorCuota={onChangeValorCuota}
                     disabled={disabledCampos}
                   />
-                  {n_dif_cuotas && n_dif_cuotas > 0 && (
-                    <Row>
-                      <Col>
+                  <Row>
+                    <Col>
+                      {n_dif_cuotas && n_dif_cuotas > 0 ? (
                         <Field
                           name="n_dif_cuotas"
                           label="Diferencia entre total y las cuotas"
@@ -669,9 +677,11 @@ class FormPresupuestos extends Component {
                           decimalScale={decimales}
                           disabled
                         />
-                      </Col>
-                    </Row>
-                  )}
+                      ) : (
+                        <Field name="n_dif_cuotas" component="input" type="hidden" />
+                      )}
+                    </Col>
+                  </Row>
                 </Collapse>
               </Col>
             </Row>
@@ -691,12 +701,18 @@ class FormPresupuestos extends Component {
             </Row>
             <Row className="text-right">
               <Col sm="12">
-                <Link to={`/presupuestos/${tipoPresupuesto}`} className="btn btn-primary" history={this.props.history}>
+                <Link
+                  to={`/presupuestos/${tipoPresupuesto}`}
+                  className="btn btn-primary"
+                  history={this.props.history}
+                >
                   Cancelar
                 </Link>{' '}
-                {!modoConsulta && <Button type="submit" color="success" disabled={pristine || submitting}>
-                  {submitting ? 'Guardando' : 'Guardar'}
-                </Button>}
+                {!modoConsulta && (
+                  <Button type="submit" color="success" disabled={pristine || submitting}>
+                    {submitting ? 'Guardando' : 'Guardar'}
+                  </Button>
+                )}
               </Col>
             </Row>
           </Form>

@@ -373,7 +373,7 @@ const MyDocument = ({ props, archivo }) => {
         {props.items.map((item, indice) => (
           <Linea key={indice}>
             <SeccionDescValor>
-              <Campo8>{item.c_descripcion.toUpperCase()}</Campo8>
+              <Campo8Izquierda>{item.c_descripcion.toUpperCase()}</Campo8Izquierda>
             </SeccionDescValor>
             <SeccionCant>
               <Campo8>{item.n_cantidad}</Campo8>

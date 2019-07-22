@@ -251,7 +251,7 @@ function mapStateToProps(state) {
     esqueleto: state.esqueleto,
     acceder: state.acceder,
     initialValues,
-    edicion: initialValues ? true : false,
+    edicion: modoNuevo ? false : true,
     optionsPersonas,
   };
 }

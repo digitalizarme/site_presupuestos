@@ -57,16 +57,20 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
                 Pendientes
               </Link>
             </NavItem>
-            <NavItem>
-              <Link className="nav-link" to="/presupuestos/aprobados">
-                Aprobados
-              </Link>
-            </NavItem>
-            <NavItem>
-              <Link className="nav-link" to="/presupuestos/concluidos">
-                Concluidos
-              </Link>
-            </NavItem>
+            {usuario.b_administrador && (
+              <NavItem>
+                <Link className="nav-link" to="/presupuestos/aprobados">
+                  Aprobados
+                </Link>
+              </NavItem>
+            )}
+            {usuario.b_administrador && (
+              <NavItem>
+                <Link className="nav-link" to="/presupuestos/concluidos">
+                  Concluidos
+                </Link>
+              </NavItem>
+            )}
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
@@ -168,6 +172,11 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
         <DropdownMenu right>
           <DropdownItem>
             <NavItem>
+              <Link className="nav-link" to="/usuarios/miUsuario">
+                Mi Usuario
+              </Link>
+            </NavItem>
+            <NavItem>
               <Link
                 className="nav-link"
                 to="#deslogar"
@@ -203,14 +212,14 @@ export class Menu extends Component {
       <div className="esqueleto-menu">
         <Router history={this.props.history}>
           <Navbar color="dark" dark expand="md">
-              <Link to="/">
-                <img
-                  src={configuracion.t_logo ? configuracion.t_logo : logo}
-                  className="img-responsive pull-left logo"
-                  alt="Logo"
-                  style={{ maxWidth: '50px' }}
-                />
-              </Link>
+            <Link to="/">
+              <img
+                src={configuracion.t_logo ? configuracion.t_logo : logo}
+                className="img-responsive pull-left logo"
+                alt="Logo"
+                style={{ maxWidth: '50px' }}
+              />
+            </Link>
             <NavbarToggler color="success" onClick={menuToggle} />
             {usuario.persona ? (
               <MenuLogado

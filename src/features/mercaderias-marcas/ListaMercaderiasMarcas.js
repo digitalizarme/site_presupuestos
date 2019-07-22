@@ -110,7 +110,7 @@ export class ListaMercaderiasMarcas extends Component {
           columns={columns}
           cuerpoModal={FormMercaderiasMarcas}
           validationConstraints={validationConstraints}
-          tituloModal={edicion ? 'Editar Marcas de Mercaderias' : 'Nuevo Marcas de Mercaderias'}
+          tituloModal={edicion ? 'Editar Marca de Mercaderias' : 'Nueva Marca de Mercaderias'}
           enviarFormulario={this.submit}
           {...this.props}
         />

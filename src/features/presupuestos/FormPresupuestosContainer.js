@@ -1033,7 +1033,7 @@ export class FormPresupuestosContainer extends Component {
       tipoTitPresupuesto = 'Concluido';
       modoConsulta = true;
       disabledCampos = true;
-      cambiaStatus = true;
+      cambiaStatus = false;
     }
     return (
       <div className="presupuestos-form-presupuestos-container">

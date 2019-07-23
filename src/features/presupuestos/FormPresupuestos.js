@@ -152,6 +152,8 @@ class FormPresupuestos extends Component {
       modoConsulta,
       disabledCampos,
       cambiaStatus,
+      usuarioComision,
+      n_valor_comision,
     } = this.props;
 
     return (
@@ -475,6 +477,13 @@ class FormPresupuestos extends Component {
                       />
                     </Col>
                   </Row>
+                  {usuarioComision > 0 && (
+                    <Row>
+                      <Col sm="8" className="comisionista">
+                        Total del Comisionista: {formatarNumero(usuarioComision, decimales)}
+                      </Col>
+                    </Row>
+                  )}
                 </Collapse>
               </Col>
             </Row>
@@ -496,7 +505,7 @@ class FormPresupuestos extends Component {
                         options={optionsSeguros}
                         onChange={valor => {
                           onChangeCamposValores({
-                            n_valor_comision: this.props.n_valor_comision,
+                            n_valor_comision,
                             seguro: valor,
                             n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
                             n_desc_redondeo: this.props.n_desc_redondeo,
@@ -515,7 +524,7 @@ class FormPresupuestos extends Component {
                         decimalScale={decimales}
                         onChange={valor => {
                           onChangeCamposValores({
-                            n_valor_comision: this.props.n_valor_comision,
+                            n_valor_comision,
                             seguro: this.props.seguro,
                             n_tipo_seguro_valor: valor,
                             n_desc_redondeo: this.props.n_desc_redondeo,
@@ -558,7 +567,7 @@ class FormPresupuestos extends Component {
                         decimalScale={decimales}
                         onChange={valor => {
                           onChangeCamposValores({
-                            n_valor_comision: this.props.n_valor_comision,
+                            n_valor_comision,
                             seguro: this.props.seguro,
                             n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
                             n_desc_redondeo: valor,

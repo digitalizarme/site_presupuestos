@@ -1163,6 +1163,7 @@ function mapStateToProps(state) {
         comisionistaObj = {
           label: comisionista.c_nombre,
           value: comisionista.id,
+          extra: comisionista,
         };
         optionsComisionista.push(comisionistaObj);
       }
@@ -1245,6 +1246,12 @@ function mapStateToProps(state) {
     ? optionsMonedas.find(moneda => moneda.value === selector(state, 'n_id_moneda'))
     : null;
 
+  let comisionistaSeleccionado = selector(state, 'n_id_persona_comisionista')
+    ? optionsComisionista.find(
+        comisionista => comisionista.value === selector(state, 'n_id_persona_comisionista'),
+      )
+    : null;
+
   let itemSeleccionado = selectorItem(state, 'c_descripcion')
     ? optionsItems.find(item => item.value === selectorItem(state, 'c_descripcion'))
     : null;
@@ -1275,6 +1282,12 @@ function mapStateToProps(state) {
     optionsItems.push(itemObj);
   }
 
+  const usuarioComision = comisionistaSeleccionado
+    ? (comisionistaSeleccionado.extra.n_valor_porcentaje_comision *
+        (selector(state, 'n_valor_comision') || 0)) /
+      100
+    : 0;
+
   return {
     items: state.presupuestos.items,
     presupuestos: state.presupuestos,
@@ -1283,6 +1296,7 @@ function mapStateToProps(state) {
     cotizaciones: state.cotizaciones.cotizaciones,
     esqueleto: state.esqueleto,
     usuario: state.acceder.usuario.c_usuario,
+    usuarioComision,
     initialValues,
     initialValuesModal,
     optionsMonedas,

@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  Page,
-  Image,
-  Document,
-  StyleSheet,
-  PDFDownloadLink,
-  PDFViewer,
-} from '@react-pdf/renderer';
+import { Page, Image, Document, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
 import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
@@ -314,7 +307,9 @@ const MyDocument = ({ props, archivo }) => {
           </Seccion1>
           <Seccion2>
             <Valor>{props.configuracion.c_razon_social.toUpperCase()}</Valor>
-            <Valor style={styles.espacioArriba}>{props.configuracion.c_direccion.toUpperCase()}</Valor>
+            <Valor style={styles.espacioArriba}>
+              {props.configuracion.c_direccion.toUpperCase()}
+            </Valor>
           </Seccion2>
           <Seccion3>
             <Campo>Fecha:</Campo>
@@ -322,7 +317,9 @@ const MyDocument = ({ props, archivo }) => {
           </Seccion3>
           <Seccion4>
             <Valor>{moment(props.presupuesto.updatedAt).format('DD/MM/YYYY')}</Valor>
-            <Valor style={styles.espacioArriba}>{props.presupuesto.id.toString().padStart(9, '0')}</Valor>
+            <Valor style={styles.espacioArriba}>
+              {props.presupuesto.id.toString().padStart(9, '0')}
+            </Valor>
           </Seccion4>
         </Linea50>
         <Linea>
@@ -501,7 +498,10 @@ const MyDocument = ({ props, archivo }) => {
         <Linea>
           <Seccion25Firma />
           <Seccion50Firma>
-            <Campo8>{props.presupuesto.persona.c_nombre.toUpperCase()} - {props.presupuesto.persona.c_identificacion}</Campo8>
+            <Campo8>
+              {props.presupuesto.persona.c_nombre.toUpperCase()} -{' '}
+              {props.presupuesto.persona.c_identificacion}
+            </Campo8>
           </Seccion50Firma>
         </Linea>
       </Page>
@@ -524,10 +524,17 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
         html.scrollHeight,
         html.offsetHeight,
       );
+      const width = Math.max(
+        body.scrollWidth,
+        body.offsetWidth,
+        html.clientWidth,
+        html.scrollWidth,
+        html.offsetWidth,
+      );
       document.body.style.marginBottom = 0;
 
       return (
-        <PDFViewer width="100%" height={height}>
+        <PDFViewer width={width} height={height}>
           <MyDocument props={props} archivo={archivo} />
         </PDFViewer>
       );
@@ -594,7 +601,7 @@ export class GenerarPdf extends Component {
   }
 
   _onButtonClick(idPresupuesto) {
-    if (is.ios()) {
+    if (is.ios() || is.desktop()) {
       window.open(`/presupuestos/generar_pdf/${idPresupuesto}`);
     } else {
       this.setState({

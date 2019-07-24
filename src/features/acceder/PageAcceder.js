@@ -27,7 +27,7 @@ export class PageAcceder extends Component {
       .then(res => {
         toggleCargando();
         const { acceder,history } = this.props;
-        setToken(acceder.usuario.token, 0); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
+        setToken(acceder.usuario.token, 365); //el 2 parametro es la cantidad de dias que esta sesion sera valida. 0 = 24 hs
         history.push('/');
       })
       .catch(res => {

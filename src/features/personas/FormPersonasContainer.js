@@ -45,14 +45,6 @@ const validationConstraints = {
       message: 'Su Celular debe tener 10 caracteres como minimo',
     },
   },
-  c_email: {
-    presence: {
-      message: 'E-mail es obligatorio',
-    },
-    email: {
-      message: 'E-mail no es un e-mail válido',
-    },
-  },
   c_direccion: {
     presence: {
       message: 'Dirección es obligatorio',
@@ -64,8 +56,28 @@ const validationConstraints = {
   },
 };
 
+const validationConstraintsUsuario = {
+  ...validationConstraints,
+  c_email: {
+    presence: {
+      message: 'E-mail es obligatorio',
+    },
+    email: {
+      message: 'E-mail no es un e-mail válido',
+    },
+  },
+};
+
 const validationConstraintsComision = {
   ...validationConstraints,
+  c_email: {
+    presence: {
+      message: 'E-mail es obligatorio',
+    },
+    email: {
+      message: 'E-mail no es un e-mail válido',
+    },
+  },
   n_valor_porcentaje_comision: {
     presence: {
       message: '% de la comisión es obligatorio',
@@ -174,7 +186,11 @@ FormPersonasContainer = reduxForm({
   validate: values =>
     validate(
       values,
-      values.b_comisionista ? validationConstraintsComision : validationConstraints,
+      values.b_comisionista
+        ? validationConstraintsComision
+        : values.b_usuario
+        ? validationConstraintsUsuario
+        : validationConstraints,
       { fullMessages: false },
     ),
 })(FormPersonasContainer);

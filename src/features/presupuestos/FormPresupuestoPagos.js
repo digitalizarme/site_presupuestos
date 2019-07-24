@@ -144,6 +144,19 @@ export default class FormPresupuestoPagos extends Component {
                 />
               </Col>
             </Row>
+            <Row>
+              <Col sm="12">
+                <Field
+                  name="t_observacion"
+                  styleDiv={{ width: '100%' }}
+                  label="Observación"
+                  component={InputText}
+                  type="textarea"
+                  className="field"
+                  normalize={value => value && value.toUpperCase()}
+                />
+              </Col>
+            </Row>
           </div>
         )}
       </div>

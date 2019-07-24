@@ -137,6 +137,7 @@ export class ModalCuotas extends Component {
       n_id_medio_pago: values.n_id_medio_pago,
       n_id_persona_baja: values.n_id_persona_baja,
       n_id_presupuesto: values.n_id_presupuesto,
+      t_observacion: values.t_observacion,
     };
     const params = {
       data: valores,

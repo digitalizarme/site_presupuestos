@@ -1290,6 +1290,7 @@ function mapStateToProps(state) {
 
   return {
     items: state.presupuestos.items,
+    cuotas: state.presupuestos.cuotas,
     presupuestos: state.presupuestos,
     modoNuevo,
     traeItemsPending: state.presupuestos.traeItemsPending,

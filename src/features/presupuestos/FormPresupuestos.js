@@ -30,7 +30,7 @@ const renderCuotas = ({
             onChange={valor => {
               onChangeValorCuota({
                 actual: { valor, indice },
-                fields: fields.getAll(),
+                fields,
               });
             }}
             disabled={disabled}
@@ -155,7 +155,6 @@ class FormPresupuestos extends Component {
       usuarioComision,
       n_valor_comision,
     } = this.props;
-
     return (
       <div className="presupuestos-form-presupuestos">
         <div className="titulo_formulario">

@@ -173,6 +173,7 @@ export class ModalCuotas extends Component {
   render() {
     const { isOpen } = this.state;
     const { handleSubmit, submitting, pristine, datos, cuotaSeleccionada } = this.props;
+    const soloLectura = datos.n_id_status === 4;
     return (
       <div className="presupuestos-modal-cuotas">
         <button className="btn-danger btn btn-md" onClick={() => this.toggleModal()}>
@@ -188,6 +189,7 @@ export class ModalCuotas extends Component {
                 {...this.props}
                 onChangeCuotas={this.onChangeCuotas}
                 onChangeDescRedondeo={this.onChangeDescRedondeo}
+                soloLectura={soloLectura}
               />
             </ModalBody>
             <ModalFooter>
@@ -196,9 +198,11 @@ export class ModalCuotas extends Component {
                   <Button color="secondary" onClick={this.toggleModal}>
                     Cancelar
                   </Button>{' '}
-                  <Button type="submit" color="success" disabled={pristine || submitting}>
-                    {submitting ? 'Guardando' : 'Guardar'}
-                  </Button>
+                  {!soloLectura && (
+                    <Button type="submit" color="success" disabled={pristine || submitting}>
+                      {submitting ? 'Guardando' : 'Guardar'}
+                    </Button>
+                  )}
                 </div>
               )}
             </ModalFooter>
@@ -227,7 +231,7 @@ function mapStateToProps(state) {
   let decimales = 0;
   let cuotaSeleccionada = null;
   if (state.presupuestos.cuotas.length > 0) {
-    decimales = state.presupuestos.cuotas[0].moneda.n_decimales||0;
+    decimales = state.presupuestos.cuotas[0].moneda.n_decimales || 0;
     for (let item of state.presupuestos.cuotas) {
       const valorFormatado = formatarNumero(item.n_valor, decimales, true);
       itemObj = {

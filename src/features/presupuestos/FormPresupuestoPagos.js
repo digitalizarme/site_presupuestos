@@ -23,6 +23,7 @@ export default class FormPresupuestoPagos extends Component {
       optionsCobradores,
       optionsMediosPago,
       onChangeDescRedondeo,
+      soloLectura,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuesto-pagos">
@@ -88,6 +89,7 @@ export default class FormPresupuestoPagos extends Component {
                   decimalScale={decimales}
                   onChange={onChangeDescRedondeo}
                   className="field form-control-lg form-control"
+                  disabled={soloLectura}
                 />
               </Col>
               <Col sm="12" md="4">
@@ -119,6 +121,7 @@ export default class FormPresupuestoPagos extends Component {
                   type="date"
                   component={InputText}
                   className="field form-control-lg form-control"
+                  disabled={soloLectura}
                 />
               </Col>
             </Row>
@@ -131,6 +134,7 @@ export default class FormPresupuestoPagos extends Component {
                   component={SuperSelect}
                   placeholder="Elija"
                   className="field form-control-lg form-control"
+                  disabled={soloLectura}
                 />
               </Col>
               <Col sm="12" md="6">
@@ -141,6 +145,7 @@ export default class FormPresupuestoPagos extends Component {
                   component={SuperSelect}
                   placeholder="Elija"
                   className="field form-control-lg form-control"
+                  disabled={soloLectura}
                 />
               </Col>
             </Row>
@@ -154,6 +159,7 @@ export default class FormPresupuestoPagos extends Component {
                   type="textarea"
                   className="field"
                   normalize={value => value && value.toUpperCase()}
+                  disabled={soloLectura}
                 />
               </Col>
             </Row>

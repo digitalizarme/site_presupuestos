@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { modalToggle, limpiarLineaSeleccionada } from './redux/actions';
 import { Button, Form, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { reduxForm } from 'redux-form'; 
+import { reduxForm } from 'redux-form';
 import validate from 'validate.js';
 
 export class ModalForm extends Component {
@@ -18,7 +18,10 @@ export class ModalForm extends Component {
 
   cerrarModal = () => {
     const { modalToggle, limpiarLineaSeleccionada } = this.props.actions;
-    limpiarLineaSeleccionada();
+    const { nolimpiarLineaSeleccionada } = this.props;
+    if (!nolimpiarLineaSeleccionada) {
+      limpiarLineaSeleccionada();
+    }
     modalToggle();
   };
 
@@ -54,15 +57,16 @@ ModalForm = reduxForm({
   // a unique name for the form
   form: 'formModal',
   enableReinitialize: true,
-  validate: (values, props) =>  validate(values, props && props.validationConstraints?props.validationConstraints:{}, { fullMessages: false }),
+  validate: (values, props) =>
+    validate(values, props && props.validationConstraints ? props.validationConstraints : {}, {
+      fullMessages: false,
+    }),
   onChange: (values, dispatch, props) => {
-    if(props.atualizouForm)
-    {
+    if (props.atualizouForm) {
       props.atualizouForm(values, dispatch, props);
     }
   },
 })(ModalForm);
-
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
@@ -74,7 +78,7 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ modalToggle,limpiarLineaSeleccionada }, dispatch),
+    actions: bindActionCreators({ modalToggle, limpiarLineaSeleccionada }, dispatch),
   };
 }
 

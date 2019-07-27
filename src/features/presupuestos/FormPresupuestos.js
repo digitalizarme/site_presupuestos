@@ -189,6 +189,7 @@ class FormPresupuestos extends Component {
             validationConstraints={validationConstraintsItems}
             c_desc_item={c_desc_item}
             sizeModal="xl"
+            nolimpiarLineaSeleccionada={true}
           />
           <Form onSubmit={enviarFormulario} className="form_border">
             <Field name="id" component="input" type="hidden" />

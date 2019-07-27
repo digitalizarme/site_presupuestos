@@ -915,7 +915,9 @@ export class FormPresupuestosContainer extends Component {
         icon: 'success',
         timer: 1000,
       });
-      history.push('/presupuestos');
+      setTimeout(() => {
+        history.push('/presupuestos');
+      }, 500);
     });
   };
 

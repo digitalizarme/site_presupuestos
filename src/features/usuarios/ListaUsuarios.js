@@ -52,6 +52,7 @@ const columns = [
   {
     dataField: 'c_usuario',
     table: 'Usuarios',
+    noExiste: true,
     text: 'Usuario',
     sort: true,
     attrs: { width: '10%' },
@@ -65,6 +66,7 @@ const columns = [
   {
     dataField: 'c_activo',
     text: 'Ativo',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -73,6 +75,7 @@ const columns = [
   {
     dataField: 'c_administrador',
     text: 'Administrador',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -81,6 +84,7 @@ const columns = [
   {
     dataField: 'c_cadastrar',
     text: 'Cadastrar',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -89,6 +93,7 @@ const columns = [
   {
     dataField: 'c_editar',
     text: 'Editar',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -97,6 +102,7 @@ const columns = [
   {
     dataField: 'c_eliminar',
     text: 'Eliminar',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -105,6 +111,7 @@ const columns = [
   {
     dataField: 'c_imprimir',
     text: 'Imprimir',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,

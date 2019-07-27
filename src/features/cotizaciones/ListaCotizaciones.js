@@ -82,7 +82,7 @@ const columns = [
   {
     dataField: 'n_valor',
     text: 'Cotización',
-    sort: false,
+    sort: true,
     formatter: (cell, row) => {
       return formatarNumero(cell, 5);
     },

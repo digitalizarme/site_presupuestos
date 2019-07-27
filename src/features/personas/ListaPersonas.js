@@ -33,6 +33,7 @@ const columns = [
   {
     dataField: 'c_activo',
     text: 'Activa',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -41,6 +42,7 @@ const columns = [
   {
     dataField: 'c_cliente',
     text: 'Cliente',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -49,6 +51,7 @@ const columns = [
   {
     dataField: 'c_comisionista',
     text: 'Comisionista',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -57,6 +60,7 @@ const columns = [
   {
     dataField: 'c_funcionario',
     text: 'Funcionario',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,
@@ -65,6 +69,7 @@ const columns = [
   {
     dataField: 'c_usuario',
     text: 'Usuário',
+    noExiste: true,
     sort: true,
     editable: false,
     searchable: false,

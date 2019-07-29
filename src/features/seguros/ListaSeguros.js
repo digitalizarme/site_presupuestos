@@ -53,13 +53,13 @@ const columns = [
     table: 'Seguros',
     text: 'Valor a exhibir',
     sort: true,
-    attrs: { width: '25%' },
+    attrs: { width: '20%' },
   },
   {
     dataField: 'c_tipo_select2',
     text: 'Tipo a exhibir',
     sort: true,
-    attrs: { width: '25%' },
+    attrs: { width: '20%' },
   },
   {
     dataField: 'n_valor',
@@ -82,6 +82,15 @@ const columns = [
     sort: true,
     editable: false,
     attrs: { width: '15%' },
+  },
+  {
+    dataField: 'c_activo',
+    text: 'Activo',
+    noExiste: true,
+    sort: true,
+    editable: false,
+    searchable: false,
+    attrs: { width: '10%' },
   },
 ];
 

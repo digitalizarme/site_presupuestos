@@ -49,7 +49,7 @@ const columns = [
     table: 'Fletes',
     text: 'Tipo',
     sort: true,
-    attrs: { width: '35%' },
+    attrs: { width: '25%' },
   },
   {
     dataField: 'moneda.c_descripcion',
@@ -65,6 +65,15 @@ const columns = [
     formatter: formatarNumero,
     editable: false,
     attrs: { width: '25%' },
+  },
+  {
+    dataField: 'c_activo',
+    text: 'Activo',
+    noExiste: true,
+    sort: true,
+    editable: false,
+    searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'updatedAt',

@@ -28,7 +28,16 @@ const columns = [
     table: 'MercaderiasGrupos',
     text: 'Descripción',
     sort: true,
-    attrs: { width: '80%' },
+    attrs: { width: '70%' },
+  },
+  {
+    dataField: 'c_activo',
+    text: 'Activo',
+    noExiste: true,
+    sort: true,
+    editable: false,
+    searchable: false,
+    attrs: { width: '10%' },
   },
   {
     dataField: 'updatedAt',

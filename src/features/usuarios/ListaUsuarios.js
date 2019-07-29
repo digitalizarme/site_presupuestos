@@ -65,7 +65,7 @@ const columns = [
   },
   {
     dataField: 'c_activo',
-    text: 'Ativo',
+    text: 'Activo',
     noExiste: true,
     sort: true,
     editable: false,

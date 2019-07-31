@@ -31,7 +31,7 @@ export class PrincipalTabla extends Component {
     reiniciaTablaParams();
     setTimeout(() => {
       this.toggleCargado();
-    }, 100);
+    }, 50);
   };
 
   render() {
@@ -47,7 +47,7 @@ export class PrincipalTabla extends Component {
             {this.state.cargado ? (
               <Tabla {...this.props} toggleCargando={toggleCargando} />
             ) : (
-              'Cargando...'
+              ''
             )}
           </div>
           <Pie />

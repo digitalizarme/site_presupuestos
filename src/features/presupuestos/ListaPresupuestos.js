@@ -61,9 +61,7 @@ const columns = [
     dataField: 'n_total_general',
     text: 'Total',
     sort: true,
-    noExiste: true,
     editable: false,
-    searchable: false,
     formatter: (cell, row) => {
       return formatarNumero(cell, row.moneda ? row.moneda.n_decimales : 2);
     },

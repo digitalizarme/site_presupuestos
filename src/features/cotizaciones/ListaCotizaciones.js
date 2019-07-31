@@ -97,7 +97,6 @@ const columns = [
     text: 'Actualizado',
     sort: true,
     editable: false,
-    searchable: false,
     formatter: formatarFecha,
     attrs: { width: '15%' },
   },

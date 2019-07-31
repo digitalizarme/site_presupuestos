@@ -69,10 +69,8 @@ const columns = [
   {
     dataField: 'c_activo',
     text: 'Activo',
-    noExiste: true,
     sort: true,
     editable: false,
-    searchable: false,
     attrs: { width: '10%' },
   },
   {
@@ -80,7 +78,6 @@ const columns = [
     text: 'Atualizado',
     sort: true,
     editable: false,
-    searchable: false,
     formatter: formatarFecha,
     attrs: { width: '25%' },
   },

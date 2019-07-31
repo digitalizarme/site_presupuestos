@@ -37,7 +37,6 @@ const columns = [
     text: 'Comisión',
     sort: true,
     editable: false,
-    searchable: true,
     formatter: formatarNumero,
     attrs: { width: '10%' },
   },
@@ -52,10 +51,8 @@ const columns = [
   {
     dataField: 'c_activo',
     text: 'Activo',
-    noExiste: true,
     sort: true,
     editable: false,
-    searchable: false,
     attrs: { width: '10%' },
   },
 ];

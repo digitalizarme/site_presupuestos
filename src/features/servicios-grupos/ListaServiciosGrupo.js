@@ -32,10 +32,8 @@ const columns = [
   {
     dataField: 'c_activo',
     text: 'Activo',
-    noExiste: true,
     sort: true,
     editable: false,
-    searchable: false,
     attrs: { width: '10%' },
   },
   {

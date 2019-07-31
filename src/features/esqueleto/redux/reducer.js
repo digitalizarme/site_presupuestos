@@ -20,6 +20,7 @@ import { reducer as toggleCargandoReducer } from './toggleCargando';
 import { reducer as limpiaImgReducer } from './limpiaImg';
 import { reducer as pararCargandoReducer } from './pararCargando';
 import { reducer as iniciarCargandoReducer } from './iniciarCargando';
+import { reducer as reiniciaTablaParamsReducer } from './reiniciaTablaParams';
 
 const reducers = [
   menuToggleReducer,
@@ -35,6 +36,7 @@ const reducers = [
   limpiaImgReducer,
   pararCargandoReducer,
   iniciarCargandoReducer,
+  reiniciaTablaParamsReducer,
 ];
 
 export default function reducer(state = initialState, action) {

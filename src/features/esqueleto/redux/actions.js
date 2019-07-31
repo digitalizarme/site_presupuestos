@@ -11,3 +11,4 @@ export { toggleCargando } from './toggleCargando';
 export { limpiaImg } from './limpiaImg';
 export { pararCargando } from './pararCargando';
 export { iniciarCargando } from './iniciarCargando';
+export { reiniciaTablaParams } from './reiniciaTablaParams';

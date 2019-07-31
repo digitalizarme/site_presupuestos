@@ -13,6 +13,27 @@ export class PrincipalTabla extends Component {
     titulo: PropTypes.string.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.toggleCargado = this.toggleCargado.bind(this);
+
+    this.state = {
+      cargado: false,
+    };
+  }
+
+  toggleCargado() {
+    this.setState(state => ({ cargado: !state.cargado }));
+  }
+
+  componentDidMount = () => {
+    const { reiniciaTablaParams } = this.props.actions;
+    reiniciaTablaParams();
+    setTimeout(() => {
+      this.toggleCargado();
+    }, 100);
+  };
+
   render() {
     const { titulo } = this.props;
     const { toggleCargando } = this.props.actions;
@@ -23,7 +44,11 @@ export class PrincipalTabla extends Component {
         <div className="margin_pie">
           <Menu {...this.props} />
           <div className="margin_component">
-            <Tabla {...this.props} toggleCargando={toggleCargando} />
+            {this.state.cargado ? (
+              <Tabla {...this.props} toggleCargando={toggleCargando} />
+            ) : (
+              'Cargando...'
+            )}
           </div>
           <Pie />
         </div>

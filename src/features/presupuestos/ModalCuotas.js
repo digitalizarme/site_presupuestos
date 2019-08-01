@@ -44,7 +44,6 @@ const validationConstraints = {
 
 export class ModalCuotas extends Component {
   static propTypes = {
-    optionsCuotas: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
   };
 
@@ -55,6 +54,12 @@ export class ModalCuotas extends Component {
     this.state = {
       isOpen: false,
     };
+  }
+
+  componentDidMount = () => {
+    const { actions } = this.props;
+    actions.limpiaCuotas();
+    
   }
 
   onChangeDescRedondeo = valor => {

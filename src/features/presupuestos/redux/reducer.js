@@ -18,6 +18,7 @@ import { reducer as eliminaCuotasReducer } from './eliminaCuotas';
 import { reducer as traeCobradoresReducer } from './traeCobradores';
 import { reducer as traeMediosPagoReducer } from './traeMediosPago';
 import { reducer as actualizaCuotaReducer } from './actualizaCuota';
+import { reducer as limpiaCuotasReducer } from './limpiaCuotas';
 
 const reducers = [
   traeStatusReducer,
@@ -31,6 +32,7 @@ const reducers = [
   traeCobradoresReducer,
   traeMediosPagoReducer,
   actualizaCuotaReducer,
+  limpiaCuotasReducer,
 ];
 
 export default function reducer(state = initialState, action) {

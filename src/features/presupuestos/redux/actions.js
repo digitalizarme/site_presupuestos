@@ -9,3 +9,4 @@ export { eliminaCuotas, dismissEliminaCuotasError } from './eliminaCuotas';
 export { traeCobradores, dismissTraeCobradoresError } from './traeCobradores';
 export { traeMediosPago, dismissTraeMediosPagoError } from './traeMediosPago';
 export { actualizaCuota, dismissActualizaCuotaError } from './actualizaCuota';
+export { limpiaCuotas } from './limpiaCuotas';

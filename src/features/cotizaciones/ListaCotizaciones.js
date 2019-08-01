@@ -120,39 +120,6 @@ export class ListaCotizaciones extends Component {
     actions: PropTypes.object.isRequired,
   };
 
-  guardarNovasAtualizacoes = () => {
-    const { guardarCotizaciones, procesarTabla, toggleCargando } = this.props.actions;
-    const { esqueleto } = this.props;
-    toggleCargando();
-    guardarCotizaciones('USD_PYG,USD_BRL,USD_ARS,USD_EUR')
-      .then(res => {
-        procesarTabla({
-          api_funcion: 'cotizaciones',
-          offset: 0,
-          sizePerPage: esqueleto.sizePerPage,
-          page: 1,
-          columns: JSON.stringify(columns),
-          searchText: esqueleto.searchText,
-          sortField: esqueleto.sortField,
-          sortOrder: esqueleto.sortOrder,
-        });
-        toggleCargando();
-      })
-      .catch(err => {
-        const { message } =
-          typeof err.response !== 'undefined'
-            ? err.response.data
-            : 'Error al intentar actualizar cotizaciones';
-        toggleCargando();
-        swal({
-          title: 'Ops',
-          text: message ? message : 'Error al intentar actualizar cotizaciones',
-          icon: 'error',
-          button: 'OK!',
-        });
-      });
-  };
-
   submit = values => {
     const { api_axio, procesarTabla, modalToggle, toggleCargando } = this.props.actions;
     const { esqueleto } = this.props;

@@ -12,3 +12,4 @@ export { limpiaImg } from './limpiaImg';
 export { pararCargando } from './pararCargando';
 export { iniciarCargando } from './iniciarCargando';
 export { reiniciaTablaParams } from './reiniciaTablaParams';
+export { noLimpiarFormModal } from './noLimpiarFormModal';

@@ -13,6 +13,7 @@ export default class SuperSelect extends Component {
       label,
       autoFocus,
       disabled,
+      puedeLimpiar,
       permiteCrear,
       meta: { touched, error, warning },
     } = this.props;
@@ -23,12 +24,13 @@ export default class SuperSelect extends Component {
           {label ? <Label>{label}</Label> : null}
           {!permiteCrear ? (
             <Select
-              value={options && options.find(option => option.value === input.value)}
-              onChange={option => input.onChange(option.value)}
-              onBlur={option => input.onBlur(option.value)}
+              value={input.value && input.value !== ''&& options && options.find(option => option.value === input.value)}
+              onChange={option => input.onChange(option?option.value:'')}
+              onBlur={option => input.onBlur(option?option.value:'')}
               autoFocus={autoFocus}
               name={input.name}
               options={options}
+              isClearable={puedeLimpiar}
               isDisabled={disabled}
               placeholder={placeholder}
               classNamePrefix="react-select"

@@ -21,6 +21,7 @@ import { reducer as limpiaImgReducer } from './limpiaImg';
 import { reducer as pararCargandoReducer } from './pararCargando';
 import { reducer as iniciarCargandoReducer } from './iniciarCargando';
 import { reducer as reiniciaTablaParamsReducer } from './reiniciaTablaParams';
+import { reducer as noLimpiarFormModalReducer } from './noLimpiarFormModal';
 
 const reducers = [
   menuToggleReducer,
@@ -37,6 +38,7 @@ const reducers = [
   pararCargandoReducer,
   iniciarCargandoReducer,
   reiniciaTablaParamsReducer,
+  noLimpiarFormModalReducer,
 ];
 
 export default function reducer(state = initialState, action) {

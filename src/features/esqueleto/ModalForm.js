@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { modalToggle, limpiarLineaSeleccionada } from './redux/actions';
+import { modalToggle, limpiarLineaSeleccionada, noLimpiarFormModal } from './redux/actions';
 import { Button, Form, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { reduxForm } from 'redux-form';
+import { reduxForm, reset } from 'redux-form';
 import validate from 'validate.js';
 
 export class ModalForm extends Component {
@@ -14,6 +14,17 @@ export class ModalForm extends Component {
     tituloModal: PropTypes.string.isRequired,
     cuerpoModal: PropTypes.func.isRequired,
     enviarFormulario: PropTypes.func.isRequired,
+  };
+
+  componentDidUpdate = () => {
+    const { noLimpiarFormModal } = this.props.actions;
+    const { limpiarModal } = this.props.esqueleto;
+    if (limpiarModal) {
+      noLimpiarFormModal();
+      setTimeout(() => {
+        this.props.dispatch(reset('formModal'));
+      }, 50);
+    }
   };
 
   cerrarModal = () => {
@@ -78,7 +89,10 @@ function mapStateToProps(state) {
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ modalToggle, limpiarLineaSeleccionada }, dispatch),
+    actions: bindActionCreators(
+      { modalToggle, limpiarLineaSeleccionada, noLimpiarFormModal },
+      dispatch,
+    ),
   };
 }
 

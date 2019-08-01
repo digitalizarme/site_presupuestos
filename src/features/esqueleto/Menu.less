@@ -33,3 +33,36 @@ button>li.nav-item>a.nav-link:hover
 .dropdown-item:active {
     background-color: #f8fdff;
 }
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu a::after {
+  transform: rotate(-90deg);
+  position: absolute;
+  right: 6px;
+  top: .8em;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-left: .1rem;
+  margin-right: .1rem;
+}
+
+.direitos{
+
+    border: 1px   solid gray;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: #dc3545;
+}
+
+.dropdown-item:hover {
+    color: #dc3545;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}

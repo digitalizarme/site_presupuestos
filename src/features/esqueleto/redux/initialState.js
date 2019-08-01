@@ -8,6 +8,7 @@
 const initialState = {
   isOpen: false,
   isOpenModal: false,
+  limpiarModal:false,
   procesarTablaPending: false,
   procesarTablaError: null,
   page: 1,

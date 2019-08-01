@@ -41,6 +41,7 @@ export default class SuperSelect extends Component {
               value={options && options.find(option => option.value === input.value)}
               onChange={option => input.onChange(option?option.value:'')}
               onBlur={option => input.onBlur(option?option.value:'')}
+              formatCreateLabel={(value)=> (`Crear ${value}`)}
               autoFocus={autoFocus}
               name={input.name}
               options={options}

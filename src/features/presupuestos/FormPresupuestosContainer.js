@@ -452,7 +452,7 @@ export class FormPresupuestosContainer extends Component {
   onChangeValorCuota = ({ fields, actual }) => {
     const { n_total_general, decimales } = this.props;
     let total = 0;
-    fields.map((campo, indice) => {
+    fields.getAll().map((campo, indice) => {
       if (indice === actual.indice) {
         total += parseFloat(actual.valor);
       } else {

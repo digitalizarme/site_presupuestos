@@ -6,6 +6,7 @@ import { PrincipalTabla } from '../esqueleto';
 import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
 import GenerarPdf from './GenerarPdf';
+import MarcarAprobado from './MarcarAprobado';
 import ModalCuotas from './ModalCuotas';
 import { traerPresupuesto, traeItems, traeCuotas } from './redux/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -85,9 +86,8 @@ const columns = [
       return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0 ? (
         <div>
           <GenerarPdf key={`pdf${row.id}`} idPresupuesto={row.id} />{' '}
-          {row.n_id_status > 2 ? (
-            <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} />
-          ) : null}
+          {row.n_id_status > 2 && <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} />}
+          {row.n_id_status === 2 && <MarcarAprobado key={`setar${row.id}`} values={row} />}
         </div>
       ) : (
         <Incompletos />
@@ -99,7 +99,7 @@ const columns = [
 
 const Incompletos = () => {
   return (
-    <button className="btn-danger btn btn-md" onClick={clickIncompleto}>
+    <button className="btn-danger btn btn-md" onClick={clickIncompleto} title="Incompleto">
       <FontAwesomeIcon icon={faPrint} />
     </button>
   );

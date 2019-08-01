@@ -685,6 +685,7 @@ export class GenerarPdf extends Component {
         ) : modoDescarga ? (
           <button
             className="btn-primary btn btn-md"
+            title="Gerar PDF"
             onClick={() => {
               return this._onButtonClick(idPresupuesto);
             }}

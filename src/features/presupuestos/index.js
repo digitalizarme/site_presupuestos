@@ -6,3 +6,4 @@ export { default as GenerarPdf } from './GenerarPdf';
 export { default as FormPresupuestoPagos } from './FormPresupuestoPagos';
 export { default as ModalCuotas } from './ModalCuotas';
 export { default as Redireccionar } from './Redireccionar';
+export { default as MarcarAprobado } from './MarcarAprobado';

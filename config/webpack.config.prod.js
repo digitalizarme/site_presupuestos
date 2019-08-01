@@ -132,7 +132,7 @@ module.exports = {
         if (message.indexOf('Skipping static resource') === 0) {
           return;
         }
-        console.log(message);
+        //console.log(message);
       },
       minify: true,
       navigateFallback: publicUrl + '/index.html',

@@ -116,12 +116,16 @@ class FormServicios extends Component {
                 />
               </Col>
             </Row>
-            <Button type="submit" color="success" disabled={pristine || submitting}>
-              {submitting ? 'Guardando' : 'Guardar'}
-            </Button>{' '}
-            <Link to="/servicios" className="btn btn-primary" history={this.props.history}>
-              Cancelar
-            </Link>
+            <Row className="text-right">
+              <Col sm="12">
+                <Link to="/servicios" className="btn btn-primary" history={this.props.history}>
+                  Cancelar
+                </Link>{' '}
+                <Button type="submit" color="success" disabled={pristine || submitting}>
+                  {submitting ? 'Guardando' : 'Guardar'}
+                </Button>
+              </Col>
+            </Row>
           </Form>
         </Container>
       </div>

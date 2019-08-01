@@ -154,6 +154,7 @@ class FormPresupuestos extends Component {
       cambiaStatus,
       usuarioComision,
       n_valor_comision,
+      configuracion,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -164,6 +165,7 @@ class FormPresupuestos extends Component {
           <ModalForm
             tituloModal={modoEdicionItem ? 'Editar Item' : 'Nuevo Item'}
             esqueleto={esqueleto}
+            configuracion={configuracion}
             descMoneda={descMoneda}
             decimales={decimales}
             onChangeItems={onChangeItems}
@@ -269,14 +271,14 @@ class FormPresupuestos extends Component {
                     <Table striped responsive hover>
                       <thead>
                         <tr>
-                          <th style={{ width: '25%' }}>Desc.</th>
+                          <th style={{ width: configuracion.b_flete?'25%':'35%' }}>Desc.</th>
                           <th style={{ width: '5%' }}>Cant.</th>
                           <th style={{ width: '10%' }}>Unit.</th>
                           <th style={{ width: '10%' }}>Exent.</th>
                           <th style={{ width: '10%' }}>Grav. 5%</th>
                           <th style={{ width: '10%' }}>Grav. 10%</th>
                           <th style={{ width: '10%' }}>Peso</th>
-                          <th style={{ width: '10%' }}>Flete</th>
+                          {configuracion.b_flete &&<th style={{ width: '10%' }}>Flete</th>}
                           <th style={{ width: '10%' }}>Acciones</th>
                         </tr>
                       </thead>
@@ -298,7 +300,7 @@ class FormPresupuestos extends Component {
                               <td>{formatarNumero(objItem.n_gravadas_5, decimales)}</td>
                               <td>{formatarNumero(objItem.n_gravadas_10, decimales)}</td>
                               <td>{formatarNumero(objItem.n_peso, 2)}</td>
-                              <td>{formatarNumero(objItem.n_flete, decimales)}</td>
+                              {configuracion.b_flete && <td>{formatarNumero(objItem.n_flete, decimales)}</td>}
                               <td>
                                 {!modoConsulta && (
                                   <span>
@@ -329,7 +331,7 @@ class FormPresupuestos extends Component {
                           ))
                         ) : (
                           <tr>
-                            <td colSpan="9" className="text-center">
+                            <td colSpan={configuracion.b_flete?'9':'8'} className="text-center">
                               No hay items
                             </td>
                           </tr>
@@ -437,117 +439,125 @@ class FormPresupuestos extends Component {
                 </Collapse>
               </Col>
             </Row>
-            <Row>
-              <Col>
-                <div className="titulo_sesion bg-info mano" onClick={this.toggleComisionista}>
-                  Comisión
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Collapse isOpen={this.state.collapseComisionista}>
-                  <Row>
-                    <Col sm="8">
-                      <Field
-                        name="n_id_persona_comisionista"
-                        label="Comicionista"
-                        options={optionsComisionista}
-                        component={SuperSelect}
-                        placeholder="Elija"
-                        disabled={disabledCampos}
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
-                        name="n_valor_comision"
-                        label="Valor"
-                        component={InputNumber}
-                        decimalScale={decimales}
-                        onChange={valor => {
-                          onChangeCamposValores({
-                            n_valor_comision: valor,
-                            seguro: this.props.seguro,
-                            n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
-                            n_desc_redondeo: this.props.n_desc_redondeo,
-                          });
-                        }}
-                        className="field form-control-lg form-control"
-                        disabled={disabledCampos}
-                      />
-                    </Col>
-                  </Row>
-                  {usuarioComision > 0 && (
+            {configuracion.b_comision && (
+              <Row>
+                <Col>
+                  <div className="titulo_sesion bg-info mano" onClick={this.toggleComisionista}>
+                    Comisión
+                  </div>
+                </Col>
+              </Row>
+            )}
+            {configuracion.b_comision && (
+              <Row>
+                <Col>
+                  <Collapse isOpen={this.state.collapseComisionista}>
                     <Row>
-                      <Col sm="8" className="comisionista">
-                        Total del Comisionista: {formatarNumero(usuarioComision, decimales)}
+                      <Col sm="8">
+                        <Field
+                          name="n_id_persona_comisionista"
+                          label="Comicionista"
+                          options={optionsComisionista}
+                          component={SuperSelect}
+                          placeholder="Elija"
+                          disabled={disabledCampos}
+                        />
+                      </Col>
+                      <Col sm="4">
+                        <Field
+                          name="n_valor_comision"
+                          label="Valor"
+                          component={InputNumber}
+                          decimalScale={decimales}
+                          onChange={valor => {
+                            onChangeCamposValores({
+                              n_valor_comision: valor,
+                              seguro: this.props.seguro,
+                              n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
+                              n_desc_redondeo: this.props.n_desc_redondeo,
+                            });
+                          }}
+                          className="field form-control-lg form-control"
+                          disabled={disabledCampos}
+                        />
                       </Col>
                     </Row>
-                  )}
-                </Collapse>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <div className="titulo_sesion bg-danger mano" onClick={this.toggleSeguro}>
-                  Seguro
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Collapse isOpen={this.state.collapseSeguro}>
-                  <Row>
-                    <Col sm="4">
-                      <Field
-                        name="n_id_seguro"
-                        label="Tipo : "
-                        options={optionsSeguros}
-                        onChange={valor => {
-                          onChangeCamposValores({
-                            n_valor_comision,
-                            seguro: valor,
-                            n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
-                            n_desc_redondeo: this.props.n_desc_redondeo,
-                          });
-                        }}
-                        component={SuperSelect}
-                        placeholder="Elija"
-                        disabled={disabledCampos}
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
-                        name="n_tipo_seguro_valor"
-                        label="Cantidad asegurada : "
-                        component={InputNumber}
-                        decimalScale={decimales}
-                        onChange={valor => {
-                          onChangeCamposValores({
-                            n_valor_comision,
-                            seguro: this.props.seguro,
-                            n_tipo_seguro_valor: valor,
-                            n_desc_redondeo: this.props.n_desc_redondeo,
-                          });
-                        }}
-                        className="field form-control-lg form-control"
-                        disabled={disabledCampos}
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
-                        name="n_valor_seguro"
-                        label="Valor seguro : "
-                        component={InputNumber}
-                        readonly
-                        decimalScale={decimales}
-                        className="field form-control-lg form-control"
-                      />
-                    </Col>
-                  </Row>
-                </Collapse>
-              </Col>
-            </Row>
+                    {usuarioComision > 0 && (
+                      <Row>
+                        <Col sm="8" className="comisionista">
+                          Total del Comisionista: {formatarNumero(usuarioComision, decimales)}
+                        </Col>
+                      </Row>
+                    )}
+                  </Collapse>
+                </Col>
+              </Row>
+            )}
+            {configuracion.b_seguro && (
+              <Row>
+                <Col>
+                  <div className="titulo_sesion bg-danger mano" onClick={this.toggleSeguro}>
+                    Seguro
+                  </div>
+                </Col>
+              </Row>
+            )}
+            {configuracion.b_seguro && (
+              <Row>
+                <Col>
+                  <Collapse isOpen={this.state.collapseSeguro}>
+                    <Row>
+                      <Col sm="4">
+                        <Field
+                          name="n_id_seguro"
+                          label="Tipo : "
+                          options={optionsSeguros}
+                          onChange={valor => {
+                            onChangeCamposValores({
+                              n_valor_comision,
+                              seguro: valor,
+                              n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
+                              n_desc_redondeo: this.props.n_desc_redondeo,
+                            });
+                          }}
+                          component={SuperSelect}
+                          placeholder="Elija"
+                          disabled={disabledCampos}
+                        />
+                      </Col>
+                      <Col sm="4">
+                        <Field
+                          name="n_tipo_seguro_valor"
+                          label="Cantidad asegurada : "
+                          component={InputNumber}
+                          decimalScale={decimales}
+                          onChange={valor => {
+                            onChangeCamposValores({
+                              n_valor_comision,
+                              seguro: this.props.seguro,
+                              n_tipo_seguro_valor: valor,
+                              n_desc_redondeo: this.props.n_desc_redondeo,
+                            });
+                          }}
+                          className="field form-control-lg form-control"
+                          disabled={disabledCampos}
+                        />
+                      </Col>
+                      <Col sm="4">
+                        <Field
+                          name="n_valor_seguro"
+                          label="Valor seguro : "
+                          component={InputNumber}
+                          readonly
+                          decimalScale={decimales}
+                          className="field form-control-lg form-control"
+                        />
+                      </Col>
+                    </Row>
+                  </Collapse>
+                </Col>
+              </Row>
+            )}
             <Row>
               <Col>
                 <div className="titulo_sesion bg-warning mano" onClick={this.toggleTotalG}>
@@ -580,7 +590,7 @@ class FormPresupuestos extends Component {
                     <Col sm="12">
                       <Field
                         name="n_total_general"
-                        label="Total General (Comisión + Seguro + Items con flete + Descuento/Redondeo) : "
+                        label={`Total General (${configuracion.b_comision?'Comisión + ':''} ${configuracion.b_comision?'Seguro + ':''} Items ${configuracion.b_flete?'con flete ':''} + Descuento/Redondeo) : `}
                         component={InputNumber}
                         readonly
                         decimalScale={decimales}

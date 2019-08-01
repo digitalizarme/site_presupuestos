@@ -25,7 +25,7 @@ export default class FormUsuario extends Component {
         <Container>
           <Form onSubmit={enviarFormulario} className="form_border">
             {this.form()}
-            <Row>
+            <Row className="text-right">
               <Col sm="12">
                 <Button type="submit" color="success" disabled={pristine || submitting}>
                   {submitting ? 'Guardando' : 'Guardar'}

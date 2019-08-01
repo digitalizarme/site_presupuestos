@@ -9,7 +9,6 @@ export default class FormConfiguraciones extends Component {
     enviarFormulario: PropTypes.func.isRequired,
   };
 
-
   render() {
     const { enviarFormulario, submitting, pristine, b_comision } = this.props;
 
@@ -20,10 +19,7 @@ export default class FormConfiguraciones extends Component {
           <Form onSubmit={enviarFormulario} className="form_border">
             <Row>
               <Col sm="12">
-                <Field
-                  name="t_logo"
-                  component={DragDrop}
-                />
+                <Field name="t_logo" component={DragDrop} />
               </Col>
             </Row>
             <Row>
@@ -157,12 +153,13 @@ export default class FormConfiguraciones extends Component {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col sm="3" />
+            <Row className="text-right">
+              <Col sm="12">
+                <Button type="submit" color="success" disabled={pristine || submitting}>
+                  {submitting ? 'Guardando' : 'Guardar'}
+                </Button>
+              </Col>
             </Row>
-            <Button type="submit" color="success" disabled={ (pristine || submitting)}>
-              {submitting ? 'Guardando' : 'Guardar'}
-            </Button>
           </Form>
         </Container>
       </div>

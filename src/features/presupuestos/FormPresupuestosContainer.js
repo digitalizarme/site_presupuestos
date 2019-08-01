@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { toggleCargando, modalToggle } from '../esqueleto/redux/actions';
+import { toggleCargando, modalToggle, pararCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import {
   listaMonedas,
@@ -115,6 +115,10 @@ const validationConstraintsItems = {
       notGreaterThan: 'El valor debe ser mayor que zero',
     },
   },
+};
+
+const validationConstraintsItemsFlete = {
+  ...validationConstraintsItems,
   n_flete: {
     presence: {
       message: 'Flete es obligatorio',
@@ -156,7 +160,7 @@ const totalizaSeguro = ({ props, totSeguro }) => {
 };
 
 const totalizaItems = ({ items, props }) => {
-  const { n_valor_porcentaje_comision, seguro } = props;
+  const { n_valor_porcentaje_comision, seguro, configuracion, n_desc_redondeo } = props;
   let totExentas = 0;
   let totFletes = 0;
   let tot5 = 0;
@@ -166,6 +170,7 @@ const totalizaItems = ({ items, props }) => {
   let totIVA10 = 0;
   let totIVA = 0;
   let totSeguro = 0;
+  let valorComision = 0;
   if (items && items.length > 0) {
     items.map((objItem, indice) => {
       totExentas += parseFloat(objItem.n_exentas);
@@ -181,15 +186,34 @@ const totalizaItems = ({ items, props }) => {
       }
       return true;
     });
+
+    if (configuracion.b_flete === false) {
+      totFletes = 0;
+    }
+    if (configuracion.b_seguro === false) {
+      totSeguro = 0;
+    }
+
     totItems =
       parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
     totIVA5 = parseFloat(tot5) / 21;
     totIVA10 = parseFloat(tot10) / 11;
     totIVA = parseFloat(totIVA5) + parseFloat(totIVA10);
   }
-  const valorComision =
+  valorComision =
     ((parseFloat(totItems) - parseFloat(totFletes)) * parseFloat(n_valor_porcentaje_comision)) /
     100;
+
+  if (configuracion.b_comision === false) {
+    valorComision = 0;
+    setaTotalGeneral({
+      n_total_items: totItems,
+      n_valor_comision: valorComision,
+      valorSeguro: totSeguro,
+      n_desc_redondeo,
+      dispatch: props.dispatch,
+    });
+  }
 
   props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
   props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
@@ -402,6 +426,22 @@ const validaValoresItem = values => {
   return true;
 };
 
+const setaTotalGeneral = ({
+  n_total_items,
+  n_valor_comision,
+  valorSeguro,
+  n_desc_redondeo,
+  dispatch,
+}) => {
+  const totalGeneral =
+    parseFloat(n_total_items || 0) +
+    parseFloat(n_valor_comision || 0) +
+    parseFloat(valorSeguro || 0) +
+    parseFloat(n_desc_redondeo || 0);
+  dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
+  return totalGeneral;
+};
+
 export class FormPresupuestosContainer extends Component {
   static propTypes = {
     // presupuestos: PropTypes.object.isRequired,
@@ -495,19 +535,20 @@ export class FormPresupuestosContainer extends Component {
     const { traeUltimasCotizacionesMoneda } = this.props.actions;
 
     const valorSeguro = totalizaSeguro({ props });
-    const totalGeneral =
-      parseFloat(n_total_items || 0) +
-      parseFloat(campos.n_valor_comision || 0) +
-      parseFloat(valorSeguro || 0) +
-      parseFloat(campos.n_desc_redondeo || 0);
+    const totalGeneral = setaTotalGeneral({
+      n_total_items,
+      n_valor_comision: campos.n_valor_comision,
+      valorSeguro,
+      n_desc_redondeo: campos.n_desc_redondeo,
+      dispatch,
+    });
 
     setaValorGs({
       monedaSeleccionada,
       totalGeneral,
-      dispatch: this.props.dispatch,
+      dispatch,
       traeUltimasCotizacionesMoneda,
     });
-    this.props.dispatch(change('formPresupuestos', `n_total_general`, totalGeneral));
   };
 
   onChangePersona = idPersona => {
@@ -607,8 +648,8 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangeItems = idItem => {
-    const { monedaSeleccionada, optionsItems } = this.props;
-    const { traeUltimasCotizacionesMoneda, toggleCargando } = this.props.actions;
+    const { monedaSeleccionada, optionsItems, configuracion } = this.props;
+    const { traeUltimasCotizacionesMoneda, toggleCargando, pararCargando } = this.props.actions;
     toggleCargando().then(res => {
       this.props.dispatch(change('formModal', `n_cantidad`, 1));
       let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
@@ -645,7 +686,7 @@ export class FormPresupuestosContainer extends Component {
         let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
         let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
         let peso = parseFloat(itemSeleccionado.n_peso);
-        let flete = peso * parseFloat(itemSeleccionado.n_flete);
+        let flete = configuracion.b_flete ? peso * parseFloat(itemSeleccionado.n_flete) : 0;
         const props_ratio = {
           n_cantidad: 1,
           n_unitario: unitario,
@@ -700,7 +741,8 @@ export class FormPresupuestosContainer extends Component {
               }
             })
             .catch(err => {
-              toggleCargando();
+              //console.log(err,'merda')
+              pararCargando();
               mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
             });
         } else {
@@ -720,6 +762,7 @@ export class FormPresupuestosContainer extends Component {
         }
         //SI ES MERCADORIA Y LA MONEDA DEL FLETE ES DISTINCTA A LA DEL ITEM
         if (
+          configuracion.b_flete &&
           itemSeleccionado.c_tipo === 'M' &&
           itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
         ) {
@@ -741,16 +784,16 @@ export class FormPresupuestosContainer extends Component {
                   button: 'OK!',
                 });
               }
-              toggleCargando();
+              pararCargando();
             })
             .catch(err => {
               atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
-              toggleCargando();
+              pararCargando();
               mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
             });
         } else {
           atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-          toggleCargando();
+          pararCargando();
         }
       }
     });
@@ -917,7 +960,7 @@ export class FormPresupuestosContainer extends Component {
       });
       setTimeout(() => {
         history.push('/presupuestos');
-      }, 500);
+      }, 900);
     });
   };
 
@@ -1014,7 +1057,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   render() {
-    let { handleSubmit } = this.props;
+    let { handleSubmit, configuracion } = this.props;
     const { path } = this.props.match;
     let edicion = true;
     if (path.indexOf('nuevo') !== -1) {
@@ -1058,7 +1101,7 @@ export class FormPresupuestosContainer extends Component {
           onChangeImpuesto={this.onChangeImpuesto}
           onChangePeso={this.onChangePeso}
           onChangeRatio={this.onChangeRatio}
-          validationConstraintsItems={validationConstraintsItems}
+          validationConstraintsItems={!configuracion.b_flete?validationConstraintsItems:validationConstraintsItemsFlete}
           onChangePesoFlete={this.onChangePesoFlete}
           onChangePagos={this.onChangePagos}
           onChangeValorCuota={this.onChangeValorCuota}
@@ -1341,6 +1384,7 @@ function mapStateToProps(state) {
     descMonedaItem,
     n_valor_porcentaje_comision:
       state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
+    configuracion: state.configuraciones.configuracion,
   };
 }
 
@@ -1355,6 +1399,7 @@ function mapDispatchToProps(dispatch) {
         guardarCotizaciones,
         traeUltimasCotizacionesMoneda,
         toggleCargando,
+        pararCargando,
         traeStatus,
         traePersonasTodas,
         traeFletes,

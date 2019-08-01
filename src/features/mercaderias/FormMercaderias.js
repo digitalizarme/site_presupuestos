@@ -159,14 +159,14 @@ class FormMercaderias extends Component {
                 />
               </Col>
             </Row>
-            <Row>
+            <Row className="text-right">
               <Col sm="12">
-                <Button type="submit" color="success" disabled={pristine || submitting}>
-                  {submitting ? 'Guardando' : 'Guardar'}
-                </Button>{' '}
                 <Link to="/mercaderias" className="btn btn-primary" history={this.props.history}>
                   Cancelar
-                </Link>
+                </Link>{' '}
+                <Button type="submit" color="success" disabled={pristine || submitting}>
+                  {submitting ? 'Guardando' : 'Guardar'}
+                </Button>
               </Col>
             </Row>
           </Form>

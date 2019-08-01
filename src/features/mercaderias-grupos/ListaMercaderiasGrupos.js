@@ -159,6 +159,7 @@ function mapStateToProps(state) {
   return {
     mercaderiasGrupos: state.mercaderiasGrupos,
     esqueleto: state.esqueleto,
+    configuracion: state.configuraciones.configuracion,
     initialValues,
     edicion: state.esqueleto.selected[0] ? true : false,
     optionsFletes,

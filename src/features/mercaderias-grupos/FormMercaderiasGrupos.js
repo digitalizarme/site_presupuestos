@@ -10,7 +10,7 @@ class FormMercaderiasGrupos extends Component {
   };
 
   render() {
-    const { optionsFletes } = this.props;
+    const { optionsFletes,configuracion } = this.props;
 
     return (
       <div className="mercaderias-grupos-form-mercaderias-grupos">
@@ -29,7 +29,7 @@ class FormMercaderiasGrupos extends Component {
           </Col>
         </Row>
         <Row>
-          <Col sm="6">
+          {configuracion.b_flete && <Col sm="6">
             <Field
               name="n_id_flete"
               label="Flete"
@@ -37,7 +37,7 @@ class FormMercaderiasGrupos extends Component {
               component={SuperSelect}
               placeholder="Elija"
             />
-          </Col>
+          </Col>}
           <Col sm="6">
             <Field name="b_activo" label="Activo" component={InputCheckBox} />
           </Col>

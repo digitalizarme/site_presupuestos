@@ -38,7 +38,7 @@ const MenuDeslogado = ({ isOpen }) => (
   </Collapse>
 );
 
-const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
+const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history,configuracion }) => (
   <Collapse isOpen={isOpen} navbar>
     <Nav className="mr-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
@@ -116,16 +116,16 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history }) => (
                 Servicios grupos
               </Link>
             </NavItem>
-            <NavItem>
+            {configuracion.b_flete && <NavItem>
               <Link className="nav-link" to="/fletes">
                 Fletes
               </Link>
-            </NavItem>
-            <NavItem>
+            </NavItem>}
+            {configuracion.b_seguro && <NavItem>
               <Link className="nav-link" to="/seguros">
                 Seguros
               </Link>
-            </NavItem>
+            </NavItem>}
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
@@ -227,6 +227,7 @@ export class Menu extends Component {
                 isOpen={isOpen}
                 limpiarUsuario={limpiarUsuario}
                 history={history}
+                configuracion={configuracion}
               />
             ) : (
               <MenuDeslogado isOpen={isOpen} />

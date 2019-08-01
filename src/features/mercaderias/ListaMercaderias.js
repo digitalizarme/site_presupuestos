@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
 import formatarNumero from '../../common/formatarNumero';
+import formatarFecha from '../../common/formatarFecha';
 
 const columns = [
   {
@@ -11,14 +12,14 @@ const columns = [
     table: 'Mercaderias',
     text: 'Descripción',
     sort: true,
-    attrs: { width: '40%' },
+    attrs: { width: '35%' },
   },
   {
     dataField: 'c_unidad',
     text: 'Unidad',
     sort: true,
     editable: false,
-    attrs: { width: '10%' },
+    attrs: { width: '5%' },
   },
   {
     dataField: 'marca.c_descripcion',
@@ -32,7 +33,7 @@ const columns = [
     text: 'Grupo',
     sort: true,
     editable: false,
-    attrs: { width: '10%' },
+    attrs: { width: '15%' },
   },
   {
     dataField: 'n_venta',
@@ -50,11 +51,12 @@ const columns = [
     attrs: { width: '10%' },
   },
   {
-    dataField: 'c_activo',
-    text: 'Activo',
+    dataField: 'updatedAt',
+    text: 'Actualizado',
     sort: true,
     editable: false,
-    attrs: { width: '10%' },
+    formatter: formatarFecha,
+    attrs: { width: '15%' },
   },
 ];
 

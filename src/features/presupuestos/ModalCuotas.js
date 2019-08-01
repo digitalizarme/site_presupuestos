@@ -231,7 +231,7 @@ function mapStateToProps(state) {
   let decimales = 0;
   let cuotaSeleccionada = null;
   if (state.presupuestos.cuotas.length > 0) {
-    decimales = state.presupuestos.cuotas[0].moneda.n_decimales || 0;
+    decimales = state.presupuestos.cuotas[0].moneda?state.presupuestos.cuotas[0].moneda.n_decimales:0;
     for (let item of state.presupuestos.cuotas) {
       const valorFormatado = formatarNumero(item.n_valor, decimales, true);
       itemObj = {

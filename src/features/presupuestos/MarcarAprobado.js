@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckDouble } from '@fortawesome/free-solid-svg-icons';
 import mostraMensajeError from '../../common/mostraMensajeError';
 import api_axio from '../../common/api_axios';
+import swal from 'sweetalert';
 
 export class MarcarAprobado extends Component {
   static propTypes = {
@@ -29,6 +30,7 @@ export class MarcarAprobado extends Component {
       params,
     })
       .then(res => {
+        swal({ icon: 'success', timer: 1000 });
         procesarTabla({ api_funcion: `presupuestos/pendientes` });
       })
       .catch(err => {

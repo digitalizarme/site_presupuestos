@@ -59,12 +59,11 @@ export class ModalCuotas extends Component {
   componentDidMount = () => {
     const { actions } = this.props;
     actions.limpiaCuotas();
-    
-  }
+  };
 
   onChangeDescRedondeo = valor => {
     const { dispatch, cuotaSeleccionada } = this.props;
-    const recebido = cuotaSeleccionada.extra.n_valor + parseFloat(valor);
+    const recebido = parseFloat(cuotaSeleccionada.extra.n_valor) + parseFloat(valor);
     dispatch(change('formCuotas', 'n_tot_recibido', recebido));
   };
 
@@ -81,14 +80,9 @@ export class ModalCuotas extends Component {
     setTimeout(() => {
       Object.entries(cuotaSeleccionada.extra).map((arrayDatos, indice) => {
         const campo = arrayDatos[0];
-        if (campo === 'd_fecha_pago') {
-          arrayDatos[1] = moment(arrayDatos[1]).format('YYYY-MM-DD');
-        }
         const valor = arrayDatos[1];
         return dispatch(change('formCuotas', campo, valor));
       });
-      const recebido = cuotaSeleccionada.extra.n_valor + cuotaSeleccionada.extra.n_desc_redondeo;
-      dispatch(change('formCuotas', 'n_tot_recibido', recebido));
       actions.toggleCargando();
     }, 100);
   };
@@ -117,6 +111,8 @@ export class ModalCuotas extends Component {
     actions
       .traeCuotas(params)
       .then(res => {
+        this.setState(state => ({ isOpen: !state.isOpen }));
+
         actions.toggleCargando();
       })
       .catch(err => {
@@ -131,7 +127,6 @@ export class ModalCuotas extends Component {
       dispatch(reset('formCuotas'));
       this.setaDatos();
     }
-    this.setState(state => ({ isOpen: !state.isOpen }));
   }
 
   submit = values => {
@@ -166,8 +161,8 @@ export class ModalCuotas extends Component {
               });
             });
         } else {
-          this.toggleModal();
           swal({ icon: 'success', timer: 1000 });
+          this.toggleModal();
         }
       })
       .catch(err => {
@@ -236,12 +231,14 @@ function mapStateToProps(state) {
   let decimales = 0;
   let cuotaSeleccionada = null;
   if (state.presupuestos.cuotas.length > 0) {
-    decimales = state.presupuestos.cuotas[0].moneda?state.presupuestos.cuotas[0].moneda.n_decimales:0;
+    decimales = state.presupuestos.cuotas[0].moneda
+      ? state.presupuestos.cuotas[0].moneda.n_decimales
+      : 0;
     for (let item of state.presupuestos.cuotas) {
-      if(!item.moneda){
+      if (!item.moneda) {
         return;
       }
-      const valorFormatado = formatarNumero(item.n_valor, decimales, true);
+      const valorFormatado = formatarNumero(item.n_recebido, decimales, true);
       itemObj = {
         label:
           'Cuota N.: ' +

@@ -544,6 +544,11 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
   }
 };
 
+const pdf_ios = (blob) => {
+var fileBlob = new Blob([blob], {type: 'application/pdf'});
+window.location.hfref = fileBlob;
+}
+
 const PdfDescargar = ({ cargado, props, archivo }) => {
   return cargado ? (
     <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} archivo={archivo} />}>
@@ -562,7 +567,7 @@ const PdfDescargar = ({ cargado, props, archivo }) => {
               <FontAwesomeIcon icon={faDownload} />
             </span>
           ) : (
-            'Abrir PDF'
+            pdf_ios(blob)
           )
         ) : !is.ios() ? (
           <span className="btn-danger btn btn-md">

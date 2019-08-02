@@ -547,6 +547,7 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
 const pdf_ios = (blob) => {
 var fileBlob = new Blob([blob], {type: 'application/pdf'});
 window.location.hfref = fileBlob;
+return true;
 }
 
 const PdfDescargar = ({ cargado, props, archivo }) => {

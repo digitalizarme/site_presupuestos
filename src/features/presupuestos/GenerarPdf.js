@@ -569,7 +569,7 @@ const PdfDescargar = ({ cargado, props, archivo }) => {
               <FontAwesomeIcon icon={faDownload} />
             </span>
           ) : (
-            pdf_ios(blob)
+            pdf_ios(url)
           )
         ) : !is.ios() ? (
           <span className="btn-danger btn btn-md">

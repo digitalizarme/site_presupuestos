@@ -12,7 +12,7 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
 const publicPath = paths.servedPath;
-const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
+const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'false';
 const publicUrl = publicPath.slice(0, -1);
 const env = getClientEnvironment(publicUrl);
 

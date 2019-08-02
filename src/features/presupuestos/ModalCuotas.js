@@ -50,6 +50,7 @@ export class ModalCuotas extends Component {
   constructor(props) {
     super(props);
     this.toggleModal = this.toggleModal.bind(this);
+    this.cerrarModal = this.cerrarModal.bind(this);
 
     this.state = {
       isOpen: false,
@@ -121,6 +122,10 @@ export class ModalCuotas extends Component {
       });
   }
 
+  cerrarModal() {
+    this.setState(state => ({ isOpen: false }));
+  }
+
   toggleModal() {
     if (!this.state.isOpen) {
       const { dispatch } = this.props;
@@ -181,7 +186,7 @@ export class ModalCuotas extends Component {
         </button>
         <Modal centered isOpen={isOpen} toggle={this.toggleModal} size={'lg'}>
           <Form onSubmit={handleSubmit(this.submit)}>
-            <ModalHeader toggle={this.toggleModal}>
+            <ModalHeader toggle={this.cerrarModal}>
               Pagos del Presupuesto N. {datos.id} - Valores en: {datos.moneda.c_descripcion}
             </ModalHeader>
             <ModalBody>
@@ -195,7 +200,7 @@ export class ModalCuotas extends Component {
             <ModalFooter>
               {cuotaSeleccionada && (
                 <div>
-                  <Button color="secondary" onClick={this.toggleModal}>
+                  <Button color="secondary" onClick={this.cerrarModal}>
                     Cancelar
                   </Button>{' '}
                   {!soloLectura && (

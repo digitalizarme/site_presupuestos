@@ -544,6 +544,13 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
   }
 };
 
+const pdf_ios = (blob) => {
+var fileBlob = new Blob([blob], {type: 'application/pdf'});
+window.open(fileBlob, '_blank');
+return true;
+
+}
+
 const PdfDescargar = ({ cargado, props, archivo }) => {
   return cargado ? (
     <PDFDownloadLink fileName={archivo} document={<MyDocument props={props} archivo={archivo} />}>

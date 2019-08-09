@@ -104,12 +104,12 @@ const columns = [
 
 const defaultSorted = [
   {
-    dataField: 'c_monedaOrigemDestino',
-    order: 'asc',
-  },
-  {
     dataField: 'updatedAt',
     order: 'desc',
+  },
+  {
+    dataField: 'c_monedaOrigemDestino',
+    order: 'asc',
   },
 ];
 

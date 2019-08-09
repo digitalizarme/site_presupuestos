@@ -258,6 +258,8 @@ const Campo8Izquierda = styled.Text`
   font-size: 8px;
   font-weight: 900;
   text-align: left;
+  padding: 1px;
+
 `;
 
 const Campo8Derecha = styled.Text`
@@ -333,7 +335,7 @@ const MyDocument = ({ props, archivo }) => {
             <Campo8Derecha style={styles.espacioArriba}>Dirección:</Campo8Derecha>
           </Cliente>
           <ClienteValor>
-            <Valor8Izquierda>{props.presupuesto.persona.c_nombre.toUpperCase()}</Valor8Izquierda>
+            <Valor8Izquierda>{`${props.presupuesto.persona.c_nombre.toUpperCase()} - ${props.presupuesto.persona.c_identificacion}`}</Valor8Izquierda>
             <Valor8Izquierda style={styles.espacioArriba}>
               {props.presupuesto.persona.c_direccion.toUpperCase()}
             </Valor8Izquierda>
@@ -544,12 +546,12 @@ const PdfVisualizar = ({ props, cargado, archivo }) => {
   }
 };
 
-const pdf_ios = (blob) => {
-var fileBlob = new Blob([blob], {type: 'application/pdf'});
-window.open(fileBlob, '_blank');
-return true;
+// const pdf_ios = (blob) => {
+// var fileBlob = new Blob([blob], {type: 'application/pdf'});
+// window.open(fileBlob, '_blank');
+// return true;
 
-}
+// }
 
 const PdfDescargar = ({ cargado, props, archivo }) => {
   return cargado ? (

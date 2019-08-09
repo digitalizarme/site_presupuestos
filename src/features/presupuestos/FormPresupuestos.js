@@ -716,7 +716,7 @@ class FormPresupuestos extends Component {
                 >
                   Cancelar
                 </Link>{' '}
-                {!modoConsulta && (
+                {tipoPresupuesto !== 'concluidos' && (
                   <Button type="submit" color="success" disabled={pristine || submitting}>
                     {submitting ? 'Guardando' : 'Guardar'}
                   </Button>

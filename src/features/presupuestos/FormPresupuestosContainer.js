@@ -954,12 +954,20 @@ export class FormPresupuestosContainer extends Component {
     const { history } = this.props;
 
     this.preSubmit(values).then(res => {
+      const { path } = this.props.match;
+      let tipoPresupuesto = 'pendientes';
+      if (path.indexOf('aprobados') !== -1) {
+        tipoPresupuesto = 'aprobados';
+      } else if (path.indexOf('concluidos') !== -1) {
+        tipoPresupuesto = 'concluidos';
+      }
+  
       swal({
         icon: 'success',
         timer: 1000,
       });
       setTimeout(() => {
-        history.push('/presupuestos');
+        history.push(`/presupuestos/${tipoPresupuesto}`);
       }, 900);
     });
   };

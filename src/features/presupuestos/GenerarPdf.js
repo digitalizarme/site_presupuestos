@@ -555,7 +555,7 @@ const MyDocument = ({props, archivo}) => {
                                     {typeof cuotas[indice + 1] !== 'undefined' && (
                                         <Seccion50 key={`coluna2key${indice}`}>
                                             <Campo8Izquierda>
-                                                {cuotas[indice + 1].n_nr_cuota}) Valor:{' '} {formatarNumero(cuotas[indice + 1].n_valor, decimales, true)}
+                                                {cuotas[indice + 1].n_nr_cuota}) Valor:{' '} {formatarNumero(cuotas[indice + 1].n_valor, decimales, true)}{' '}
                                                 Vencimiento:{' '} {moment(cuotas[indice + 1].d_fecha_vcto).format('DD/MM/YYYY')}
                                             </Campo8Izquierda>
                                         </Seccion50>

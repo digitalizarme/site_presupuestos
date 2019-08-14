@@ -534,7 +534,7 @@ const MyDocument = ({props, archivo}) => {
                 <Linea>
                     <Seccion100>
                         <Campo8>
-                            Entrega(aproximada) de {props.presupuesto.n_dias_entrega}
+                            Entrega(aproximada) de {props.presupuesto.n_dias_entrega}{' '}
                             días. Pagos (Cuotas):
                         </Campo8>
                     </Seccion100>

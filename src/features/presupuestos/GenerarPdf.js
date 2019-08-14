@@ -19,6 +19,7 @@ import formatarNumero from '../../common/formatarNumero';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faDownload, faSpinner, faPrint, faExclamationCircle} from '@fortawesome/free-solid-svg-icons';
 import is from 'is_js';
+import {ReactTitle} from 'react-meta-tags';
 
 const b64toBlob = (b64Data, contentType = '', sliceSize = 512) => {
     const byteCharacters = atob(b64Data);
@@ -596,7 +597,10 @@ const MyDocument = ({props, archivo}) => {
 
 const PdfVisualizar = ({props, cargado, archivo}) => {
     if (is.ios()) {
-        return <PdfDescargar props={props} cargado={cargado} archivo={archivo}/>;
+        return <div><ReactTitle
+            title={`${archivo
+            ? archivo
+            : 'PDF'} | Presupuesto`}/><PdfDescargar props={props} cargado={cargado} archivo={archivo}/></div>;
     } else {
         if (cargado) {
             const body = document.body,
@@ -607,9 +611,14 @@ const PdfVisualizar = ({props, cargado, archivo}) => {
             document.body.style.marginBottom = 0;
 
             return (
-                <PDFViewer width={width} height={height}>
-                    <MyDocument props={props} archivo={archivo}/>
-                </PDFViewer>
+                <div><ReactTitle
+                    title={`${archivo
+                    ? archivo
+                    : 'PDF'} | Presupuesto`}/>
+                    <PDFViewer width={width} height={height}>
+                        <MyDocument props={props} archivo={archivo}/>
+                    </PDFViewer>
+                </div>
             );
         } else {
             return 'Cargando...';

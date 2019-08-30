@@ -160,7 +160,16 @@ const totalizaSeguro = ({ props, totSeguro }) => {
 };
 
 const totalizaItems = ({ items, props }) => {
-  const { n_valor_porcentaje_comision, seguro, configuracion, n_desc_redondeo } = props;
+  const {
+    n_valor_porcentaje_comision,
+    seguro,
+    configuracion,
+    optionsMonedas,
+    n_desc_redondeo,
+    monedaSeleccionada,
+  } = props;
+  const { traeUltimasCotizacionesMoneda } = props.actions;
+
   let totExentas = 0;
   let totFletes = 0;
   let tot5 = 0;
@@ -206,6 +215,7 @@ const totalizaItems = ({ items, props }) => {
 
   if (configuracion.b_comision === false) {
     valorComision = 0;
+    props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
     setaTotalGeneral({
       n_total_items: totItems,
       n_valor_comision: valorComision,
@@ -213,6 +223,34 @@ const totalizaItems = ({ items, props }) => {
       n_desc_redondeo,
       dispatch: props.dispatch,
     });
+  } else {
+    let valorMinComision = configuracion.n_valor_min_comision;
+
+    if (configuracion.n_id_moneda_valor_min_comision !== monedaSeleccionada.extra.id) {
+      const monedaConfig = optionsMonedas.find(
+        moneda => moneda.value === configuracion.n_id_moneda_valor_min_comision,
+      );
+      const c_monedaOrigemDestino =
+        monedaConfig.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
+      traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+        .then(res => {
+          if (res.data && res.data.length > 0) {
+            const n_cotizacion = parseFloat(res.data[0].n_valor);
+            valorMinComision *= n_cotizacion;
+            if (valorComision < valorMinComision) {
+              props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
+            }
+          }
+        })
+        .catch(err => {
+          props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+          mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+        });
+    } else if (valorComision < valorMinComision) {
+      props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
+    } else {
+      props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+    }
   }
 
   props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
@@ -224,7 +262,6 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
   props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
   props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
-  props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
   if (seguro) {
     totalizaSeguro({ props, totSeguro });
   }
@@ -961,7 +998,7 @@ export class FormPresupuestosContainer extends Component {
       } else if (path.indexOf('concluidos') !== -1) {
         tipoPresupuesto = 'concluidos';
       }
-  
+
       swal({
         icon: 'success',
         timer: 1000,
@@ -1109,7 +1146,9 @@ export class FormPresupuestosContainer extends Component {
           onChangeImpuesto={this.onChangeImpuesto}
           onChangePeso={this.onChangePeso}
           onChangeRatio={this.onChangeRatio}
-          validationConstraintsItems={!configuracion.b_flete?validationConstraintsItems:validationConstraintsItemsFlete}
+          validationConstraintsItems={
+            !configuracion.b_flete ? validationConstraintsItems : validationConstraintsItemsFlete
+          }
           onChangePesoFlete={this.onChangePesoFlete}
           onChangePagos={this.onChangePagos}
           onChangeValorCuota={this.onChangeValorCuota}

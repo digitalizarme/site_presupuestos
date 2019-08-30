@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Form, Container, Row, Col } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { InputText, InputCheckBox, InputNumber, DragDrop } from '../esqueleto';
+import { InputText, InputCheckBox, InputNumber, DragDrop, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
 
 export default class FormConfiguraciones extends Component {
@@ -10,7 +10,14 @@ export default class FormConfiguraciones extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine, b_comision } = this.props;
+    const {
+      enviarFormulario,
+      submitting,
+      pristine,
+      b_comision,
+      optionsMonedas,
+      decimales,
+    } = this.props;
 
     return (
       <div className="configuraciones-form-configuraciones">
@@ -93,7 +100,7 @@ export default class FormConfiguraciones extends Component {
               </Col>
             </Row>
             <Row>
-              <Col sm="10">
+              <Col sm="12" md="7" lg="8">
                 <Field
                   name="c_direccion"
                   bsSize="lg"
@@ -104,16 +111,19 @@ export default class FormConfiguraciones extends Component {
                   normalize={value => value && value.toUpperCase()}
                 />
               </Col>
-              <Col sm="2" md="2" lg="1" xl="1">
+              <Col sm="2" md="2" lg="2" xl="2">
                 <Field name="b_flete" label="Flete" component={InputCheckBox} />
               </Col>
-            </Row>
-            <Row>
-              <Col sm="3" md="3" lg="2" xl="2">
-                <Field name="b_comision" label="Comisión" component={InputCheckBox} />
+              <Col sm="2" md="2" lg="1" xl="1">
+                <Field name="b_seguro" label="Seguro" component={InputCheckBox} />
               </Col>
-              {b_comision ? (
-                <Col sm="2" md="3" lg="2" xl="2">
+            </Row>
+            {b_comision ? (
+              <Row>
+                <Col sm="12" md="12" lg="2" xl="2">
+                  <Field name="b_comision" label="Comisión" component={InputCheckBox} />
+                </Col>
+                <Col sm="12" md="4" lg="3" xl="3">
                   <Field
                     name="n_valor_porcentaje_comision"
                     label="% Comisión"
@@ -122,11 +132,33 @@ export default class FormConfiguraciones extends Component {
                     className="field form-control-lg form-control"
                   />
                 </Col>
-              ) : null}
-              <Col sm="2" md="2" lg="1" xl="1">
-                <Field name="b_seguro" label="Seguro" component={InputCheckBox} />
-              </Col>
-            </Row>
+                <Col sm="12" md="4" lg="4" xl="4">
+                  <Field
+                    name="n_id_moneda_valor_min_comision"
+                    label="Moneda"
+                    options={optionsMonedas}
+                    component={SuperSelect}
+                    placeholder="Elija"
+                  />
+                </Col>
+                <Col sm="12" md="4" lg="3" xl="3">
+                  <Field
+                    name="n_valor_min_comision"
+                    label="Valor minimo de comisión"
+                    component={InputNumber}
+                    decimalScale={decimales}
+                    className="field form-control-lg form-control"
+                  />
+                </Col>
+              </Row>
+            ) : (
+              <Row>
+                <Col sm="3" md="3" lg="2" xl="2">
+                  <Field name="b_comision" label="Comisión" component={InputCheckBox} />
+                </Col>
+              </Row>
+            )}
+
             <Row>
               <Col sm="12">
                 <Field

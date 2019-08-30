@@ -9,6 +9,7 @@ import swal from 'sweetalert';
 import validate from 'validate.js';
 import { reduxForm, formValueSelector } from 'redux-form';
 import { toggleCargando } from '../esqueleto/redux/actions';
+import { listaMonedas } from '../cotizaciones/redux/actions';
 
 // Decorate with connect to read form values
 const selector = formValueSelector('formConfiguraciones'); // <-- same as form name
@@ -101,6 +102,17 @@ const validationConstraintsComision = {
       notLessThanOrEqualTo: 'El valor debe ser menor o igual a 100',
     },
   },
+  n_valor_min_comision: {
+    presence: {
+      message: 'Valor minimo de la comisión es obligatorio',
+    },
+    numericality: {
+      onlyInteger: false,
+      notValid: 'Este valor no es válido',
+      greaterThan: 0,
+      notGreaterThan: 'El valor debe ser mayor que zero',
+    },
+  },
 };
 
 export class FormConfiguracionesContainer extends Component {
@@ -109,8 +121,13 @@ export class FormConfiguracionesContainer extends Component {
     actions: PropTypes.object.isRequired,
   };
 
+  componentDidMount = () => {
+    const { listaMonedas } = this.props.actions;
+    listaMonedas();
+  };
+
   submit = values => {
-    const { guardar,toggleCargando } = this.props.actions;
+    const { guardar, toggleCargando } = this.props.actions;
     toggleCargando();
     guardar(values)
       .then(res => {
@@ -125,7 +142,7 @@ export class FormConfiguracionesContainer extends Component {
           typeof err.response !== 'undefined'
             ? err.response.data
             : 'Error al intentar guardar los datos';
-        toggleCargando();    
+        toggleCargando();
         swal({
           title: 'Ops',
           text: message ? message : 'Error al intentar guardar los datos',
@@ -135,9 +152,8 @@ export class FormConfiguracionesContainer extends Component {
       });
   };
 
-
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit,optionsMonedas } = this.props;
 
     return (
       <div className="configuraciones-form-configuraciones-container">
@@ -145,6 +161,7 @@ export class FormConfiguracionesContainer extends Component {
           titulo="Configuraciones"
           component={FormConfiguraciones}
           enviarFormulario={handleSubmit(this.submit)}
+          optionsMonedas={optionsMonedas}
           {...this.props}
         />
       </div>
@@ -164,19 +181,43 @@ FormConfiguracionesContainer = reduxForm({
 
 /* istanbul ignore next */
 function mapStateToProps(state) {
+  const optionsMonedas = [];
+  let monedaObj = {};
+  for (let moneda of state.cotizaciones.monedas) {
+    if (
+      moneda.b_activo ||
+      (state.configuraciones.configuracion.n_id_moneda_valor_min_comision === moneda.id ||
+        moneda.b_activo)
+    ) {
+      monedaObj = {
+        label: moneda.c_descripcion,
+        value: moneda.id,
+        decimales: moneda.n_decimales,
+        extra: moneda,
+      };
+      optionsMonedas.push(monedaObj);
+    }
+  }
+  let decimales = selector(state, 'n_id_moneda_valor_min_comision')
+    ? optionsMonedas.find(
+        moneda => moneda.value === selector(state, 'n_id_moneda_valor_min_comision'),
+      )
+    : null;
+  decimales = decimales ? decimales.decimales : 2;
   return {
     configuraciones: state.configuraciones,
     initialValues: state.configuraciones.configuracion,
     b_comision: selector(state, 'b_comision'),
+    decimales,
     t_logo: state.esqueleto.img,
-
+    optionsMonedas,
   };
 }
 
 /* istanbul ignore next */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...actions,toggleCargando }, dispatch),
+    actions: bindActionCreators({ ...actions, toggleCargando, listaMonedas }, dispatch),
   };
 }
 

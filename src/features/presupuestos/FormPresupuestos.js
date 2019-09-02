@@ -155,6 +155,7 @@ class FormPresupuestos extends Component {
       usuarioComision,
       n_valor_comision,
       configuracion,
+      onChangeComisionista,
     } = this.props;
     return (
       <div className="presupuestos-form-presupuestos">
@@ -196,7 +197,8 @@ class FormPresupuestos extends Component {
           <Form onSubmit={enviarFormulario} className="form_border">
             <Field name="id" component="input" type="hidden" />
             <Field name="n_id_usuario" component="input" type="hidden" />
-
+            <Field name="n_porc_comisionista" component="input" type="hidden" />
+            <Field name="n_porc_comision_empresa" component="input" type="hidden" />
             <Row>
               <Col sm="6" md="4" lg="4" xl="4">
                 <label>Creado por</label>
@@ -458,6 +460,7 @@ class FormPresupuestos extends Component {
                           name="n_id_persona_comisionista"
                           label="Comicionista"
                           options={optionsComisionista}
+                          onChange={onChangeComisionista}
                           component={SuperSelect}
                           placeholder="Elija"
                           disabled={disabledCampos}

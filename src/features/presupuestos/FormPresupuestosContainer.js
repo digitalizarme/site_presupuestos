@@ -563,7 +563,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangeCamposValores = campos => {
-    const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada } = this.props;
+    const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada, id } = this.props;
     const props = {
       ...campos,
       optionsSeguros,
@@ -586,6 +586,7 @@ export class FormPresupuestosContainer extends Component {
       dispatch,
       traeUltimasCotizacionesMoneda,
     });
+    this.deletaCuotas({ n_id_presupuesto: id });
   };
 
   onChangePersona = idPersona => {
@@ -617,6 +618,24 @@ export class FormPresupuestosContainer extends Component {
         seguro: idSeguro,
       };
       totalizaSeguro({ props });
+    }
+  };
+
+  onChangeComisionista = idComisionista => {
+    if (idComisionista) {
+      const { optionsComisionista } = this.props;
+      const comisionistaSeleccionado = optionsComisionista.find(
+        comisionista => comisionista.value === idComisionista,
+      );
+      if (comisionistaSeleccionado && comisionistaSeleccionado.extra) {
+        this.props.dispatch(
+          change(
+            'formPresupuestos',
+            `n_porc_comisionista`,
+            comisionistaSeleccionado.extra.n_valor_porcentaje_comision,
+          ),
+        );
+      }
     }
   };
 
@@ -880,7 +899,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   eliminarItem = item => {
-    const { api_axio, toggleCargando, traeItems, eliminaCuotas } = this.props.actions;
+    const { api_axio, toggleCargando, traeItems } = this.props.actions;
     const props = this.props;
     swal({
       title: 'Estás seguro?',
@@ -920,16 +939,7 @@ export class FormPresupuestosContainer extends Component {
             traeItems(params).then(res => {
               totalizaItems({ items: res.data, props });
               this.props.dispatch(this.props.handleSubmit(this.preSubmit));
-              this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
-              this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
-              this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
-              params = {
-                id: item.n_id_presupuesto,
-                method: 'delete',
-              };
-              eliminaCuotas(params).then(res => {
-                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-              });
+              this.deletaCuotas({ n_id_presupuesto: item.n_id_presupuesto });
               toggleCargando();
             });
           })
@@ -941,8 +951,25 @@ export class FormPresupuestosContainer extends Component {
     });
   };
 
+  deletaCuotas = ({ n_id_presupuesto }) => {
+    const { cuotas } = this.props;
+
+    this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+    this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+    this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+    if (cuotas && cuotas.length > 0) {
+      const params = {
+        id: n_id_presupuesto,
+        method: 'delete',
+      };
+      eliminaCuotas(params).then(res => {
+        this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+      });
+    }
+  };
+
   submitItem = values => {
-    const { modalToggle, api_axio, toggleCargando, traeItems, eliminaCuotas } = this.props.actions;
+    const { modalToggle, api_axio, toggleCargando, traeItems } = this.props.actions;
     const props = this.props;
     toggleCargando();
     const params = {
@@ -965,18 +992,7 @@ export class FormPresupuestosContainer extends Component {
         traeItems(params).then(res => {
           totalizaItems({ items: res.data, props });
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
-          this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
-          this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
-          this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
-
-          params = {
-            id: values.n_id_presupuesto,
-            method: 'delete',
-          };
-
-          eliminaCuotas(params).then(res => {
-            this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-          });
+          this.deletaCuotas({ n_id_presupuesto: values.n_id_presupuesto });
           toggleCargando();
           modalToggle();
         });
@@ -1158,6 +1174,7 @@ export class FormPresupuestosContainer extends Component {
           modoConsulta={modoConsulta}
           disabledCampos={disabledCampos}
           cambiaStatus={cambiaStatus}
+          onChangeComisionista={this.onChangeComisionista}
         />
       </div>
     );
@@ -1181,6 +1198,7 @@ function mapStateToProps(state) {
   let initialValues = modoNuevo
     ? {
         n_id_usuario: state.acceder.usuario.id,
+        n_porc_comision_empresa: state.configuraciones.configuracion.n_valor_porcentaje_comision,
       }
     : typeof state.esqueleto.selected[0] !== 'undefined'
     ? {

@@ -953,6 +953,7 @@ export class FormPresupuestosContainer extends Component {
 
   deletaCuotas = ({ n_id_presupuesto }) => {
     const { cuotas } = this.props;
+    const { eliminaCuotas } = this.props.actions;
 
     this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
     this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));

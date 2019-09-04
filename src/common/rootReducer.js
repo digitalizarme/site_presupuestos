@@ -18,6 +18,7 @@ import mercaderiasMarcasReducer from '../features/mercaderias-marcas/redux/reduc
 import mercaderiasReducer from '../features/mercaderias/redux/reducer';
 import segurosReducer from '../features/seguros/redux/reducer';
 import presupuestosReducer from '../features/presupuestos/redux/reducer';
+import informesReducer from '../features/informes/redux/reducer';
 
 // NOTE 1: DO NOT CHANGE the 'reducerMap' name and the declaration pattern.
 // This is used for Rekit cmds to register new features, remove features, etc.
@@ -44,6 +45,7 @@ const reducerMap = {
   mercaderias: mercaderiasReducer,
   seguros: segurosReducer,
   presupuestos: presupuestosReducer,
+  informes: informesReducer,
 };
 
 export default (history) => {

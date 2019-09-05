@@ -1007,7 +1007,7 @@ export class FormPresupuestosContainer extends Component {
   submit = values => {
     const { history } = this.props;
 
-    this.preSubmit(values).then(res => {
+    return this.preSubmit(values, true).then(res => {
       const { path } = this.props.match;
       let tipoPresupuesto = 'pendientes';
       if (path.indexOf('aprobados') !== -1) {
@@ -1020,13 +1020,14 @@ export class FormPresupuestosContainer extends Component {
         icon: 'success',
         timer: 1000,
       });
+
       setTimeout(() => {
         history.push(`/presupuestos/${tipoPresupuesto}`);
       }, 900);
     });
   };
 
-  preSubmit = values => {
+  preSubmit = (values, finalizar) => {
     const { api_axio, toggleCargando } = this.props.actions;
     toggleCargando();
 
@@ -1039,8 +1040,9 @@ export class FormPresupuestosContainer extends Component {
       params,
     })
       .then(res => {
-        this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
-
+        if (!finalizar) {
+          this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
+        }
         toggleCargando();
       })
       .catch(err => {

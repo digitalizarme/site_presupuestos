@@ -25,7 +25,7 @@ export class MarcarAprobado extends Component {
       method: 'put',
       data,
     };
-    api_axio({
+    return api_axio({
       api_funcion: `presupuestos/status`,
       params,
     })

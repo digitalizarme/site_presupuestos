@@ -212,7 +212,6 @@ const totalizaItems = ({ items, props }) => {
   valorComision =
     ((parseFloat(totItems) - parseFloat(totFletes)) * parseFloat(n_valor_porcentaje_comision)) /
     100;
-
   if (configuracion.b_comision === false) {
     valorComision = 0;
     props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
@@ -225,7 +224,6 @@ const totalizaItems = ({ items, props }) => {
     });
   } else {
     let valorMinComision = configuracion.n_valor_min_comision;
-
     if (configuracion.n_id_moneda_valor_min_comision !== monedaSeleccionada.extra.id) {
       const monedaConfig = optionsMonedas.find(
         moneda => moneda.value === configuracion.n_id_moneda_valor_min_comision,
@@ -240,6 +238,14 @@ const totalizaItems = ({ items, props }) => {
             if (valorComision < valorMinComision) {
               props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
             }
+            else
+            {
+              props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+            }
+          }
+          else
+          {
+              props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
           }
         })
         .catch(err => {
@@ -485,6 +491,19 @@ export class FormPresupuestosContainer extends Component {
     actions: PropTypes.object.isRequired,
     esqueleto: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.toggleCargandoDatos = this.toggleCargandoDatos.bind(this);
+
+    this.state = {
+      cargandoDatos: false,
+    };
+  }
+
+  toggleCargandoDatos() {
+    this.setState(state => ({ cargandoDatos: !state.cargandoDatos }));
+  }
 
   onChangeValorCuota = ({ fields, actual }) => {
     const { n_total_general, decimales } = this.props;
@@ -952,21 +971,32 @@ export class FormPresupuestosContainer extends Component {
   };
 
   deletaCuotas = ({ n_id_presupuesto }) => {
-    const { cuotas } = this.props;
-    const { eliminaCuotas } = this.props.actions;
+    setTimeout(() => {
+      const { cuotas, n_total_general } = this.props;
+      const { cargandoDatos } = this.state;
+      if (!cargandoDatos) {
+        let totalCuotas = 0;
+        cuotas.map(cuota => {
+          return (totalCuotas += cuota.n_valor);
+        });
+        if (parseFloat(n_total_general) !== parseFloat(totalCuotas)) {
+          const { eliminaCuotas } = this.props.actions;
 
-    this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
-    this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
-    this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
-    if (cuotas && cuotas.length > 0) {
-      const params = {
-        id: n_id_presupuesto,
-        method: 'delete',
-      };
-      eliminaCuotas(params).then(res => {
-        this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-      });
-    }
+          this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+          this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+          this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+          if (cuotas && cuotas.length > 0) {
+            const params = {
+              id: n_id_presupuesto,
+              method: 'delete',
+            };
+            eliminaCuotas(params).then(res => {
+              this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+            });
+          }
+        }
+      }
+    }, 100);
   };
 
   submitItem = values => {
@@ -1007,7 +1037,7 @@ export class FormPresupuestosContainer extends Component {
   submit = values => {
     const { history } = this.props;
 
-    return this.preSubmit(values, true).then(res => {
+    return this.preSubmit(values).then(res => {
       const { path } = this.props.match;
       let tipoPresupuesto = 'pendientes';
       if (path.indexOf('aprobados') !== -1) {
@@ -1027,8 +1057,9 @@ export class FormPresupuestosContainer extends Component {
     });
   };
 
-  preSubmit = (values, finalizar) => {
+  preSubmit = values => {
     const { api_axio, toggleCargando } = this.props.actions;
+    const { id } = this.props;
     toggleCargando();
 
     const params = {
@@ -1040,7 +1071,7 @@ export class FormPresupuestosContainer extends Component {
       params,
     })
       .then(res => {
-        if (!finalizar) {
+        if (typeof id === 'undefined' || !id) {
           this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
         }
         toggleCargando();
@@ -1101,6 +1132,7 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
+      this.toggleCargandoDatos();
       traerPresupuesto(params).then(res => {
         const datos = res.data;
         const monedaSeleccionada = {
@@ -1111,11 +1143,14 @@ export class FormPresupuestosContainer extends Component {
           totalGeneral: datos.n_total_general,
           dispatch: this.props.dispatch,
           traeUltimasCotizacionesMoneda,
+          edicion: true,
         });
       });
-      traeItems(params);
-      traeCuotas(params).then(res => {
-        this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+      traeItems(params).then(resItems => {
+        traeCuotas(params).then(res => {
+          this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+          this.toggleCargandoDatos();
+        });
       });
     }
   };
@@ -1405,6 +1440,7 @@ function mapStateToProps(state) {
     items: state.presupuestos.items,
     cuotas: state.presupuestos.cuotas,
     presupuestos: state.presupuestos,
+    presupuesto: state.presupuestos.presupuesto,
     modoNuevo,
     traeItemsPending: state.presupuestos.traeItemsPending,
     cotizaciones: state.cotizaciones.cotizaciones,

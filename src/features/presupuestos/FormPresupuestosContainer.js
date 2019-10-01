@@ -237,15 +237,11 @@ const totalizaItems = ({ items, props }) => {
             valorMinComision *= n_cotizacion;
             if (valorComision < valorMinComision) {
               props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
-            }
-            else
-            {
+            } else {
               props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
             }
-          }
-          else
-          {
-              props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+          } else {
+            props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
           }
         })
         .catch(err => {
@@ -971,32 +967,34 @@ export class FormPresupuestosContainer extends Component {
   };
 
   deletaCuotas = ({ n_id_presupuesto }) => {
-    setTimeout(() => {
-      const { cuotas, n_total_general } = this.props;
-      const { cargandoDatos } = this.state;
-      if (!cargandoDatos) {
-        let totalCuotas = 0;
-        cuotas.map(cuota => {
-          return (totalCuotas += cuota.n_valor);
-        });
-        if (parseFloat(n_total_general) !== parseFloat(totalCuotas)) {
-          const { eliminaCuotas } = this.props.actions;
+    if (n_id_presupuesto && n_id_presupuesto > 0) {
+      setTimeout(() => {
+        const { cuotas, n_total_general } = this.props;
+        const { cargandoDatos } = this.state;
+        if (!cargandoDatos) {
+          let totalCuotas = 0;
+          cuotas.map(cuota => {
+            return (totalCuotas += cuota.n_valor);
+          });
+          if (parseFloat(n_total_general) !== parseFloat(totalCuotas)) {
+            const { eliminaCuotas } = this.props.actions;
 
-          this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
-          this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
-          this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
-          if (cuotas && cuotas.length > 0) {
-            const params = {
-              id: n_id_presupuesto,
-              method: 'delete',
-            };
-            eliminaCuotas(params).then(res => {
-              this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-            });
+            this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+            this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+            this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+            if (cuotas && cuotas.length > 0) {
+              const params = {
+                id: n_id_presupuesto,
+                method: 'delete',
+              };
+              eliminaCuotas(params).then(res => {
+                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+              });
+            }
           }
         }
-      }
-    }, 100);
+      }, 100);
+    }
   };
 
   submitItem = values => {

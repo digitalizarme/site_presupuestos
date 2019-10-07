@@ -988,7 +988,7 @@ export class FormPresupuestosContainer extends Component {
                 method: 'delete',
               };
               eliminaCuotas(params).then(res => {
-                this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
+                this.props.dispatch(change('formPresupuestos', `cuotas`, []));
               });
             }
           }

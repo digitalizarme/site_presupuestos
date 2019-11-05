@@ -186,10 +186,10 @@ const totalizaItems = ({ items, props }) => {
       totFletes += parseFloat(objItem.n_flete);
       tot5 += parseFloat(objItem.n_gravadas_5);
       tot10 += parseFloat(objItem.n_gravadas_10);
-      if (objItem.b_seguro) {
+      if (objItem.b_seguro === true) {
         totSeguro +=
           parseFloat(objItem.n_exentas) +
-          parseFloat(objItem.n_flete) +
+          //parseFloat(objItem.n_flete) +
           parseFloat(objItem.n_gravadas_5) +
           parseFloat(objItem.n_gravadas_10);
       }
@@ -212,6 +212,20 @@ const totalizaItems = ({ items, props }) => {
   valorComision =
     ((parseFloat(totItems) - parseFloat(totFletes)) * parseFloat(n_valor_porcentaje_comision)) /
     100;
+
+  props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
+  props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
+  props.dispatch(change('formPresupuestos', `n_total_5`, tot5));
+  props.dispatch(change('formPresupuestos', `n_total_10`, tot10));
+  props.dispatch(change('formPresupuestos', `n_total_items`, totItems));
+  props.dispatch(change('formPresupuestos', `n_total_iva_5`, totIVA5));
+  props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
+  props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
+  props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
+  if (seguro) {
+    totalizaSeguro({ props, totSeguro });
+  }
+  
   if (configuracion.b_comision === false) {
     valorComision = 0;
     props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
@@ -243,30 +257,46 @@ const totalizaItems = ({ items, props }) => {
           } else {
             props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
           }
+          setaTotalGeneral({
+            n_total_items: totItems,
+            n_valor_comision: valorComision,
+            valorSeguro: totSeguro,
+            n_desc_redondeo,
+            dispatch: props.dispatch,
+          });
         })
         .catch(err => {
           props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+          setaTotalGeneral({
+            n_total_items: totItems,
+            n_valor_comision: valorComision,
+            valorSeguro: totSeguro,
+            n_desc_redondeo,
+            dispatch: props.dispatch,
+          });
           mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
         });
     } else if (valorComision < valorMinComision) {
       props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
+      setaTotalGeneral({
+        n_total_items: totItems,
+        n_valor_comision: valorComision,
+        valorSeguro: totSeguro,
+        n_desc_redondeo,
+        dispatch: props.dispatch,
+      });
     } else {
       props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
+      setaTotalGeneral({
+        n_total_items: totItems,
+        n_valor_comision: valorComision,
+        valorSeguro: totSeguro,
+        n_desc_redondeo,
+        dispatch: props.dispatch,
+      });
     }
   }
 
-  props.dispatch(change('formPresupuestos', `n_total_exentas`, totExentas));
-  props.dispatch(change('formPresupuestos', `n_total_flete`, totFletes));
-  props.dispatch(change('formPresupuestos', `n_total_5`, tot5));
-  props.dispatch(change('formPresupuestos', `n_total_10`, tot10));
-  props.dispatch(change('formPresupuestos', `n_total_items`, totItems));
-  props.dispatch(change('formPresupuestos', `n_total_iva_5`, totIVA5));
-  props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
-  props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
-  props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
-  if (seguro) {
-    totalizaSeguro({ props, totSeguro });
-  }
 };
 
 const atualizouForm = (values, dispatch, props) => {

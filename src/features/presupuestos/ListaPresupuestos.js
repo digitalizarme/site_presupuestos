@@ -69,11 +69,9 @@ const columns = [
     attrs: { width: '10%' },
   },
   {
-    dataField: 'updatedAt',
-    text: 'Actualizado',
+    dataField: 't_observacion',
+    text: 'Observación',
     sort: true,
-    editable: false,
-    formatter: formatarFecha,
     attrs: { width: '15%' },
   },
   {

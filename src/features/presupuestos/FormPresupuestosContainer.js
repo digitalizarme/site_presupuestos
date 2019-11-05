@@ -179,6 +179,7 @@ const totalizaItems = ({ items, props }) => {
   let totIVA10 = 0;
   let totIVA = 0;
   let totSeguro = 0;
+  let totCtdAsegurada = 0;
   let valorComision = 0;
   if (items && items.length > 0) {
     items.map((objItem, indice) => {
@@ -187,7 +188,7 @@ const totalizaItems = ({ items, props }) => {
       tot5 += parseFloat(objItem.n_gravadas_5);
       tot10 += parseFloat(objItem.n_gravadas_10);
       if (objItem.b_seguro === true) {
-        totSeguro +=
+        totCtdAsegurada +=
           parseFloat(objItem.n_exentas) +
           //parseFloat(objItem.n_flete) +
           parseFloat(objItem.n_gravadas_5) +
@@ -200,9 +201,10 @@ const totalizaItems = ({ items, props }) => {
       totFletes = 0;
     }
     if (configuracion.b_seguro === false) {
-      totSeguro = 0;
+      totCtdAsegurada = 0;
     }
 
+  
     totItems =
       parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
     totIVA5 = parseFloat(tot5) / 21;
@@ -221,11 +223,10 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_total_iva_5`, totIVA5));
   props.dispatch(change('formPresupuestos', `n_total_iva_10`, totIVA10));
   props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
-  props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totSeguro));
+  props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totCtdAsegurada));
   if (seguro) {
-    totalizaSeguro({ props, totSeguro });
+    totSeguro = totalizaSeguro({ props, totSeguro:totCtdAsegurada });
   }
-  
   if (configuracion.b_comision === false) {
     valorComision = 0;
     props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
@@ -244,22 +245,26 @@ const totalizaItems = ({ items, props }) => {
       );
       const c_monedaOrigemDestino =
         monedaConfig.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
+      let comissaoFinal = valorComision;
       traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
         .then(res => {
           if (res.data && res.data.length > 0) {
             const n_cotizacion = parseFloat(res.data[0].n_valor);
             valorMinComision *= n_cotizacion;
             if (valorComision < valorMinComision) {
+              comissaoFinal = valorMinComision;
               props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
             } else {
+              comissaoFinal = valorComision;
               props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
             }
           } else {
+            comissaoFinal = valorComision;
             props.dispatch(change('formPresupuestos', `n_valor_comision`, valorComision));
           }
           setaTotalGeneral({
             n_total_items: totItems,
-            n_valor_comision: valorComision,
+            n_valor_comision: comissaoFinal,
             valorSeguro: totSeguro,
             n_desc_redondeo,
             dispatch: props.dispatch,
@@ -280,7 +285,7 @@ const totalizaItems = ({ items, props }) => {
       props.dispatch(change('formPresupuestos', `n_valor_comision`, valorMinComision));
       setaTotalGeneral({
         n_total_items: totItems,
-        n_valor_comision: valorComision,
+        n_valor_comision: valorMinComision,
         valorSeguro: totSeguro,
         n_desc_redondeo,
         dispatch: props.dispatch,
@@ -296,7 +301,6 @@ const totalizaItems = ({ items, props }) => {
       });
     }
   }
-
 };
 
 const atualizouForm = (values, dispatch, props) => {
@@ -842,7 +846,6 @@ export class FormPresupuestosContainer extends Component {
               }
             })
             .catch(err => {
-              //console.log(err,'merda')
               pararCargando();
               mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
             });

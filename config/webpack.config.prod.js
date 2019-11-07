@@ -10,6 +10,8 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const CompressionPlugin = require('compression-webpack-plugin');
+const HtmlWebpackChangeAssetsExtensionPlugin = require('html-webpack-change-assets-extension-plugin')
 
 const publicPath = paths.servedPath;
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP === 'false';
@@ -102,6 +104,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
+      jsExtension: ".gz",
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -141,6 +144,15 @@ module.exports = {
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.IgnorePlugin(/\/iconv-loader$/),
+    new CompressionPlugin({
+      filename: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.js$|\.css$|\.html$/,
+      threshold: 10240,
+      minRatio: 0.8,
+      deleteOriginalAssets: true,
+    }),
+    new HtmlWebpackChangeAssetsExtensionPlugin(),
   ],
   node: {
     dgram: 'empty',

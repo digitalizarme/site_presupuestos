@@ -84,7 +84,7 @@ const columns = [
     text: 'Cotización',
     sort: true,
     formatter: (cell, row) => {
-      return formatarNumero(cell, 5);
+      return formatarNumero(cell, 8);
     },
     align: 'right',
     editorRenderer: (editorProps, value, row, column, rowIndex, columnIndex) => (

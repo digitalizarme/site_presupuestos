@@ -639,22 +639,6 @@ class FormPresupuestos extends Component {
                     </Col>
                     <Col sm="4">
                       <Field
-                        name="n_cuotas_pago"
-                        label="Cantidad de pagos : "
-                        component={InputNumber}
-                        decimalScale={0}
-                        className="field form-control-lg form-control"
-                        onBlur={valor => {
-                          onChangePagos({
-                            n_cuotas_pago: this.props.n_cuotas_pago,
-                            n_dias_Frecuencia_pago: this.props.n_dias_Frecuencia_pago,
-                          });
-                        }}
-                        disabled={disabledCampos}
-                      />
-                    </Col>
-                    <Col sm="4">
-                      <Field
                         name="n_dias_Frecuencia_pago"
                         label="Frecuencia de pagos : "
                         options={optionsFrecuencias}
@@ -668,6 +652,23 @@ class FormPresupuestos extends Component {
                         }}
                         disabled={disabledCampos}
                       />
+                    </Col>
+                    <Col sm="4">
+                      <Field
+                        name="n_cuotas_pago"
+                        label="Cantidad de pagos : "
+                        component={InputNumber}
+                        decimalScale={0}
+                        className="field form-control-lg form-control"
+                        onBlur={valor => {
+                          onChangePagos({
+                            n_cuotas_pago: this.props.n_cuotas_pago,
+                            n_dias_Frecuencia_pago: this.props.n_dias_Frecuencia_pago,
+                          });
+                        }}
+                        disabled={disabledCampos}
+                      />
+
                     </Col>
                   </Row>
                   <FieldArray

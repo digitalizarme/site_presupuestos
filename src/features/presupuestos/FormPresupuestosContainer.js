@@ -584,7 +584,7 @@ export class FormPresupuestosContainer extends Component {
     generaCuotas(params)
       .then(res => {
         this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-        if (this.props.status === 1) {
+        if (this.props.status === 1 && res.data && res.data.length>0) {
           this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
         }
         toggleCargando();
@@ -1013,6 +1013,7 @@ export class FormPresupuestosContainer extends Component {
             const { eliminaCuotas } = this.props.actions;
 
             this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+            this.props.dispatch(change('formPresupuestos', 'n_dias_Frecuencia_pago', 1));            
             this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
             this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
             if (cuotas && cuotas.length > 0) {

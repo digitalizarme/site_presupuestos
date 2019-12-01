@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { toggleCargando, modalToggle, pararCargando } from '../esqueleto/redux/actions';
+import { iniciarCargando, modalToggle, pararCargando } from '../esqueleto/redux/actions';
 import api_axio from '../../common/api_axios';
 import {
   listaMonedas,
@@ -204,7 +204,6 @@ const totalizaItems = ({ items, props }) => {
       totCtdAsegurada = 0;
     }
 
-  
     totItems =
       parseFloat(totExentas) + parseFloat(totFletes) + parseFloat(tot5) + parseFloat(tot10);
     totIVA5 = parseFloat(tot5) / 21;
@@ -225,7 +224,7 @@ const totalizaItems = ({ items, props }) => {
   props.dispatch(change('formPresupuestos', `n_total_iva`, totIVA));
   props.dispatch(change('formPresupuestos', `n_tipo_seguro_valor`, totCtdAsegurada));
   if (seguro) {
-    totSeguro = totalizaSeguro({ props, totSeguro:totCtdAsegurada });
+    totSeguro = totalizaSeguro({ props, totSeguro: totCtdAsegurada });
   }
   if (configuracion.b_comision === false) {
     valorComision = 0;
@@ -522,19 +521,6 @@ export class FormPresupuestosContainer extends Component {
     esqueleto: PropTypes.object.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-    this.toggleCargandoDatos = this.toggleCargandoDatos.bind(this);
-
-    this.state = {
-      cargandoDatos: false,
-    };
-  }
-
-  toggleCargandoDatos() {
-    this.setState(state => ({ cargandoDatos: !state.cargandoDatos }));
-  }
-
   onChangeValorCuota = ({ fields, actual }) => {
     const { n_total_general, decimales } = this.props;
     let total = 0;
@@ -580,18 +566,18 @@ export class FormPresupuestosContainer extends Component {
       });
       return;
     }
-    toggleCargando();
+    
     generaCuotas(params)
       .then(res => {
         this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-        if (this.props.status === 1 && res.data && res.data.length>0) {
+        if (this.props.status === 1 && res.data && res.data.length > 0) {
           this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
         }
-        toggleCargando();
+        
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar generar cuotas' });
-        toggleCargando();
+        
       });
   };
 
@@ -739,10 +725,10 @@ export class FormPresupuestosContainer extends Component {
                 button: 'OK!',
               });
             }
-            toggleCargando();
+            
           })
           .catch(err => {
-            toggleCargando();
+            
             mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
           });
       } else {
@@ -754,153 +740,151 @@ export class FormPresupuestosContainer extends Component {
 
   onChangeItems = idItem => {
     const { monedaSeleccionada, optionsItems, configuracion } = this.props;
-    const { traeUltimasCotizacionesMoneda, toggleCargando, pararCargando } = this.props.actions;
-    toggleCargando().then(res => {
-      this.props.dispatch(change('formModal', `n_cantidad`, 1));
-      let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
-      itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : null;
-      if (!itemSeleccionado) {
+    const { traeUltimasCotizacionesMoneda, pararCargando } = this.props.actions;
+    this.props.dispatch(change('formModal', `n_cantidad`, 1));
+    let itemSeleccionado = idItem ? optionsItems.find(item => item.value === idItem) : null;
+    itemSeleccionado = itemSeleccionado ? itemSeleccionado.extra : null;
+    if (!itemSeleccionado) {
+      atualizaCamposItem({
+        dispatch: this.props.dispatch,
+        unitario: 1,
+        exentas: 1,
+        gravadas_5: 0,
+        gravadas_10: 0,
+        peso: 0,
+        tipo: 'M',
+        obs: 'Nueva Obs',
+        c_monedaOrigemDestino:
+          monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras,
+        n_cotizacion: 1,
+      });
+      const props_ratio = {
+        n_cantidad: 1,
+        n_unitario: 1,
+        n_exentas: 1,
+        n_gravadas_5: 0,
+        n_gravadas_10: 0,
+      };
+      recalcula_ratio(props_ratio);
+      
+    } else {
+      const tipo = itemSeleccionado.c_tipo;
+      const obs = itemSeleccionado.t_observacion;
+      const idFlete = itemSeleccionado.n_id_flete;
+      let unitario = parseFloat(itemSeleccionado.n_unitario);
+      let exentas = parseFloat(itemSeleccionado.n_exentas);
+      let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
+      let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
+      let peso = parseFloat(itemSeleccionado.n_peso);
+      let flete = configuracion.b_flete ? peso * parseFloat(itemSeleccionado.n_flete) : 0;
+      const props_ratio = {
+        n_cantidad: 1,
+        n_unitario: unitario,
+        n_exentas: exentas,
+        n_gravadas_5: gravadas_5,
+        n_gravadas_10: gravadas_10,
+      };
+      recalcula_ratio(props_ratio);
+      let c_monedaOrigemDestino =
+        monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
+      let n_cotizacion = 1;
+      if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
+        c_monedaOrigemDestino =
+          itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
+
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+          .then(res => {
+            if (res.data && res.data.length > 0) {
+              n_cotizacion = parseFloat(res.data[0].n_valor);
+              unitario *= n_cotizacion;
+              unitario = unitario.toFixed(monedaSeleccionada.extra.n_decimales);
+
+              exentas *= n_cotizacion;
+              exentas = exentas.toFixed(monedaSeleccionada.extra.n_decimales);
+
+              gravadas_5 *= n_cotizacion;
+              gravadas_5 = gravadas_5.toFixed(monedaSeleccionada.extra.n_decimales);
+
+              gravadas_10 *= n_cotizacion;
+              gravadas_10 = gravadas_10.toFixed(monedaSeleccionada.extra.n_decimales);
+
+              atualizaCamposItem({
+                dispatch: this.props.dispatch,
+                unitario,
+                exentas,
+                gravadas_5,
+                gravadas_10,
+                peso,
+                tipo,
+                obs,
+                c_monedaOrigemDestino,
+                n_cotizacion,
+                idFlete,
+              });
+            } else {
+              swal({
+                title: 'Ops',
+                text: 'No fue posible obtener las ultimas cotizaciones.',
+                icon: 'warning',
+                button: 'OK!',
+              });
+            }
+          })
+          .catch(err => {
+            pararCargando();
+            mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+          });
+      } else {
         atualizaCamposItem({
           dispatch: this.props.dispatch,
-          unitario: 1,
-          exentas: 1,
-          gravadas_5: 0,
-          gravadas_10: 0,
-          peso: 0,
-          tipo: 'M',
-          obs: 'Nueva Obs',
-          c_monedaOrigemDestino:
-            monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras,
-          n_cotizacion: 1,
+          unitario,
+          exentas,
+          gravadas_5,
+          gravadas_10,
+          peso,
+          tipo,
+          obs,
+          n_cotizacion,
+          c_monedaOrigemDestino,
+          idFlete,
         });
-        const props_ratio = {
-          n_cantidad: 1,
-          n_unitario: 1,
-          n_exentas: 1,
-          n_gravadas_5: 0,
-          n_gravadas_10: 0,
-        };
-        recalcula_ratio(props_ratio);
-        toggleCargando();
-      } else {
-        const tipo = itemSeleccionado.c_tipo;
-        const obs = itemSeleccionado.t_observacion;
-        const idFlete = itemSeleccionado.n_id_flete;
-        let unitario = parseFloat(itemSeleccionado.n_unitario);
-        let exentas = parseFloat(itemSeleccionado.n_exentas);
-        let gravadas_5 = parseFloat(itemSeleccionado.n_gravadas_5);
-        let gravadas_10 = parseFloat(itemSeleccionado.n_gravadas_10);
-        let peso = parseFloat(itemSeleccionado.n_peso);
-        let flete = configuracion.b_flete ? peso * parseFloat(itemSeleccionado.n_flete) : 0;
-        const props_ratio = {
-          n_cantidad: 1,
-          n_unitario: unitario,
-          n_exentas: exentas,
-          n_gravadas_5: gravadas_5,
-          n_gravadas_10: gravadas_10,
-        };
-        recalcula_ratio(props_ratio);
-        let c_monedaOrigemDestino =
-          monedaSeleccionada.extra.c_letras + '_' + monedaSeleccionada.extra.c_letras;
-        let n_cotizacion = 1;
-        if (itemSeleccionado.n_id_moneda !== monedaSeleccionada.extra.id) {
-          c_monedaOrigemDestino =
-            itemSeleccionado.c_letras_moneda + '_' + monedaSeleccionada.extra.c_letras;
-
-          traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
-            .then(res => {
-              if (res.data && res.data.length > 0) {
-                n_cotizacion = parseFloat(res.data[0].n_valor);
-                unitario *= n_cotizacion;
-                unitario = unitario.toFixed(monedaSeleccionada.extra.n_decimales);
-
-                exentas *= n_cotizacion;
-                exentas = exentas.toFixed(monedaSeleccionada.extra.n_decimales);
-
-                gravadas_5 *= n_cotizacion;
-                gravadas_5 = gravadas_5.toFixed(monedaSeleccionada.extra.n_decimales);
-
-                gravadas_10 *= n_cotizacion;
-                gravadas_10 = gravadas_10.toFixed(monedaSeleccionada.extra.n_decimales);
-
-                atualizaCamposItem({
-                  dispatch: this.props.dispatch,
-                  unitario,
-                  exentas,
-                  gravadas_5,
-                  gravadas_10,
-                  peso,
-                  tipo,
-                  obs,
-                  c_monedaOrigemDestino,
-                  n_cotizacion,
-                  idFlete,
-                });
-              } else {
-                swal({
-                  title: 'Ops',
-                  text: 'No fue posible obtener las ultimas cotizaciones.',
-                  icon: 'warning',
-                  button: 'OK!',
-                });
-              }
-            })
-            .catch(err => {
-              pararCargando();
-              mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
-            });
-        } else {
-          atualizaCamposItem({
-            dispatch: this.props.dispatch,
-            unitario,
-            exentas,
-            gravadas_5,
-            gravadas_10,
-            peso,
-            tipo,
-            obs,
-            n_cotizacion,
-            c_monedaOrigemDestino,
-            idFlete,
-          });
-        }
-        //SI ES MERCADORIA Y LA MONEDA DEL FLETE ES DISTINCTA A LA DEL ITEM
-        if (
-          configuracion.b_flete &&
-          itemSeleccionado.c_tipo === 'M' &&
-          itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
-        ) {
-          const c_monedaOrigemDestino =
-            itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
-
-          traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
-            .then(res => {
-              if (res.data && res.data.length > 0) {
-                const cotizacion = res.data[0];
-                flete *= parseFloat(cotizacion.n_valor);
-                flete = flete.toFixed(monedaSeleccionada.extra.n_decimales);
-                atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-              } else {
-                swal({
-                  title: 'Ops',
-                  text: 'No fue posible obtener las ultimas cotizaciones para el flete',
-                  icon: 'warning',
-                  button: 'OK!',
-                });
-              }
-              pararCargando();
-            })
-            .catch(err => {
-              atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
-              pararCargando();
-              mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
-            });
-        } else {
-          atualizaCamposItem({ dispatch: this.props.dispatch, flete });
-          pararCargando();
-        }
       }
-    });
+      //SI ES MERCADORIA Y LA MONEDA DEL FLETE ES DISTINCTA A LA DEL ITEM
+      if (
+        configuracion.b_flete &&
+        itemSeleccionado.c_tipo === 'M' &&
+        itemSeleccionado.n_flete_moneda !== monedaSeleccionada.extra.id
+      ) {
+        const c_monedaOrigemDestino =
+          itemSeleccionado.c_letras_flete_moneda + '_' + monedaSeleccionada.extra.c_letras;
+
+        traeUltimasCotizacionesMoneda(c_monedaOrigemDestino)
+          .then(res => {
+            if (res.data && res.data.length > 0) {
+              const cotizacion = res.data[0];
+              flete *= parseFloat(cotizacion.n_valor);
+              flete = flete.toFixed(monedaSeleccionada.extra.n_decimales);
+              atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+            } else {
+              swal({
+                title: 'Ops',
+                text: 'No fue posible obtener las ultimas cotizaciones para el flete',
+                icon: 'warning',
+                button: 'OK!',
+              });
+            }
+            pararCargando();
+          })
+          .catch(err => {
+            atualizaCamposItem({ dispatch: this.props.dispatch, flete: 0 });
+            pararCargando();
+            mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
+          });
+      } else {
+        atualizaCamposItem({ dispatch: this.props.dispatch, flete });
+        pararCargando();
+      }
+    }
   };
 
   agregarItem = () => {
@@ -947,7 +931,7 @@ export class FormPresupuestosContainer extends Component {
   };
 
   eliminarItem = item => {
-    const { api_axio, toggleCargando, traeItems } = this.props.actions;
+    const { api_axio, traeItems } = this.props.actions;
     const props = this.props;
     swal({
       title: 'Estás seguro?',
@@ -972,9 +956,12 @@ export class FormPresupuestosContainer extends Component {
       dangerMode: true,
     }).then(willDelete => {
       if (willDelete) {
-        toggleCargando();
+        
         const params = {
           method: 'delete',
+          data: {
+            n_id_presupuesto: item.n_id_presupuesto,
+          },
         };
         return api_axio({
           api_funcion: `presupuestos/item/${item.id}/${item.c_tipo}`,
@@ -988,12 +975,12 @@ export class FormPresupuestosContainer extends Component {
               totalizaItems({ items: res.data, props });
               this.props.dispatch(this.props.handleSubmit(this.preSubmit));
               this.deletaCuotas({ n_id_presupuesto: item.n_id_presupuesto });
-              toggleCargando();
+              
             });
           })
           .catch(err => {
             mostraMensajeError({ err, msgPadron: 'Error al intentar eliminar' });
-            toggleCargando();
+            
           });
       }
     });
@@ -1003,44 +990,45 @@ export class FormPresupuestosContainer extends Component {
     if (n_id_presupuesto && n_id_presupuesto > 0) {
       setTimeout(() => {
         const { cuotas, n_total_general } = this.props;
-        const { cargandoDatos } = this.state;
-        if (!cargandoDatos) {
-          let totalCuotas = 0;
-          cuotas.map(cuota => {
-            return (totalCuotas += cuota.n_valor);
-          });
-          if (parseFloat(n_total_general) !== parseFloat(totalCuotas)) {
-            const { eliminaCuotas } = this.props.actions;
+        //const { cargandoDatos } = this.state;
+        //if (!cargandoDatos) {
+        let totalCuotas = 0;
+        cuotas.map(cuota => {
+          return (totalCuotas += cuota.n_valor);
+        });
+        if (parseFloat(n_total_general) !== parseFloat(totalCuotas)) {
+          const { eliminaCuotas } = this.props.actions;
 
-            this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
-            this.props.dispatch(change('formPresupuestos', 'n_dias_Frecuencia_pago', 1));            
-            this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
-            this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
-            if (cuotas && cuotas.length > 0) {
-              const params = {
-                id: n_id_presupuesto,
-                method: 'delete',
-              };
-              eliminaCuotas(params).then(res => {
-                this.props.dispatch(change('formPresupuestos', `cuotas`, []));
-              });
-            }
+          this.props.dispatch(change('formPresupuestos', 'n_id_status', 1));
+          this.props.dispatch(change('formPresupuestos', 'n_dias_Frecuencia_pago', 1));
+          this.props.dispatch(change('formPresupuestos', 'n_cuotas_pago', 0));
+          this.props.dispatch(change('formPresupuestos', 'n_dif_cuotas', 0));
+          if (cuotas && cuotas.length > 0) {
+            const params = {
+              id: n_id_presupuesto,
+              method: 'delete',
+            };
+            alert('eliminar parcelas');
+            eliminaCuotas(params).then(res => {
+              this.props.dispatch(change('formPresupuestos', `cuotas`, []));
+            });
           }
         }
-      }, 100);
+        //}
+      }, 1000);
     }
   };
 
   submitItem = values => {
-    const { modalToggle, api_axio, toggleCargando, traeItems } = this.props.actions;
+    const { modalToggle, api_axio, traeItems } = this.props.actions;
     const props = this.props;
-    toggleCargando();
+    
     const params = {
       data: values,
       method: values.id && values.id !== '' ? 'put' : 'post',
     };
     if (!validaValoresItem(values)) {
-      toggleCargando();
+      
 
       return;
     }
@@ -1056,43 +1044,52 @@ export class FormPresupuestosContainer extends Component {
           totalizaItems({ items: res.data, props });
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
           this.deletaCuotas({ n_id_presupuesto: values.n_id_presupuesto });
-          toggleCargando();
+          
           modalToggle();
         });
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar guardar' });
-        toggleCargando();
+        
       });
   };
 
   submit = values => {
     const { history } = this.props;
 
-    return this.preSubmit(values).then(res => {
-      const { path } = this.props.match;
-      let tipoPresupuesto = 'pendientes';
-      if (path.indexOf('aprobados') !== -1) {
-        tipoPresupuesto = 'aprobados';
-      } else if (path.indexOf('concluidos') !== -1) {
-        tipoPresupuesto = 'concluidos';
-      }
+    return this.preSubmit(values)
+      .then(resPreSubmit => {
+        if (typeof resPreSubmit === 'object' && resPreSubmit.errorCode === 500) {
+          mostraMensajeError({ resPreSubmit, msgPadron: 'Error al intentar guardar' });
+        } else {
+          const { path } = this.props.match;
+          let tipoPresupuesto = 'pendientes';
+          if (path.indexOf('aprobados') !== -1) {
+            tipoPresupuesto = 'aprobados';
+          } else if (path.indexOf('concluidos') !== -1) {
+            tipoPresupuesto = 'concluidos';
+          }
 
-      swal({
-        icon: 'success',
-        timer: 1000,
+          swal({
+            icon: 'success',
+            timer: 1000,
+          });
+
+          setTimeout(() => {
+            history.push(`/presupuestos/${tipoPresupuesto}`);
+          }, 900);
+        }
+      })
+      .catch(err => {
+        mostraMensajeError({ err, msgPadron: 'Error al intentar guardar' });
+        
       });
-
-      setTimeout(() => {
-        history.push(`/presupuestos/${tipoPresupuesto}`);
-      }, 900);
-    });
   };
 
   preSubmit = values => {
-    const { api_axio, toggleCargando } = this.props.actions;
+    const { api_axio } = this.props.actions;
     const { id } = this.props;
-    toggleCargando();
+    
 
     const params = {
       data: values,
@@ -1106,38 +1103,30 @@ export class FormPresupuestosContainer extends Component {
         if (typeof id === 'undefined' || !id) {
           this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
         }
-        toggleCargando();
+        
+        return true;
       })
       .catch(err => {
+        
         mostraMensajeError({ err, msgPadron: `Error al intentar guardar` });
-        toggleCargando();
+        return err.response.data;
       });
   };
 
-  parei = false;
-
   componentDidUpdate = () => {
-    const { toggleCargando } = this.props.actions;
-    const { initialValues, esqueleto, items, traeItemsPending, modoNuevo } = this.props;
-    if (
-      (modoNuevo ||
-        (initialValues &&
-          initialValues.id &&
-          ((initialValues.items && initialValues.items.length > 0) ||
-            (items && !traeItemsPending && items.length > 0) ||
-            (items && !traeItemsPending && items.length === 0)))) &&
-      esqueleto.cargando === true &&
-      !this.parei
-    ) {
-      toggleCargando();
-      this.parei = true;
+    const { pararCargando, iniciarCargando } = this.props.actions;
+    const { loading } = this.props;
+    if (!loading) {
+      pararCargando();
+    } else {
+      iniciarCargando();
     }
   };
 
   componentDidMount = () => {
     const {
       listaMonedas,
-      toggleCargando,
+      iniciarCargando,
       traeStatus,
       traePersonasTodas,
       traeFletes,
@@ -1150,7 +1139,7 @@ export class FormPresupuestosContainer extends Component {
       traerPresupuesto,
     } = this.props.actions;
     const { path } = this.props.match;
-    toggleCargando();
+    iniciarCargando();
     listaMonedas();
     traeStatus();
     traeFletes();
@@ -1164,7 +1153,6 @@ export class FormPresupuestosContainer extends Component {
       const params = {
         id: this.props.match.params.id,
       };
-      this.toggleCargandoDatos();
       traerPresupuesto(params).then(res => {
         const datos = res.data;
         const monedaSeleccionada = {
@@ -1181,7 +1169,6 @@ export class FormPresupuestosContainer extends Component {
       traeItems(params).then(resItems => {
         traeCuotas(params).then(res => {
           this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
-          this.toggleCargandoDatos();
         });
       });
     }
@@ -1468,6 +1455,22 @@ function mapStateToProps(state) {
       100
     : 0;
 
+  const loading =
+    state.presupuestos.traeStatusPending ||
+    state.presupuestos.traerPresupuestoPending ||
+    state.presupuestos.traeFrecuenciasPending ||
+    state.presupuestos.traeItemsPending ||
+    state.presupuestos.traeMercaderiasServiciosPending ||
+    state.presupuestos.traeCuotasPending ||
+    state.presupuestos.eliminaCuotasPending ||
+    state.presupuestos.traeCobradoresPending ||
+    state.presupuestos.traeMediosPagoPending ||
+    state.presupuestos.actualizaCuotaPending ||
+    state.cotizaciones.listaMonedasPending ||
+    state.personas.traePersonasTodasPending ||
+    state.fletes.traeFletesPending ||
+    state.seguros.traeSegurosPending ||
+    state.cotizaciones.traeUltimasCotizacionesMonedaPending;
   return {
     items: state.presupuestos.items,
     cuotas: state.presupuestos.cuotas,
@@ -1477,6 +1480,7 @@ function mapStateToProps(state) {
     traeItemsPending: state.presupuestos.traeItemsPending,
     cotizaciones: state.cotizaciones.cotizaciones,
     esqueleto: state.esqueleto,
+    cargando: state.esqueleto.cargando,
     usuario: state.acceder.usuario.c_usuario,
     usuarioComision,
     initialValues,
@@ -1521,6 +1525,7 @@ function mapStateToProps(state) {
     n_valor_porcentaje_comision:
       state.configuraciones.configuracion.n_valor_porcentaje_comision || 0,
     configuracion: state.configuraciones.configuracion,
+    loading,
   };
 }
 
@@ -1534,7 +1539,7 @@ function mapDispatchToProps(dispatch) {
         listaMonedas,
         guardarCotizaciones,
         traeUltimasCotizacionesMoneda,
-        toggleCargando,
+        iniciarCargando,
         pararCargando,
         traeStatus,
         traePersonasTodas,

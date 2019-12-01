@@ -81,10 +81,14 @@ const columns = [
     searchable: false,
     editable: false,
     formatter: (cell, row) => {
-      return row.n_id_status !== 1 && parseFloat(row.n_total_general) > 0 ? (
+      return row.n_id_status !== 1 &&
+        parseFloat(row.n_total_general) > 0 &&
+        parseInt(row.n_cuotas_pago) > 0 ? (
         <div>
           <GenerarPdf key={`pdf${row.id}`} idPresupuesto={row.id} />{' '}
-          {row.n_id_status > 2 && <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} />}
+          {row.n_id_status > 2 && parseInt(row.n_cuotas_pago) > 0 && (
+            <ModalCuotas key={`modal${row.id}`} id={row.id} datos={row} />
+          )}
           {row.n_id_status === 2 && <MarcarAprobado key={`setar${row.id}`} values={row} />}
         </div>
       ) : (

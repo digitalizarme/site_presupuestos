@@ -990,8 +990,6 @@ export class FormPresupuestosContainer extends Component {
     if (n_id_presupuesto && n_id_presupuesto > 0) {
       setTimeout(() => {
         const { cuotas, n_total_general } = this.props;
-        //const { cargandoDatos } = this.state;
-        //if (!cargandoDatos) {
         let totalCuotas = 0;
         cuotas.map(cuota => {
           return (totalCuotas += cuota.n_valor);
@@ -1008,13 +1006,11 @@ export class FormPresupuestosContainer extends Component {
               id: n_id_presupuesto,
               method: 'delete',
             };
-            alert('eliminar parcelas');
             eliminaCuotas(params).then(res => {
               this.props.dispatch(change('formPresupuestos', `cuotas`, []));
             });
           }
         }
-        //}
       }, 1000);
     }
   };

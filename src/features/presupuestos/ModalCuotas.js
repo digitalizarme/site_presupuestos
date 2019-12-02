@@ -281,6 +281,7 @@ function mapStateToProps(state) {
     };
     optionsMediosPago.push(itemObj);
   }
+  
 
   return {
     optionsCuotas,

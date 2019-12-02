@@ -566,18 +566,16 @@ export class FormPresupuestosContainer extends Component {
       });
       return;
     }
-    
+
     generaCuotas(params)
       .then(res => {
         this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
         if (this.props.status === 1 && res.data && res.data.length > 0) {
           this.props.dispatch(change('formPresupuestos', `n_id_status`, 2));
         }
-        
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar generar cuotas' });
-        
       });
   };
 
@@ -725,10 +723,8 @@ export class FormPresupuestosContainer extends Component {
                 button: 'OK!',
               });
             }
-            
           })
           .catch(err => {
-            
             mostraMensajeError({ err, msgPadron: 'Error al intentar traer la cotizacion' });
           });
       } else {
@@ -766,7 +762,6 @@ export class FormPresupuestosContainer extends Component {
         n_gravadas_10: 0,
       };
       recalcula_ratio(props_ratio);
-      
     } else {
       const tipo = itemSeleccionado.c_tipo;
       const obs = itemSeleccionado.t_observacion;
@@ -956,7 +951,6 @@ export class FormPresupuestosContainer extends Component {
       dangerMode: true,
     }).then(willDelete => {
       if (willDelete) {
-        
         const params = {
           method: 'delete',
           data: {
@@ -975,12 +969,10 @@ export class FormPresupuestosContainer extends Component {
               totalizaItems({ items: res.data, props });
               this.props.dispatch(this.props.handleSubmit(this.preSubmit));
               this.deletaCuotas({ n_id_presupuesto: item.n_id_presupuesto });
-              
             });
           })
           .catch(err => {
             mostraMensajeError({ err, msgPadron: 'Error al intentar eliminar' });
-            
           });
       }
     });
@@ -1018,14 +1010,12 @@ export class FormPresupuestosContainer extends Component {
   submitItem = values => {
     const { modalToggle, api_axio, traeItems } = this.props.actions;
     const props = this.props;
-    
+
     const params = {
       data: values,
       method: values.id && values.id !== '' ? 'put' : 'post',
     };
     if (!validaValoresItem(values)) {
-      
-
       return;
     }
     return api_axio({
@@ -1040,13 +1030,12 @@ export class FormPresupuestosContainer extends Component {
           totalizaItems({ items: res.data, props });
           this.props.dispatch(this.props.handleSubmit(this.preSubmit));
           this.deletaCuotas({ n_id_presupuesto: values.n_id_presupuesto });
-          
+
           modalToggle();
         });
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar guardar' });
-        
       });
   };
 
@@ -1078,14 +1067,12 @@ export class FormPresupuestosContainer extends Component {
       })
       .catch(err => {
         mostraMensajeError({ err, msgPadron: 'Error al intentar guardar' });
-        
       });
   };
 
   preSubmit = values => {
     const { api_axio } = this.props.actions;
     const { id } = this.props;
-    
 
     const params = {
       data: values,
@@ -1099,11 +1086,10 @@ export class FormPresupuestosContainer extends Component {
         if (typeof id === 'undefined' || !id) {
           this.props.dispatch(change('formPresupuestos', `id`, res.data.id));
         }
-        
+
         return true;
       })
       .catch(err => {
-        
         mostraMensajeError({ err, msgPadron: `Error al intentar guardar` });
         return err.response.data;
       });
@@ -1163,6 +1149,10 @@ export class FormPresupuestosContainer extends Component {
         });
       });
       traeItems(params).then(resItems => {
+        const params = {
+          id: this.props.match.params.id,
+          ordenAlternativa: 'qqcoisa',
+        };
         traeCuotas(params).then(res => {
           this.props.dispatch(change('formPresupuestos', `cuotas`, res.data));
         });

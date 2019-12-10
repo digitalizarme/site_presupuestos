@@ -104,7 +104,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
-      jsExtension: ".gz",
+      jsExtension: process.env.npm_config_HEROKU?"":".gz",
       minify: {
         removeComments: true,
         collapseWhitespace: true,
@@ -150,7 +150,7 @@ module.exports = {
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.8,
-      deleteOriginalAssets: true,
+      deleteOriginalAssets: false,
     }),
     new HtmlWebpackChangeAssetsExtensionPlugin(),
   ],

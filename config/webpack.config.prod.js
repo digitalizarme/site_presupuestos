@@ -104,7 +104,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
-      jsExtension: process.env.npm_config_HEROKU?"":".gz",
+      jsExtension: process.env.HEROKU?"":".gz",
       minify: {
         removeComments: true,
         collapseWhitespace: true,

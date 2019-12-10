@@ -144,13 +144,13 @@ module.exports = {
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.IgnorePlugin(/\/iconv-loader$/),
-    new CompressionPlugin({
+    !process.env.HEROKU && new CompressionPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: /\.js$|\.css$|\.html$/,
       threshold: 10240,
       minRatio: 0.8,
-      deleteOriginalAssets: false,
+      deleteOriginalAssets: true,
     }),
     new HtmlWebpackChangeAssetsExtensionPlugin(),
   ],

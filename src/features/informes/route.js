@@ -9,6 +9,6 @@ export default {
   path: 'informes',
   name: 'Informes',
   childRoutes: [
-    { path: 'comisiones-container', name: 'Comisiones container', component: ComisionesContainer, isIndex: true },
+    { path: 'comisiones', name: 'Comisiones', component: ComisionesContainer, isIndex: true },
   ],
 };

@@ -10,10 +10,16 @@ const initialState = {
   traerPersonaError: null,
   persona: {},
   personas: [],
+  comisionistas: [],
+  clientes: [],
   traerPersonasPending: false,
   traerPersonasError: null,
   traePersonasTodasPending: false,
   traePersonasTodasError: null,
+  traerPersonasComisionistasPending: false,
+  traerPersonasComisionistasError: null,
+  traerPersonasClientesPending: false,
+  traerPersonasClientesError: null,
 };
 
 export default initialState;

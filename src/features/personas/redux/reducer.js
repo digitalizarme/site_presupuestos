@@ -10,11 +10,15 @@ import initialState from './initialState';
 import { reducer as traerPersonaReducer } from './traerPersona';
 import { reducer as traerPersonasReducer } from './traerPersonas';
 import { reducer as traePersonasTodasReducer } from './traePersonasTodas';
+import { reducer as traerPersonasComisionistasReducer } from './traerPersonasComisionistas';
+import { reducer as traerPersonasClientesReducer } from './traerPersonasClientes';
 
 const reducers = [
   traerPersonaReducer,
   traerPersonasReducer,
   traePersonasTodasReducer,
+  traerPersonasComisionistasReducer,
+  traerPersonasClientesReducer,
 ];
 
 export default function reducer(state = initialState, action) {

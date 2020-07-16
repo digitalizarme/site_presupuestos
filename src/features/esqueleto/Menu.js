@@ -38,7 +38,7 @@ const MenuDeslogado = ({ isOpen }) => (
   </Collapse>
 );
 
-const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history,configuracion }) => (
+const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history, configuracion }) => (
   <Collapse isOpen={isOpen} navbar>
     <Nav className="mr-auto" navbar>
       <UncontrolledDropdown nav inNavbar>
@@ -116,16 +116,34 @@ const MenuLogado = ({ usuario, isOpen, limpiarUsuario, history,configuracion }) 
                 Servicios grupos
               </Link>
             </NavItem>
-            {configuracion.b_flete && <NavItem>
-              <Link className="nav-link" to="/fletes">
-                Fletes
+            {configuracion.b_flete && (
+              <NavItem>
+                <Link className="nav-link" to="/fletes">
+                  Fletes
+                </Link>
+              </NavItem>
+            )}
+            {configuracion.b_seguro && (
+              <NavItem>
+                <Link className="nav-link" to="/seguros">
+                  Seguros
+                </Link>
+              </NavItem>
+            )}
+          </DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
+      <UncontrolledDropdown nav inNavbar>
+        <DropdownToggle nav caret>
+          Informes
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem>
+            <NavItem>
+              <Link className="nav-link" to="/informes/comisiones">
+                Comisiones
               </Link>
-            </NavItem>}
-            {configuracion.b_seguro && <NavItem>
-              <Link className="nav-link" to="/seguros">
-                Seguros
-              </Link>
-            </NavItem>}
+            </NavItem>
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>

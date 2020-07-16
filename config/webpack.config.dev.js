@@ -38,7 +38,7 @@ module.exports = {
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
       'react-native': 'react-native-web',
-      'react-dom': '@hot-loader/react-dom'
+      'react-dom': 'react-dom'
     },
     plugins: [new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])],
   },

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { InputText, InputNumber, SuperSelect } from '../esqueleto';
+import { InputText, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
 import { Row, Col, Container, Form, Button } from 'reactstrap';
 
@@ -11,7 +11,13 @@ export default class FormComision extends Component {
   };
 
   render() {
-    const { enviarFormulario, submitting, pristine, optionsMonedas } = this.props;
+    const {
+      enviarFormulario,
+      submitting,
+      optionsMonedas,
+      optionsComisionista,
+      optionsClientes,
+    } = this.props;
 
     return (
       <div className="informes-form-comision">
@@ -21,7 +27,7 @@ export default class FormComision extends Component {
         <Container>
           <Form onSubmit={enviarFormulario} className="form_border">
             <Row>
-              <Col sm="6" md="4" lg="4" xl="4">
+              <Col lg="6" xs="12">
                 <Field
                   name="n_id_moneda"
                   label="Moneda"
@@ -30,10 +36,60 @@ export default class FormComision extends Component {
                   placeholder="Elija"
                 />
               </Col>
+              <Col lg="6" xs="12">
+                <Field
+                  name="n_id_persona_comisionista"
+                  label="Comicionista"
+                  options={optionsComisionista}
+                  component={SuperSelect}
+                  placeholder="Escolha"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" xs="12">
+                <Field
+                  label="Data Inicial"
+                  name={'d_fecha_ini'}
+                  type="date"
+                  className="field form-control-lg form-control"
+                  component={InputText}
+                />
+              </Col>
+              <Col lg="6" xs="12">
+                <Field
+                  label="Data Final"
+                  name={'d_fecha_fin'}
+                  type="date"
+                  className="field form-control-lg form-control"
+                  component={InputText}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg="6" xs="12">
+                <Field
+                  name="n_id_persona"
+                  label="Cliente"
+                  options={optionsClientes}
+                  component={SuperSelect}
+                  placeholder="Escolha"
+                />
+              </Col>
+              <Col lg="6" xs="12">
+                <Field
+                  name="t_observacion"
+                  bsSize="lg"
+                  className="field"
+                  label="Observacion"
+                  component={InputText}
+                  type="text"
+                />
+              </Col>
             </Row>
             <Row className="text-right">
               <Col sm="12">
-                <Button type="submit" color="success" disabled={pristine || submitting}>
+                <Button type="submit" color="success" disabled={submitting}>
                   {submitting ? 'Generando...' : 'Generar'}
                 </Button>
               </Col>

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { PrincipalTabla } from '../esqueleto';
-import formatarFecha from '../../common/formatarFecha';
 import formatarNumero from '../../common/formatarNumero';
 import GenerarPdf from './GenerarPdf';
 import MarcarAprobado from './MarcarAprobado';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { InputText, InputNumber, SuperSelect } from '../esqueleto';
+import { InputText, SuperSelect } from '../esqueleto';
 import { Field } from 'redux-form';
 import { Row, Col, Container, Form, Button } from 'reactstrap';
 
@@ -14,7 +14,6 @@ export default class FormComision extends Component {
     const {
       enviarFormulario,
       submitting,
-      pristine,
       optionsMonedas,
       optionsComisionista,
       optionsClientes,

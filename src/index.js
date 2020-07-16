@@ -31,6 +31,6 @@ if (module.hot) {
   });
   module.hot.accept('./Root', () => {
     const nextRoot = require('./Root').default; // eslint-disable-line
-    renderApp(<Root store={store} history={history} routeConfig={routeConfig} />);
+    renderApp(<Root store={store} history={history} routeConfig={nextRoot} />);
   });
 }

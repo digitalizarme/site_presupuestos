@@ -596,6 +596,8 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangeCamposValores = campos => {
+    if ((!campos.valorAnterior && !campos.valorActual) || parseInt(campos.valorActual) === parseInt(campos.valorAnterior)) return;
+
     const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada, id } = this.props;
     const props = {
       ...campos,

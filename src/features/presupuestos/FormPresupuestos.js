@@ -273,14 +273,14 @@ class FormPresupuestos extends Component {
                     <Table striped responsive hover>
                       <thead>
                         <tr>
-                          <th style={{ width: configuracion.b_flete?'25%':'35%' }}>Desc.</th>
+                          <th style={{ width: configuracion.b_flete ? '25%' : '35%' }}>Desc.</th>
                           <th style={{ width: '5%' }}>Cant.</th>
                           <th style={{ width: '10%' }}>Unit.</th>
                           <th style={{ width: '10%' }}>Exent.</th>
                           <th style={{ width: '10%' }}>Grav. 5%</th>
                           <th style={{ width: '10%' }}>Grav. 10%</th>
                           <th style={{ width: '10%' }}>Peso</th>
-                          {configuracion.b_flete &&<th style={{ width: '10%' }}>Flete</th>}
+                          {configuracion.b_flete && <th style={{ width: '10%' }}>Flete</th>}
                           <th style={{ width: '10%' }}>Acciones</th>
                         </tr>
                       </thead>
@@ -302,7 +302,9 @@ class FormPresupuestos extends Component {
                               <td>{formatarNumero(objItem.n_gravadas_5, decimales)}</td>
                               <td>{formatarNumero(objItem.n_gravadas_10, decimales)}</td>
                               <td>{formatarNumero(objItem.n_peso, 2)}</td>
-                              {configuracion.b_flete && <td>{formatarNumero(objItem.n_flete, decimales)}</td>}
+                              {configuracion.b_flete && (
+                                <td>{formatarNumero(objItem.n_flete, decimales)}</td>
+                              )}
                               <td>
                                 {!modoConsulta && (
                                   <span>
@@ -333,7 +335,7 @@ class FormPresupuestos extends Component {
                           ))
                         ) : (
                           <tr>
-                            <td colSpan={configuracion.b_flete?'9':'8'} className="text-center">
+                            <td colSpan={configuracion.b_flete ? '9' : '8'} className="text-center">
                               No hay items
                             </td>
                           </tr>
@@ -472,8 +474,11 @@ class FormPresupuestos extends Component {
                           label="Valor"
                           component={InputNumber}
                           decimalScale={decimales}
-                          onChange={valor => {
+                          onChange={(event,valor, valorAnterior) => {
                             onChangeCamposValores({
+                              campo: 'n_valor_comision',
+                              valorActual: valor,
+                              valorAnterior,
                               n_valor_comision: valor,
                               seguro: this.props.seguro,
                               n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
@@ -515,8 +520,11 @@ class FormPresupuestos extends Component {
                           name="n_id_seguro"
                           label="Tipo : "
                           options={optionsSeguros}
-                          onChange={valor => {
+                          onChange={(event,valor, valorAnterior) => {
                             onChangeCamposValores({
+                              campo: 'seguro',
+                              valorActual: valor,
+                              valorAnterior,
                               n_valor_comision,
                               seguro: valor,
                               n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
@@ -534,8 +542,11 @@ class FormPresupuestos extends Component {
                           label="Cantidad asegurada : "
                           component={InputNumber}
                           decimalScale={decimales}
-                          onChange={valor => {
+                          onChange={(event,valor, valorAnterior) => {
                             onChangeCamposValores({
+                              valorActual: valor,
+                              valorAnterior,
+                              campo: 'n_tipo_seguro_valor',
                               n_valor_comision,
                               seguro: this.props.seguro,
                               n_tipo_seguro_valor: valor,
@@ -578,8 +589,11 @@ class FormPresupuestos extends Component {
                         label="Descuento/Redondeo : "
                         component={InputNumber}
                         decimalScale={decimales}
-                        onChange={valor => {
+                        onChange={(event,valor, valorAnterior) => {
                           onChangeCamposValores({
+                            valorActual: valor,
+                            valorAnterior,
+                            campo: 'n_desc_redondeo',
                             n_valor_comision,
                             seguro: this.props.seguro,
                             n_tipo_seguro_valor: this.props.n_tipo_seguro_valor,
@@ -593,7 +607,11 @@ class FormPresupuestos extends Component {
                     <Col sm="12">
                       <Field
                         name="n_total_general"
-                        label={`Total General (${configuracion.b_comision?'Comisión + ':''} ${configuracion.b_comision?'Seguro + ':''} Items ${configuracion.b_flete?'con flete ':''} + Descuento/Redondeo) : `}
+                        label={`Total General (${configuracion.b_comision ? 'Comisión + ' : ''} ${
+                          configuracion.b_comision ? 'Seguro + ' : ''
+                        } Items ${
+                          configuracion.b_flete ? 'con flete ' : ''
+                        } + Descuento/Redondeo) : `}
                         component={InputNumber}
                         readonly
                         decimalScale={decimales}
@@ -668,7 +686,6 @@ class FormPresupuestos extends Component {
                         }}
                         disabled={disabledCampos}
                       />
-
                     </Col>
                   </Row>
                   <FieldArray

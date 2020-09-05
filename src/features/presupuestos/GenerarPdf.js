@@ -11,7 +11,6 @@ import {
     PDFViewer
 } from '@react-pdf/renderer';
 import logo from '../../images/logo_digitalizarame.png';
-import image2base64 from 'image-to-base64';
 import styled from '@react-pdf/styled-components';
 import moment from 'moment';
 import api_axio from '../../common/api_axios';
@@ -735,12 +734,12 @@ export class GenerarPdf extends Component {
             const b = b64toBlob(this.props.configuracion.t_logo.slice(22));
             this.setState(state => ({img: b}));
         } else {
-            image2base64(logo).then(response => {
-                const b = b64toBlob(response);
+            let reader = new FileReader();
+            reader.readAsDataURL(logo);
+            reader.onloadend = () => {
+                const b = b64toBlob(reader.result);
                 this.setState(state => ({img: b}));
-            }).catch(error => {
-                console.log(error);
-            });
+            }
         }
     }
 

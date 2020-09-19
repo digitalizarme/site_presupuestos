@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { InputText, SuperSelect } from '../esqueleto';
+import { InputText, SuperSelect,InputDate } from '../esqueleto';
 import { Field } from 'redux-form';
 import { Row, Col, Container, Form, Button } from 'reactstrap';
 
@@ -51,18 +51,16 @@ export default class FormComision extends Component {
                 <Field
                   label="Data Inicial"
                   name={'d_fecha_ini'}
-                  type="date"
                   className="field form-control-lg form-control"
-                  component={InputText}
+                  component={InputDate}
                 />
               </Col>
               <Col lg="6" xs="12">
                 <Field
                   label="Data Final"
                   name={'d_fecha_fin'}
-                  type="date"
                   className="field form-control-lg form-control"
-                  component={InputText}
+                  component={InputDate}
                 />
               </Col>
             </Row>

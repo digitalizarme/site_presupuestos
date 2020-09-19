@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { FormGroup, Label, FormFeedback } from 'reactstrap';
 import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker from 'react-datepicker';
+import DatePicker, { registerLocale } from "react-datepicker";
+import es from "date-fns/locale/es";
 import moment from 'moment';
+
+registerLocale("es", es);
 
 export default class InputDate extends Component {
   static propTypes = {};
@@ -41,6 +44,7 @@ export default class InputDate extends Component {
           <DatePicker
             placeholder={placeholder}
             autoFocus={autoFocus}
+            locale="es"
             name={input.name}
             className={className}
             dateFormat={'dd/MM/yyyy'}

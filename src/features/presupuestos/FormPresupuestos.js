@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from '../esqueleto';
 import PropTypes from 'prop-types';
-import { InputText, InputNumber, SuperSelect, ModalForm } from '../esqueleto';
+import { InputText, InputNumber, SuperSelect, ModalForm,InputDate } from '../esqueleto';
 import { Field, FieldArray } from 'redux-form';
 import { Button, Form, Row, Col, Container, Collapse, Table } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -39,9 +39,8 @@ const renderCuotas = ({
         <Col sm={5}>
           <Field
             name={`${item}.d_fecha_vcto`}
-            type="date"
             className="field form-control-lg form-control"
-            component="input"
+            component={InputDate}
             disabled={disabled}
           />
         </Col>

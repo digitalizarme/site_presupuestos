@@ -1,6 +1,6 @@
 let api_string;
 if (process.env.NODE_ENV === 'development') {
-    api_string = `http://${window.location.hostname}:3000`;
+    api_string = `http://${window.location.hostname}:3100`;
 } else {
     if (window.location.hostname === "digitalizarme.herokuapp.com") {
         api_string = 'https://apitestedigitalizarme.herokuapp.com';

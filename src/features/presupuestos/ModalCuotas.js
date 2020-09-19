@@ -25,8 +25,7 @@ const validationConstraints = {
     },
   },
   d_fecha_pago: {
-    datetime: {
-      dateOnly: true,
+    presence: {
       message: 'Fecha de pago es obligatorio',
     },
   },
@@ -281,7 +280,6 @@ function mapStateToProps(state) {
     };
     optionsMediosPago.push(itemObj);
   }
-  
 
   return {
     optionsCuotas,
@@ -299,7 +297,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ModalCuotas);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalCuotas);

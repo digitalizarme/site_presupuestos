@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputText, InputNumber, SuperSelect } from '../esqueleto';
+import { InputText, InputNumber, SuperSelect, InputDate } from '../esqueleto';
 import { Field } from 'redux-form';
 import { Row, Col } from 'reactstrap';
 
@@ -25,6 +25,7 @@ export default class FormPresupuestoPagos extends Component {
       onChangeDescRedondeo,
       soloLectura,
     } = this.props;
+
     return (
       <div className="presupuestos-form-presupuesto-pagos">
         <Row>
@@ -47,7 +48,6 @@ export default class FormPresupuestoPagos extends Component {
               className="field form-control-lg form-control"
             />
           </Col>
-
         </Row>
         <Row>
           <Col sm="12">
@@ -108,8 +108,7 @@ export default class FormPresupuestoPagos extends Component {
                 <Field
                   name="d_fecha_vcto"
                   label="Vencimiento :"
-                  type="date"
-                  component={InputText}
+                  component={InputDate}
                   className="field form-control-lg form-control"
                   disabled
                 />
@@ -118,10 +117,10 @@ export default class FormPresupuestoPagos extends Component {
                 <Field
                   name="d_fecha_pago"
                   label="Pagado :"
-                  type="date"
-                  component={InputText}
+                  component={InputDate}
                   className="field form-control-lg form-control"
                   disabled={soloLectura}
+                  required
                 />
               </Col>
             </Row>

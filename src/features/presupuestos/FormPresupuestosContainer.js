@@ -59,6 +59,19 @@ const validationConstraints = {
       notEqualTo: 'El valor debe ser igual que zero',
     },
   },
+  cuotas: {
+    array: {
+      d_fecha_vcto: {
+        datetime: {
+          dateOnly: true,
+          message: 'es obligatorio',
+        },
+      },
+    },
+    presence: {
+      message: 'es obligatorio',
+    },
+  },
 };
 
 const validationConstraintsItems = {
@@ -596,7 +609,11 @@ export class FormPresupuestosContainer extends Component {
   };
 
   onChangeCamposValores = campos => {
-    if ((!campos.valorAnterior && !campos.valorActual) || parseFloat(campos.valorActual) === parseFloat(campos.valorAnterior)) return;
+    if (
+      (!campos.valorAnterior && !campos.valorActual) ||
+      parseFloat(campos.valorActual) === parseFloat(campos.valorAnterior)
+    )
+      return;
 
     const { optionsSeguros, dispatch, n_total_items, monedaSeleccionada, id } = this.props;
     const props = {
@@ -1267,7 +1284,8 @@ function mapStateToProps(state) {
     for (let moneda of state.cotizaciones.monedas) {
       if (
         (modoNuevo && moneda.b_activo) ||
-        ((!modoNuevo && initialValues.n_id_moneda === moneda.id) || moneda.b_activo)
+        (!modoNuevo && initialValues.n_id_moneda === moneda.id) ||
+        moneda.b_activo
       ) {
         monedaObj = {
           label: moneda.c_descripcion,
@@ -1283,7 +1301,8 @@ function mapStateToProps(state) {
     for (let status of state.presupuestos.status) {
       if (
         (modoNuevo && status.b_activo) ||
-        ((!modoNuevo && initialValues.n_id_status === status.id) || status.b_activo)
+        (!modoNuevo && initialValues.n_id_status === status.id) ||
+        status.b_activo
       ) {
         statusObj = {
           label: status.c_descripcion,
@@ -1297,7 +1316,8 @@ function mapStateToProps(state) {
     for (let persona of state.personas.personas) {
       if (
         (modoNuevo && persona.b_cliente) ||
-        ((!modoNuevo && initialValues.n_id_persona === persona.id) || persona.b_cliente)
+        (!modoNuevo && initialValues.n_id_persona === persona.id) ||
+        persona.b_cliente
       ) {
         personaObj = {
           label: persona.c_nombre,
@@ -1312,8 +1332,8 @@ function mapStateToProps(state) {
     for (let comisionista of state.personas.personas) {
       if (
         (modoNuevo && comisionista.b_comisionista) ||
-        ((!modoNuevo && initialValues.n_id_persona_comisionista === comisionista.id) ||
-          comisionista.b_comisionista)
+        (!modoNuevo && initialValues.n_id_persona_comisionista === comisionista.id) ||
+        comisionista.b_comisionista
       ) {
         comisionistaObj = {
           label: comisionista.c_nombre,
@@ -1329,7 +1349,8 @@ function mapStateToProps(state) {
     for (let flete of state.fletes.fletes) {
       if (
         (modoNuevo && flete.b_activo) ||
-        ((!modoNuevo && initialValues.n_id_flete === flete.id) || flete.b_activo)
+        (!modoNuevo && initialValues.n_id_flete === flete.id) ||
+        flete.b_activo
       ) {
         fleteObj = {
           label: flete.moneda.c_simbolo + flete.n_valor + '/' + flete.c_tipo,
@@ -1344,7 +1365,8 @@ function mapStateToProps(state) {
     for (let seguro of state.seguros.seguros) {
       if (
         (modoNuevo && seguro.b_activo) ||
-        ((!modoNuevo && initialValues.n_id_seguro === seguro.id) || seguro.b_activo)
+        (!modoNuevo && initialValues.n_id_seguro === seguro.id) ||
+        seguro.b_activo
       ) {
         seguroObj = {
           label: seguro.c_valor_exhibir,
@@ -1359,7 +1381,8 @@ function mapStateToProps(state) {
     for (let frecuencia of state.presupuestos.frecuencias) {
       if (
         (modoNuevo && frecuencia.b_activo) ||
-        ((!modoNuevo && initialValues.n_id_frecuencia === frecuencia.id) || frecuencia.b_activo)
+        (!modoNuevo && initialValues.n_id_frecuencia === frecuencia.id) ||
+        frecuencia.b_activo
       ) {
         frecuenciaObj = {
           label: frecuencia.c_descripcion,
@@ -1546,7 +1569,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(FormPresupuestosContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(FormPresupuestosContainer);

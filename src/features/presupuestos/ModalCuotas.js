@@ -25,7 +25,8 @@ const validationConstraints = {
     },
   },
   d_fecha_pago: {
-    presence: {
+    datetime: {
+      dateOnly: true,
       message: 'Fecha de pago es obligatorio',
     },
   },

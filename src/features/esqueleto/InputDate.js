@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { FormGroup, Label, FormFeedback } from 'reactstrap';
 import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker, { registerLocale } from "react-datepicker";
-import es from "date-fns/locale/es";
+import DatePicker, { registerLocale } from 'react-datepicker';
+import es from 'date-fns/locale/es';
 import moment from 'moment';
 
-registerLocale("es", es);
+registerLocale('es', es);
 
 export default class InputDate extends Component {
   static propTypes = {};
@@ -21,7 +21,7 @@ export default class InputDate extends Component {
       : this.props.input.value;
   }
 
-  handleChange(data){
+  handleChange(data) {
     this.props.input.onChange(moment(data).format('YYYY-MM-DD'));
   }
 
@@ -36,7 +36,6 @@ export default class InputDate extends Component {
       meta: { touched, error },
       readOnly,
     } = this.props;
-
     return (
       <div className="esqueleto-date-picker">
         <FormGroup className={touched && error ? 'con_error' : touched ? 'sin_error' : null}>
@@ -55,7 +54,13 @@ export default class InputDate extends Component {
             autoComplete="off"
             readOnly={readOnly}
           />
-          {touched && error ? error.map(e => <FormFeedback key={e}>{e}</FormFeedback>) : null}
+          {/* {touched && error ? error.map(e => <FormFeedback key={e}>{e}</FormFeedback>) : null} */}
+          {touched && typeof error === 'string' ? (
+            <FormFeedback>{error}</FormFeedback>
+          ) : typeof error === 'object' ? (
+            error.map(e => <FormFeedback key={e}>{e}</FormFeedback>)
+          ) : null}
+          {/* {touched && error ? <FormFeedback>{error}</FormFeedback> : null} */}
         </FormGroup>
       </div>
     );

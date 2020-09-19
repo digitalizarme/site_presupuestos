@@ -14,7 +14,7 @@ export default class InputDate extends Component {
 
   setDate() {
     return typeof this.props.input.value === 'string'
-      ? Date.parse(`${this.props.input.value}T00:00:00`)
+      ? Date.parse(`${this.props.input.value}T23:00:00`)
       : this.props.input.value;
   }
 

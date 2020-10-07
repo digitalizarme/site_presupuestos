@@ -10,11 +10,11 @@ validate.validators.array = (arrayItems, itemConstraints, key, attributes) => {
       const field = first(Object.keys(itemConstraints));
       const item = get(itemObject, field);
       const newItem = { [field]: item };
-// console.log(itemConstraints)
-// console.log('newItem',newItem)
+      //  console.log(itemConstraints)
+      //  console.log('newItem',newItem)
       const error = validate(newItem, itemConstraints);
       const itemError = first(get(error, field));
-      if (error) return [...errors,{ [field]: itemError }];
+      if (error) return [...errors, { [field]: itemError }];
       return errors;
     },
     [],
@@ -25,8 +25,9 @@ validate.validators.array = (arrayItems, itemConstraints, key, attributes) => {
 validate.extend(validate.validators.datetime, {
   // The value is guaranteed not to be null or undefined but otherwise it
   // could be anything.
-  parse: function(value, options) { 
-    return value !== 'Invalid date'
+  parse: function(value, options) {
+    if (!moment.utc(value).isValid()) return '';
+    return value !== ''
       ? +moment.utc(value)
       : options.dateOnly
       ? 'YYYY-MM-DD'
@@ -35,6 +36,8 @@ validate.extend(validate.validators.datetime, {
   // Input is a unix timestamp
   format: function(value, options) {
     var format = options.dateOnly ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss';
-    return value !== 'Invalid date' ? moment.utc(value).format(format) : false;
+    if (!moment.utc(value).isValid()) return '';
+
+    return value !== '' ? moment.utc(value).format(format) : '';
   },
 });

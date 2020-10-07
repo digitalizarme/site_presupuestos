@@ -13,6 +13,7 @@ export default class InputDate extends Component {
     super(props);
     this.state = { startDate: null };
     this.handleChange = this.handleChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   setDate() {
@@ -21,8 +22,14 @@ export default class InputDate extends Component {
       : this.props.input.value;
   }
 
-  handleChange(data) {
-    this.props.input.onChange(moment(data).format('YYYY-MM-DD'));
+  handleChange(value) {
+    const newValue = value && moment(value).isValid() ? moment(value).format('YYYY-MM-DD') : null;
+    this.props.input.onChange(newValue);
+  }
+
+  handleBlur({ target: { value } }) {
+    const newValue = value && moment(value).isValid() ? moment(value).format('YYYY-MM-DD') : null;
+    this.props.input.onBlur(newValue);
   }
 
   render() {
@@ -49,7 +56,7 @@ export default class InputDate extends Component {
             dateFormat={'dd/MM/yyyy'}
             selected={this.setDate()}
             onChange={this.handleChange}
-            onBlur={() => input.onBlur(moment(input.value).format('YYYY-MM-DD'))}
+            onBlur={this.handleBlur}
             disabled={disabled ? 'disabled' : ''}
             autoComplete="off"
             readOnly={readOnly}

@@ -62,14 +62,14 @@ const validationConstraints = {
   cuotas: {
     array: {
       d_fecha_vcto: {
-        datetime: {
-          dateOnly: true,
-          message: 'es obligatorio',
+        presence: {
+          message: ' es obligatorio',
         },
+            
       },
     },
     presence: {
-      message: 'es obligatorio',
+      message: 'Cuotas es obligatorio',
     },
   },
 };

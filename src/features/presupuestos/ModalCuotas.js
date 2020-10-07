@@ -21,13 +21,19 @@ const validationConstraints = {
   d_fecha_vcto: {
     datetime: {
       dateOnly: true,
-      message: 'Vencimiento es obligatorio',
+      message: 'Fecha de vencimento es obligatoria',
+    },
+    presence: {
+      message: 'Fecha de vencimento es obligatoria',
     },
   },
   d_fecha_pago: {
     datetime: {
       dateOnly: true,
-      message: 'Fecha de pago es obligatorio',
+      message: 'Fecha de pago debe ser valida',
+    },
+    presence: {
+      message: 'Fecha de pago es obligatoria',
     },
   },
   n_id_persona_baja: {

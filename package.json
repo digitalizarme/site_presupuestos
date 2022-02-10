@@ -154,6 +154,6 @@
   "devDependencies": {
     "@babel/preset-react": "^7.10.4",
     "@types/node": "^12.12.61",
-    "node-sass": "^4.14.1"
+    "node-sass": "^7.0.0"
   }
 }
